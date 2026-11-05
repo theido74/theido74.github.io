@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Theido Bots Telegram</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Un bot Telegram de commande pour votre restaurant ou votre commerce : vos clients commandent en touchant des boutons, vous recevez un ticket clair et vous gérez la carte depuis votre téléphone.">
+<meta property="og:title" content="Theido Bots Telegram">
+<meta property="og:description" content="Vos clients commandent sur Telegram. Vous recevez un ticket clair. Essayez la démo.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Courier+Prime:wght@400;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Concept : une plaque émaillée de devanture (bleu, filet blanc, vis aux coins)
+   au-dessus d'un comptoir où le bouton touché par le client imprime le ticket du gérant.
+   Choix assumé d'un seul thème : celui de la plaque. */
+:root {
+  --email: #123a8c;
+  --email-deep: #0b2763;
+  --email-line: #8fa8dc;
+  --ice: #e8edf7;
+  --white: #ffffff;
+  --paper: #fdfcf6;
+  --mustard: #f7c63e;
+  --mustard-deep: #dfa90f;
+  --ink: #101c3b;
+  --muted: #475475;
+  --rule: #c9d3e8;
+  --chat: #d7e2f3;
+  --go: #177245;
+  --display: "Bricolage Grotesque", "Arial Narrow", Arial, sans-serif;
+  --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --ticket: "Courier Prime", "Courier New", monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--ice); color: var(--ink); font: 400 1.0625rem/1.6 var(--body); }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.04; letter-spacing: -.015em; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(1.9rem, 4.4vw, 3rem); }
+h3 { font-size: 1.25rem; line-height: 1.2; letter-spacing: 0; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--mustard-deep); outline-offset: 2px; }
+
+.band { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: clamp(56px, 8vw, 96px); }
+.wrap { max-width: 1120px; margin-inline: auto; }
+.lede { max-width: 60ch; color: var(--muted); font-size: 1.125rem; }
+.head { display: grid; gap: 14px; margin-bottom: clamp(28px, 4vw, 44px); }
+
+/* Bouton */
+.btn { display: inline-block; padding: 14px 24px; border: 0; border-radius: 8px; background: var(--mustard); color: var(--ink); font: 600 1.0625rem/1.2 var(--body); text-decoration: none; cursor: pointer; box-shadow: 0 3px 0 var(--mustard-deep); transition: transform .12s, box-shadow .12s; }
+.btn:hover { transform: translateY(1px); box-shadow: 0 2px 0 var(--mustard-deep); }
+.btn:active { transform: translateY(3px); box-shadow: none; }
+.link-quiet { font-weight: 500; text-underline-offset: 4px; }
+
+/* Plaque */
+.top { background: var(--email-deep); color: var(--white); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 16px clamp(120px, 15vw, 170px); }
+.bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 24px; margin-bottom: 20px; }
+.brand { font: 800 1.2rem/1 var(--display); text-decoration: none; }
+.bar nav { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: .975rem; }
+.bar nav a { text-underline-offset: 4px; text-decoration-color: var(--email-line); }
+.plaque { position: relative; padding: clamp(32px, 6vw, 68px) clamp(22px, 5vw, 64px); background: var(--email); border: 3px solid var(--white); border-radius: 14px; outline: 7px solid var(--email); box-shadow: 0 0 0 9px var(--email-line); margin: 10px; }
+.screw { position: absolute; width: 11px; height: 11px; border-radius: 50%; background: var(--ice); box-shadow: inset 0 0 0 1px var(--muted); }
+.screw::after { content: ""; position: absolute; left: 2px; right: 2px; top: 5px; height: 1px; background: var(--muted); transform: rotate(35deg); }
+.s1 { top: 10px; left: 10px; } .s2 { top: 10px; right: 10px; } .s3 { bottom: 10px; left: 10px; } .s4 { bottom: 10px; right: 10px; }
+.plaque h1 { font-size: clamp(2.5rem, 7.6vw, 5.4rem); line-height: .98; max-width: 15ch; }
+.plaque h1 em { display: block; font-style: normal; color: var(--mustard); }
+.plaque p { max-width: 52ch; margin-top: 22px; font-size: clamp(1.0625rem, 2vw, 1.25rem); }
+.cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-top: 28px; }
+
+/* Démo */
+.demo-band { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); margin-top: clamp(-120px, -11vw, -84px); }
+.demo { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(18px, 3vw, 36px); align-items: start; }
+.demo-label { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; color: var(--white); font-size: .875rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.demo-label span:last-child { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--email-line); text-align: right; }
+
+.phone { background: var(--chat); border-radius: 16px; overflow: hidden; box-shadow: 0 18px 40px -18px rgba(11, 39, 99, .55); }
+.phone-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--white); border-bottom: 1px solid var(--rule); }
+.avatar { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--email); color: var(--white); font: 800 1.05rem/1 var(--display); }
+.phone-head b { display: block; font-weight: 600; line-height: 1.25; }
+.phone-head small { color: var(--muted); font-size: .85rem; }
+.chat { display: grid; gap: 8px; align-content: start; min-height: 408px; padding: 16px; }
+.bubble { width: fit-content; max-width: 92%; padding: 10px 14px; background: var(--white); border-radius: 4px 14px 14px 14px; font-size: 1rem; line-height: 1.45; }
+.bubble.me { justify-self: end; background: var(--email); color: var(--white); border-radius: 14px 4px 14px 14px; font-size: .95rem; }
+.bubble small { color: var(--muted); font-size: .9rem; }
+.keys { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.key { min-height: 44px; padding: 9px 10px; border: 0; border-radius: 8px; background: var(--email); color: var(--white); font: 500 .95rem/1.25 var(--body); cursor: pointer; transition: background .12s; }
+.key:hover:not(:disabled) { background: var(--email-deep); }
+.key.wide { grid-column: 1 / -1; }
+.key.ghost { background: var(--white); color: var(--email); box-shadow: inset 0 0 0 1.5px var(--email); }
+.key.ghost:hover { background: var(--ice); }
+.key.go { background: var(--mustard); color: var(--ink); font-weight: 600; }
+.key.go:hover { background: var(--mustard-deep); }
+.key:disabled { background: #c3cde0; color: var(--muted); cursor: not-allowed; }
+.key .tier { display: block; font-size: .8rem; opacity: .85; }
+
+.ticket { position: relative; padding: 22px 22px 26px; background: var(--paper); font: 400 1rem/1.4 var(--ticket); box-shadow: 0 18px 40px -18px rgba(11, 39, 99, .55); }
+.ticket::after { content: ""; position: absolute; left: 0; right: 0; bottom: -9px; height: 10px; background: linear-gradient(135deg, var(--paper) 50%, transparent 50%) 0 0 / 14px 10px repeat-x, linear-gradient(-135deg, var(--paper) 50%, transparent 50%) 0 0 / 14px 10px repeat-x; }
+.t-title { font-weight: 700; font-size: 1.1rem; }
+.t-ref { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; }
+.t-cut { margin-block: 10px; border: 0; border-top: 1.5px dashed var(--muted); }
+.t-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }
+.t-total { font-weight: 700; font-size: 1.1rem; }
+.t-dim { color: var(--muted); }
+.t-empty { color: var(--muted); }
+.stamp { position: absolute; top: 16px; right: 14px; padding: 2px 9px; border: 2.5px solid var(--go); border-radius: 5px; color: var(--go); font-weight: 700; letter-spacing: .08em; transform: rotate(7deg); background: var(--paper); }
+@media (prefers-reduced-motion: no-preference) { .stamp { animation: stamp .24s ease-out; } @keyframes stamp { from { transform: rotate(7deg) scale(1.7); opacity: 0; } } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn, .key { transition: none; } }
+
+/* Tableau "Je veux / Je touche" */
+.manage { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 64px); align-items: start; }
+.manage .head { margin: 0; }
+.table-scroll { overflow-x: auto; background: var(--white); border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+th, td { padding: 13px 18px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+tr:last-child td { border-bottom: 0; }
+th { font-size: .82rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+td:first-child { font-weight: 600; min-width: 180px; }
+td:last-child { color: var(--muted); min-width: 220px; }
+
+/* Avantages */
+.white { background: var(--white); }
+.perks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px clamp(24px, 4vw, 48px); margin: 0; }
+.perks > div { display: grid; gap: 8px; align-content: start; padding-top: 14px; border-top: 3px solid var(--email); min-width: 0; }
+.perks dd { margin: 0; color: var(--muted); }
+.perks dt { font: 800 1.25rem/1.2 var(--display); }
+
+/* Confidentialité */
+.dark { background: var(--email-deep); color: var(--white); }
+.privacy { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(24px, 6vw, 72px); align-items: start; }
+.big { font: 800 clamp(6rem, 17vw, 12.5rem)/.82 var(--display); color: var(--mustard); letter-spacing: -.04em; white-space: nowrap; }
+.big small { display: block; margin-top: 16px; font: 500 1rem/1.3 var(--body); letter-spacing: 0; color: var(--white); white-space: normal; }
+.privacy .lede { color: var(--white); margin-top: 14px; }
+.limits { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--email-line); display: grid; gap: 10px; }
+.limits h3 { font-size: 1.0625rem; }
+.limits ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; color: #dbe4f6; }
+
+/* Sur mesure */
+.fit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 64px); align-items: start; }
+.fit .head { margin: 0; }
+.settings { display: grid; margin: 0; padding: 0; list-style: none; }
+.settings li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 11px; border-bottom: 1px solid var(--rule); }
+.settings li:first-child { border-top: 1px solid var(--rule); }
+.settings b { font-weight: 600; }
+.settings span { font-family: var(--ticket); color: var(--muted); }
+
+/* Étapes */
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; margin: 0; padding: 0; list-style: none; counter-reset: s; }
+.steps li { display: grid; gap: 8px; align-content: start; counter-increment: s; min-width: 0; }
+.steps li::before { content: counter(s); display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--email); color: var(--white); font: 800 1.2rem/1 var(--display); }
+.steps p { color: var(--muted); }
+
+/* Questions */
+.faq { display: grid; max-width: 780px; }
+details { border-bottom: 1px solid var(--rule); }
+details:first-child { border-top: 1px solid var(--rule); }
+summary { padding-block: 16px; font-weight: 600; cursor: pointer; }
+details p { padding-bottom: 18px; color: var(--muted); max-width: 65ch; }
+
+/* Contact */
+.contact { background: var(--email); color: var(--white); }
+.contact h2 { max-width: 18ch; font-size: clamp(2.2rem, 5.6vw, 4rem); }
+.contact p { margin-top: 18px; max-width: 54ch; font-size: 1.125rem; }
+.foot { padding-block: 22px; background: var(--email-deep); color: #dbe4f6; font-size: .92rem; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+@media (max-width: 860px) {
+  .demo, .manage, .privacy, .fit { grid-template-columns: minmax(0, 1fr); }
+  .perks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .demo-col + .demo-col .demo-label, .demo-col + .demo-col .demo-label span:last-child { color: var(--muted); }
+  .chat { min-height: 0; }
+}
+@media (max-width: 560px) {
+  .perks, .steps { grid-template-columns: minmax(0, 1fr); }
+  .plaque { margin: 8px; padding-inline: 22px; }
+  .settings li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <a class="brand" href="#">theido · bots Telegram</a>
+      <nav aria-label="Navigation principale">
+        <a href="#gestion">Gestion</a>
+        <a href="#confidentialite">Confidentialité</a>
+        <a href="#questions">Questions</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+    <div class="plaque">
+      <i class="screw s1"></i><i class="screw s2"></i><i class="screw s3"></i><i class="screw s4"></i>
+      <h1>Votre carte sur Telegram. <em>Vos commandes sur un ticket.</em></h1>
+      <p>Je crée des bots de commande pour les restaurants et les commerces de bouche. Vos clients choisissent en touchant des boutons. Vous recevez tout, prêt à préparer, et vous changez la carte depuis votre téléphone.</p>
+      <div class="cta-row">
+        <a class="btn" href="#contact">Parler de mon bot</a>
+        <a class="link-quiet" href="#demo">Essayer la démo ↓</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="demo-band" id="demo" aria-label="Démonstration du bot">
+  <div class="wrap demo">
+    <div class="demo-col">
+      <div class="demo-label"><span>Votre client</span><span>Touchez les boutons</span></div>
+      <div class="phone">
+        <div class="phone-head">
+          <div class="avatar" aria-hidden="true">B</div>
+          <div><b>Bistrot de démonstration</b><small>bot</small></div>
+        </div>
+        <div class="chat" id="chat" aria-live="polite"></div>
+        <noscript><p style="padding:16px">La démo interactive a besoin de JavaScript.</p></noscript>
+      </div>
+    </div>
+    <div class="demo-col">
+      <div class="demo-label"><span>Vous, le gérant</span><span>Carte et client fictifs</span></div>
+      <div class="ticket" id="ticket"></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="gestion">
+  <div class="wrap manage">
+    <div class="head">
+      <h2>Vous changez la carte en plein service.</h2>
+      <p class="lede">Écrivez /admin au bot et tout se fait avec des boutons. Les changements s'appliquent tout de suite, sans rien redémarrer et sans appeler personne.</p>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th scope="col">Je veux…</th><th scope="col">Je touche…</th></tr></thead>
+        <tbody>
+          <tr><td>Changer un prix</td><td>le plat → Changer le prix</td></tr>
+          <tr><td>Signaler une rupture</td><td>le plat → Marquer épuisé</td></tr>
+          <tr><td>Ajouter vingt plats d'un coup</td><td>Ajouter des plats, puis un message avec une ligne par plat</td></tr>
+          <tr><td>Passer à la carte d'été</td><td>Remplacer toute la carte, avec un aperçu avant de valider</td></tr>
+          <tr><td>Arrêter de prendre des commandes</td><td>Fermer les commandes</td></tr>
+          <tr><td>Revoir ce qui est arrivé</td><td>Commandes, pour les 10 dernières sur 24 h</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="band white">
+  <div class="wrap">
+    <div class="head">
+      <h2>Fini les commandes griffonnées et les messages perdus.</h2>
+    </div>
+    <dl class="perks">
+      <div><dt>Pas de commande perdue en route</dt><dd>Elle est enregistrée avant l'envoi. Si Telegram ou Internet coupe, le bot renvoie la notification tout seul dès que possible.</dd></div>
+      <div><dt>Les ruptures sont gérées</dt><dd>Un plat marqué épuisé reste visible mais ne peut plus être commandé, et il sort des paniers en cours.</dd></div>
+      <div><dt>Le bon prix à la validation</dt><dd>Si vous changez un prix pendant qu'un client commande, il voit le récapitulatif à jour avant de confirmer.</dd></div>
+      <div><dt>Prix dégressifs automatiques</dt><dd>Dès 10 pièces, dès 50 pièces : vous fixez les paliers et le panier applique le bon tarif. Pratique pour les commandes de groupe.</dd></div>
+      <div><dt>Une pause en un bouton</dt><dd>Cuisine saturée ou vacances ? Les clients voient un message poli, et vous rouvrez quand vous voulez.</dd></div>
+      <div><dt>Protégé contre les abus</dt><dd>Par défaut, un client passe au plus 5 commandes par jour, avec une minute d'attente entre deux. Vous pouvez aussi fixer un panier minimum.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="band dark" id="confidentialite">
+  <div class="wrap privacy">
+    <div class="big">24 h<small>Durée maximale de conservation d'une commande sur le serveur</small></div>
+    <div>
+      <h2>Les données de vos clients ne traînent pas.</h2>
+      <p class="lede">Nom, téléphone, adresse et articles sont chiffrés en AES-256-GCM, puis effacés définitivement au bout de 24 heures. La clé n'est jamais stockée avec la base. Moins vous gardez de données, moins vous avez à en protéger.</p>
+      <div class="limits">
+        <h3>Ce que le bot ne contrôle pas, autant le savoir</h3>
+        <ul>
+          <li>La notification reçue dans Telegram reste dans votre conversation jusqu'à ce que vous l'effaciez. Telegram propose une suppression automatique, que je vous montre.</li>
+          <li>Le client garde lui aussi sa conversation avec le bot.</li>
+          <li>Comme rien n'est conservé, le bot ne fournit ni historique ni statistiques : votre comptabilité reste à tenir à part.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap fit">
+    <div class="head">
+      <h2>Réglé pour votre commerce.</h2>
+      <p class="lede">Restaurant, traiteur, boulangerie, épicerie : le bot prend votre nom, vos sections et vos horaires. Une demande plus particulière ? Dites-moi ce dont vous avez besoin, je crée aussi des bots sur mesure.</p>
+    </div>
+    <ul class="settings">
+      <li><b>Nom affiché</b><span>Bistrot du Coin</span></li>
+      <li><b>Sections</b><span>jusqu'à 12, emoji compris</span></li>
+      <li><b>Unité de vente</b><span>pièce, portion, cl…</span></li>
+      <li><b>Jours de livraison</b><span>lundi, jeudi…</span></li>
+      <li><b>Horaires</b><span>18 h – 22 h</span></li>
+      <li><b>Panier minimum</b><span>au montant de votre choix</span></li>
+      <li><b>Monnaie</b><span>CHF, EUR…</span></li>
+      <li><b>Gérants</b><span>vous et vos employés</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="band white">
+  <div class="wrap">
+    <div class="head"><h2>De la première discussion au premier ticket.</h2></div>
+    <ol class="steps">
+      <li><h3>On parle de votre service</h3><p>Votre carte, vos jours de livraison et ce que vous voulez éviter.</p></li>
+      <li><h3>Je prépare votre bot</h3><p>Je le règle à votre nom et je l'installe sur un serveur.</p></li>
+      <li><h3>Vous l'essayez</h3><p>Vous passez une commande de test et vérifiez la réception sur votre téléphone.</p></li>
+      <li><h3>Vous ouvrez</h3><p>Vous recevez un manuel écrit sans jargon, et vous avez un contact si un souci survient.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band" id="questions">
+  <div class="wrap">
+    <div class="head"><h2>Vos questions</h2></div>
+    <div class="faq">
+      <details open><summary>Combien coûte un bot ?</summary><p>Le prix dépend de votre carte et de vos besoins, je vous fais donc un devis après notre discussion. Il précise aussi qui paie l'hébergement du serveur.</p></details>
+      <details><summary>Mes clients doivent-ils installer quelque chose ?</summary><p>Seulement Telegram, s'ils ne l'ont pas déjà. Ils ouvrent le bot, touchent Démarrer et commandent. Il n'y a ni site à visiter ni compte à créer.</p></details>
+      <details><summary>Comment mes clients paient-ils ?</summary><p>Le bot est prévu aujourd'hui pour le paiement en espèces à la livraison : il annonce le montant à préparer. Si vous avez besoin d'un autre mode de paiement, parlons-en avant de démarrer.</p></details>
+      <details><summary>Faut-il des connaissances techniques ?</summary><p>Non. Vous gérez tout avec des boutons, et le manuel explique chaque action. Quelques réglages, comme les jours de livraison ou le panier minimum, se font sur le serveur par votre prestataire.</p></details>
+      <details><summary>Le bot vérifie-t-il ma zone de livraison ?</summary><p>Non, l'adresse est un texte libre. Vous la lisez sur le ticket et vous appelez le client si vous avez un doute.</p></details>
+      <details><summary>Que se passe-t-il si le serveur redémarre ?</summary><p>Il repart tout seul. Les commandes confirmées de moins de 24 heures sont conservées. Un panier pas encore validé est perdu, et le client n'a qu'à retaper /start.</p></details>
+      <details><summary>Puis-je utiliser le bot dans un groupe Telegram ?</summary><p>Oui. Dans un groupe, /start affiche la carte avec un bouton Commander qui ouvre une conversation privée. Le bot ne répond à aucun autre message du groupe.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="band contact" id="contact">
+  <div class="wrap">
+    <h2>Votre prochaine commande pourrait arriver comme ça.</h2>
+    <p>Dites-moi ce que vous vendez et comment vous livrez. Je vous réponds avec ce que votre bot pourrait faire et un devis.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://t.me/Theido74">Écrire sur Telegram</a>
+      <span>@Theido74</span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot"><div class="wrap">theido · spécialiste des bots · Site indépendant, non affilié à Telegram.</div></footer>
+
+<script>
+(function () {
+  var MENU = [
+    { id: "entrees", label: "🥗 Entrées", items: [
+      { id: "cesar", emoji: "🥗", name: "Salade César", price: 8.75 },
+      { id: "nems", emoji: "🍤", name: "Nems", price: 6, out: true }
+    ]},
+    { id: "plats", label: "🍽️ Plats", items: [
+      { id: "reine", emoji: "🍕", name: "Pizza Reine", price: 13.5 },
+      { id: "lasagnes", emoji: "🥘", name: "Lasagnes", price: 12, tiers: [[10, 11]] }
+    ]},
+    { id: "desserts", label: "🍰 Desserts", items: [
+      { id: "tiramisu", emoji: "🍰", name: "Tiramisu", price: 6 }
+    ]},
+    { id: "boissons", label: "🥤 Boissons", items: [
+      { id: "eau", emoji: "🥤", name: "Eau gazeuse 33 cl", price: 2.5 }
+    ]}
+  ];
+  var ITEMS = {};
+  MENU.forEach(function (s) { s.items.forEach(function (i) { ITEMS[i.id] = i; }); });
+
+  var state, chat = document.getElementById("chat"), ticket = document.getElementById("ticket");
+
+  function fresh() { return { view: "home", cart: { reine: 1, tiramisu: 2 }, ref: null, say: "/start" }; }
+  function money(n) { return n.toFixed(2).replace(".", ",") + " CHF"; }
+  function unit(item, qty) {
+    var p = item.price;
+    (item.tiers || []).forEach(function (t) { if (qty >= t[0]) p = t[1]; });
+    return p;
+  }
+  function lines() {
+    return Object.keys(state.cart).map(function (id) {
+      var item = ITEMS[id], qty = state.cart[id];
+      return { item: item, qty: qty, total: unit(item, qty) * qty };
+    });
+  }
+  function total() { return lines().reduce(function (a, l) { return a + l.total; }, 0); }
+  function count() { return lines().reduce(function (a, l) { return a + l.qty; }, 0); }
+  function key(label, action, cls, disabled) {
+    return '<button type="button" class="key ' + (cls || "") + '" data-a="' + action + '"' + (disabled ? " disabled" : "") + ">" + label + "</button>";
+  }
+  function cartKey() {
+    return key("🛒 Mon panier (" + count() + ")", "cart", "wide ghost");
+  }
+
+  function renderChat() {
+    var html = '<div class="bubble me">' + state.say + "</div>";
+    if (state.view === "home") {
+      html += '<div class="bubble">Bienvenue ! Que souhaitez-vous commander ?<br><small>Prochaine livraison : jeudi, 18 h – 22 h</small></div><div class="keys">';
+      MENU.forEach(function (s) { html += key(s.label, "s:" + s.id); });
+      html += cartKey() + "</div>";
+    } else if (state.view === "cart") {
+      var body = lines().map(function (l) { return l.qty + " × " + l.item.emoji + " " + l.item.name + " : " + money(l.total); }).join("<br>");
+      html += '<div class="bubble">' + (body || "Votre panier est vide.") + (body ? "<br><b>Total : " + money(total()) + "</b>" : "") + '</div><div class="keys">';
+      if (count()) {
+        lines().forEach(function (l) { html += key("− " + l.item.name, "d:" + l.item.id); });
+        if (lines().length % 2) html += key("🗑️ Vider", "clear", "ghost"); else html += key("🗑️ Vider le panier", "clear", "wide ghost");
+        html += key("✅ Confirmer la commande", "confirm", "wide go");
+      }
+      html += key("⬅️ Toutes les sections", "home", "wide ghost") + "</div>";
+    } else if (state.view === "done") {
+      html += '<div class="bubble">Merci ! Votre commande <b>' + state.ref + "</b> est enregistrée.<br>À préparer en espèces : <b>" + money(total()) + '</b><br><small>Regardez le ticket du gérant.</small></div><div class="keys">' + key("🔁 Recommencer la démo", "reset", "wide ghost") + "</div>";
+    } else {
+      var sec = MENU.filter(function (s) { return s.id === state.view; })[0];
+      html += '<div class="bubble">' + sec.label + "<br><small>Touchez un plat pour l'ajouter au panier.</small></div><div class=\"keys\">";
+      sec.items.forEach(function (i) {
+        var tier = i.tiers ? '<span class="tier">dès ' + i.tiers[0][0] + " : " + money(i.tiers[0][1]) + "</span>" : "";
+        var label = i.out ? "🚫 " + i.name + " (épuisé)" : i.emoji + " " + i.name + " · " + money(i.price) + tier;
+        html += key(label, "a:" + i.id, sec.items.length === 1 ? "wide" : "", i.out);
+      });
+      html += key("⬅️ Toutes les sections", "home", "ghost") + key("🛒 Panier (" + count() + ")", "cart", "ghost") + "</div>";
+    }
+    chat.innerHTML = html;
+  }
+
+  function renderTicket() {
+    var rows = lines().map(function (l) {
+      return '<div class="t-line"><span>' + l.qty + " x " + l.item.name + "</span><span>" + money(l.total) + "</span></div>";
+    }).join("");
+    ticket.innerHTML =
+      (state.ref ? '<div class="stamp">REÇUE</div>' : "") +
+      '<div class="t-title">' + (state.ref ? "NOUVELLE COMMANDE" : "COMMANDE EN COURS") + "</div>" +
+      '<div class="t-ref"><span>Réf. ' + (state.ref || "--------") + "</span></div>" +
+      '<hr class="t-cut">' +
+      (rows || '<div class="t-empty">Le panier est vide.</div>') +
+      '<hr class="t-cut">' +
+      '<div class="t-line t-total"><span>À encaisser</span><span>' + money(total()) + "</span></div>" +
+      '<div class="t-dim">en espèces à la livraison</div>' +
+      '<hr class="t-cut">' +
+      "<div>Client : Camille Exemple</div><div>Tél. : 000 000 00 00</div><div>Adresse : 12, rue de l'Exemple</div><div>Remarque : sonner deux fois</div><div>Livraison : jeudi, 18 h – 22 h</div>" +
+      '<hr class="t-cut">' +
+      '<div class="t-dim">Chiffrée, puis détruite sous 24 h</div>';
+  }
+
+  function render() { renderChat(); renderTicket(); }
+
+  chat.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-a]");
+    if (!btn || btn.disabled) return;
+    var a = btn.getAttribute("data-a"), v = a.slice(2);
+    if (a === "reset") { state = fresh(); }
+    else if (a === "home") { state.view = "home"; state.say = "Toutes les sections"; }
+    else if (a === "cart") { state.view = "cart"; state.say = "Mon panier"; }
+    else if (a === "clear") { state.cart = {}; state.say = "Vider le panier"; }
+    else if (a === "confirm") {
+      state.ref = Math.random().toString(16).slice(2, 10).toUpperCase().padEnd(8, "0");
+      state.view = "done"; state.say = "Confirmer la commande";
+    }
+    else if (a.indexOf("s:") === 0) {
+      state.view = v;
+      state.say = MENU.filter(function (s) { return s.id === v; })[0].label;
+    }
+    else if (a.indexOf("a:") === 0) {
+      state.cart[v] = (state.cart[v] || 0) + 1;
+      state.say = ITEMS[v].emoji + " " + ITEMS[v].name;
+    }
+    else if (a.indexOf("d:") === 0) {
+      state.cart[v] -= 1;
+      if (state.cart[v] <= 0) delete state.cart[v];
+      state.say = "Retirer " + ITEMS[v].name;
+    }
+    render();
+    var next = chat.querySelector("button");
+    if (next) next.focus({ preventScroll: true });
+  });
+
+  state = fresh();
+  render();
+})();
+</script>
+</body>
+</html>
