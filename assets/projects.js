@@ -1,0 +1,27 @@
+// Adresse e-mail de contact : si la valeur est null, aucun lien mailto n'est affiché.
+const CONTACT_EMAIL = "geleprechaun@ik.me";
+
+// Pour ajouter un projet, ajouter un objet à PROJECTS (le champ confirm est un simple rappel, jamais affiché).
+const CATEGORIES = [
+  {id:"bots", label:"Bots & automatisation"},
+  {id:"securite", label:"Sécurité & embarqué"},
+  {id:"data", label:"Data & SQL"},
+  {id:"web", label:"Web & applications"},
+  {id:"outils", label:"Outils & systèmes"},
+  {id:"jeux", label:"Jeux & expériences"}
+];
+const PROJECTS = [
+  {id:"bots-telegram", title:"Bots Telegram pour restaurants", desc:"Bot de commande pour restaurants et commerces de bouche : les clients commandent avec des boutons, le commerçant reçoit un ticket clair.", category:"bots", tech:["Telegram","Python"], visibility:"public", repo:"https://github.com/theido74/theido74.github.io", page:"bots-telegram/", featured:true, confirm:false},
+  {id:"flipper-keymanager", title:"Fliiper Keys", desc:"Application Flipper Zero qui tape tes mots de passe en USB depuis un coffre chiffré AES-256 sur la carte SD.", category:"securite", tech:["C","Flipper Zero","Python"], visibility:"public", repo:"https://github.com/theido74/flipper_keyManager", page:"projets/flipper-keymanager/", featured:true, confirm:false},
+  {id:"spotyfiles", title:"Spotyfiles", desc:"Plateforme de suivi du temps de travail : agent local Python, API FastAPI, base PostgreSQL et interface web PHP avec export PDF.", category:"web", tech:["Python","FastAPI","PostgreSQL","PHP"], visibility:"private", repo:null, page:"projets/spotyfiles/", featured:true, confirm:false},
+  {id:"pokemonbot", title:"PokemonBot", desc:"Bot Discord qui scanne eBay pour repérer des cartes Pokémon sous-évaluées (Europe/Suisse) et envoie des alertes.", category:"bots", tech:["Python","Discord","eBay API"], visibility:"private", repo:null, page:"projets/pokemonbot/", featured:false, confirm:false},
+  {id:"skills-agents", title:"Environnement IA personnel", desc:"Agents et skills Claude Code, serveurs MCP et installeur pour reconstruire mon environnement sur n'importe quelle machine Linux.", category:"bots", tech:["Python","Shell","MCP"], visibility:"private", repo:null, page:"projets/skills-agents/", featured:false, confirm:false},
+  {id:"password-analyzer", title:"Password Analyzer", desc:"Évalue la force d'un mot de passe : longueur, entropie, attaque par dictionnaire et présence dans des fuites connues.", category:"securite", tech:["Python"], visibility:"public", repo:"https://github.com/theido74/password_analyzer", page:"projets/password-analyzer/", featured:false, confirm:false},
+  {id:"entrainement-abdd", title:"Cabanes Alpines (PostgreSQL)", desc:"Base d'entraînement PostgreSQL 16 (réservations, facturation CHF avec TVA, sécurité par ligne) avec exercices corrigés et tests automatiques.", category:"data", tech:["PostgreSQL","PL/pgSQL","Docker","Shell"], visibility:"private", repo:null, page:"projets/entrainement-abdd/", featured:false, confirm:false},
+  {id:"streeteye", title:"StreetEye", desc:"Application de surveillance par caméra avec détection d'objets (YOLOv8), alertes et interface web PHP.", category:"web", tech:["PHP","Python","YOLOv8","SQL"], visibility:"public", repo:"https://github.com/theido74/streeteye", page:"projets/streeteye/", featured:false, confirm:true},
+  {id:"chatapp", title:"ChatApp (ESS)", desc:"Application de bureau VB.NET en couches (logique métier, accès aux données) avec base Oracle PL/SQL.", category:"web", tech:["VB.NET","PL/SQL"], visibility:"public", repo:"https://github.com/theido74/ChatApp", page:"projets/chatapp/", featured:false, confirm:true},
+  {id:"dmob", title:"Applications Android (Kotlin)", desc:"Série de petites applications Android en Jetpack Compose réalisées en apprentissage.", category:"web", tech:["Kotlin","Jetpack Compose"], visibility:"private", repo:null, page:"projets/dmob/", featured:false, confirm:true},
+  {id:"image-scanner", title:"Image Scanner", desc:"Outil en ligne de commande très rapide pour scanner et cataloguer des images (disque, web, Azure Blob) avec export CSV/JSON.", category:"outils", tech:["Rust","Tokio","Rayon"], visibility:"public", repo:"https://github.com/theido74/image-scanner", page:"projets/image-scanner/", featured:false, confirm:false},
+  {id:"neworcinvasion", title:"New Orc Invasion", desc:"Jeu de tir inspiré de Space Invaders dans l'univers du Seigneur des Anneaux, avec comptes et scores sauvegardés.", category:"jeux", tech:["Python","pygame","SQLite"], visibility:"public", repo:"https://github.com/theido74/neworcinvasion", page:"projets/neworcinvasion/", featured:false, confirm:false},
+  {id:"nimgame", title:"Nim Game", desc:"Jeu de Nim avec agent et analyse statistique des parties (graphiques). Projet étudiant.", category:"jeux", tech:["Python"], visibility:"public", repo:"https://github.com/theido74/nimgame", page:"projets/nimgame/", featured:false, confirm:false}
+];

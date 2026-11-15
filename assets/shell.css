@@ -1,0 +1,55 @@
+/* Shell commun des pages projet : barre du haut, lien d'évitement et pied de page.
+   Contrat : seules les classes .shell-* sont stylées, aucun sélecteur global ; variables --shell-* sur .shell-bar et .shell-foot.
+   Chaque page projet garde sa propre identité visuelle sous cette barre. */
+@font-face{font-family:"Shell Mono";font-weight:400;font-style:normal;font-display:swap;src:url("fonts/NotoSansMono-Regular.woff2") format("woff2")}
+@font-face{font-family:"Shell Mono";font-weight:700;font-style:normal;font-display:swap;src:url("fonts/NotoSansMono-Bold.woff2") format("woff2")}
+
+.shell-bar,.shell-foot{
+  --shell-bg:rgba(8,10,16,.8);
+  --shell-ink:#e6ebf5;
+  --shell-dim:#a9b4c9;
+  --shell-line:rgba(255,255,255,.14);
+  --shell-accent:#7ee8a2;
+  --shell-focus:#ffe08a;
+  --shell-font:"Shell Mono","Noto Sans Mono",ui-monospace,"Cascadia Code","SF Mono",Menlo,Consolas,monospace;
+}
+
+.shell-skip{position:fixed;left:12px;top:-80px;z-index:2147483647;padding:.6rem 1rem;border-radius:8px;background:#7ee8a2;color:#06130b;font:700 .875rem/1.4 "Shell Mono","Noto Sans Mono",ui-monospace,Menlo,Consolas,monospace;text-decoration:none}
+.shell-skip:focus{top:10px;outline:2px solid #ffe08a;outline-offset:3px}
+
+.shell-bar{
+  position:sticky;top:0;z-index:2147483000;box-sizing:border-box;width:100%;height:52px;
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:0 16px;
+  background:var(--shell-bg);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);
+  border-bottom:1px solid var(--shell-line);
+  color:var(--shell-ink);font:400 .8125rem/1.4 var(--shell-font);letter-spacing:0;text-transform:none;
+}
+.shell-bar *,.shell-foot *{box-sizing:border-box}
+.shell-home{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;color:var(--shell-ink);font-weight:700;font-size:.875rem;letter-spacing:-.02em;text-decoration:none;white-space:nowrap}
+.shell-home::before{content:">_";display:inline-block;padding:.05rem .35rem;border-radius:5px;background:var(--shell-accent);color:#06130b;font-size:.75rem;letter-spacing:0}
+.shell-nav{display:flex;align-items:center;gap:.15rem}
+.shell-prev,.shell-all,.shell-next{display:inline-flex;align-items:center;min-height:44px;padding:0 .5rem;color:var(--shell-dim);font-size:.8125rem;text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent}
+.shell-prev::before{content:"←";margin-right:.4rem}
+.shell-next::after{content:"→";margin-left:.4rem}
+.shell-prev:hover,.shell-all:hover,.shell-next:hover{color:var(--shell-ink);border-bottom-color:var(--shell-accent)}
+.shell-home:focus-visible,.shell-prev:focus-visible,.shell-all:focus-visible,.shell-next:focus-visible,.shell-foot a:focus-visible{outline:2px solid var(--shell-focus);outline-offset:2px;border-radius:4px}
+
+/* Téléphone : précédent et suivant ne gardent que leur flèche (le texte reste lu par les lecteurs d'écran) */
+@media (max-width:560px){
+  .shell-bar{padding:0 10px;gap:.4rem}
+  /* évite le débordement de 1 px à 360 px : le logo peut se tronquer, la nav ne déborde plus */
+  .shell-home{min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .shell-nav{flex:none}
+  .shell-all{padding:0 .35rem}
+  .shell-prev,.shell-next{font-size:0;min-width:44px;justify-content:center;padding:0}
+  .shell-prev::before,.shell-next::after{font-size:1rem;margin:0}
+}
+@media (max-width:400px){.shell-home::before{display:none}}
+
+.shell-foot{
+  box-sizing:border-box;width:100%;padding:1.4rem 16px 1.8rem;text-align:center;
+  background:rgba(8,10,16,.94);border-top:1px solid var(--shell-line);
+  color:var(--shell-dim);font:400 .8125rem/1.7 var(--shell-font);letter-spacing:0;text-transform:none;
+}
+.shell-foot a{display:inline-flex;align-items:center;min-height:32px;padding:0 .2rem;color:var(--shell-ink);text-underline-offset:4px}
+.shell-foot a:hover{color:var(--shell-accent)}

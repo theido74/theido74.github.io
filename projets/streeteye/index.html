@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StreetEye · GeLeprechaun</title>
+<meta name="description" content="Application de surveillance par caméra avec détection d'objets (YOLOv8), alertes et interface web PHP. Une salle de contrôle simulée pour voir le principe.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0f13">
+<meta property="og:type" content="website">
+<meta property="og:title" content="StreetEye · GeLeprechaun">
+<meta property="og:description" content="Surveillance par caméra, détection YOLOv8, alertes et interface web PHP : la salle de contrôle en simulation.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body class="se">
+<!-- À CONFIRMER : le dépôt n'a pas de README ; contenu déduit du code et de la structure des fichiers. -->
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../entrainement-abdd/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../chatapp/" rel="next">Suivant</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="se-hero" aria-labelledby="se-title">
+    <div class="se-hero__in">
+      <h1 id="se-title" class="se-title">StreetEye</h1>
+      <p class="se-lead">Une caméra sur la rue, un modèle qui reconnaît ce qui passe, et une alerte quand quelque chose roule trop vite.</p>
+      <ul class="se-meta" aria-label="Fiche du projet">
+        <li><span class="se-badge se-badge--public">Public</span></li>
+        <li>PHP</li>
+        <li>Python</li>
+        <li>YOLOv8</li>
+        <li>SQL</li>
+        <li><a class="se-code" href="https://github.com/theido74/streeteye" rel="noopener">Code</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="se-console" aria-labelledby="se-console-title">
+    <h2 id="se-console-title" class="se-vh">Salle de contrôle, en simulation</h2>
+
+    <div class="se-screen">
+      <canvas id="se-cam" class="se-cam" width="960" height="540" role="img"
+        aria-label="Rue dessinée à la main où des voitures, un camion, un deux-roues, des cyclistes et des piétons génériques passent. Des cadres de détection les suivent avec un nom et un score de confiance. Ce n'est pas une vraie caméra."></canvas>
+      <div class="se-osd se-osd--tl" aria-hidden="true"><span class="se-rec"></span>REC · CAM 01</div>
+      <div class="se-osd se-osd--tr" aria-hidden="true" id="se-clock">--:--:--</div>
+      <div class="se-osd se-osd--bl" aria-hidden="true">SIMULATION · aucune image réelle</div>
+      <div class="se-osd se-osd--br" aria-hidden="true">ligne de repère</div>
+      <div class="se-flash" id="se-flash" aria-hidden="true"></div>
+    </div>
+
+    <div class="se-controls">
+      <button type="button" class="se-btn" id="se-play" aria-pressed="false">Mettre en pause</button>
+      <label class="se-range" for="se-seuil">
+        <span>Seuil d'alerte Telegram</span>
+        <input id="se-seuil" type="range" min="10" max="50" step="1" value="28">
+        <output id="se-seuil-out" for="se-seuil">28 km/h</output>
+      </label>
+    </div>
+
+    <dl class="se-stats" aria-label="Compteurs de la simulation">
+      <div class="se-stat"><dt>Caméras actives</dt><dd id="se-n-cam">1</dd></div>
+      <div class="se-stat"><dt>Véhicules détectés</dt><dd id="se-n-det">0</dd></div>
+      <div class="se-stat se-stat--alert"><dt>Alertes</dt><dd id="se-n-alert">0</dd></div>
+      <div class="se-stat"><dt>Taux de confiance moyen</dt><dd id="se-n-conf">0 %</dd></div>
+    </dl>
+
+    <div class="se-log">
+      <h3 class="se-h3">Journal</h3>
+      <ol class="se-log__list" id="se-log" role="log" aria-live="off"></ol>
+      <p class="se-note">Une alerte s'affiche dans le tableau de bord au-dessus de 20 km/h, et part sur Telegram au-dessus du seuil réglé.</p>
+    </div>
+
+    <figure class="se-map">
+      <figcaption class="se-h3">Zone surveillée</figcaption>
+      <canvas id="se-map" class="se-map__cv" width="480" height="300" role="img" aria-label="Plan schématique : une route, la caméra et un point par objet suivi."></canvas>
+      <p class="se-note">Plan schématique dessiné pour la page.</p>
+    </figure>
+  </section>
+
+  <section class="se-sec se-flow" aria-labelledby="se-flow-title">
+    <h2 id="se-flow-title" class="se-h2">De l'image à l'alerte</h2>
+    <ol class="se-steps">
+      <li>
+        <h3>Le flux</h3>
+        <p>Le programme Python lit le flux vidéo d'une caméra IP (RTSP).</p>
+      </li>
+      <li>
+        <h3>La détection</h3>
+        <p>YOLOv8 en mode suivi repère voitures, deux-roues, camions, cyclistes, piétons et quelques animaux, et garde un identifiant par objet.</p>
+      </li>
+      <li>
+        <h3>La vitesse</h3>
+        <p>Elle vient du déplacement entre deux images, avec une échelle pixels-mètres fixée dans le code, lissée sur une moyenne de cinq mesures.</p>
+      </li>
+      <li>
+        <h3>La ligne de repère</h3>
+        <p>Une détection n'est enregistrée qu'une fois par identifiant, quand l'objet franchit la ligne au milieu de l'image avec plus de 80 % de confiance.</p>
+      </li>
+      <li>
+        <h3>La base</h3>
+        <p>La photo et la détection (type, confiance, vitesse) vont dans une base PostgreSQL.</p>
+      </li>
+      <li>
+        <h3>L'alerte</h3>
+        <p>Au-dessus d'un seuil de vitesse, une alerte Telegram part avec la photo.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="se-sec se-build" aria-labelledby="se-build-title">
+    <div class="se-build__txt">
+      <h2 id="se-build-title" class="se-h2">Comment c'est construit</h2>
+      <ul class="se-list">
+        <li>Deux parties : un programme Python découpé en services (détection, suivi, vitesse, photo, comptage, Telegram, base de données) et une interface web PHP, avec des scripts SQL.</li>
+        <li>L'interface pour l'administrateur affiche les détections et les alertes. Une alerte se supprime, se modifie et se réactive : la suppression est logique, une colonne garde la date.</li>
+        <li>Elle propose deux modes : Démo, avec des données déjà capturées et sans caméra, et Réel, avec une caméra connectée.</li>
+        <li>Les réglages sensibles passent par des variables d'environnement, avec un fichier d'exemple.</li>
+        <li>Pas confirmé dans le code lu : la lecture des plaques et la conservation temporaire des photos. Le modèle de données a bien un champ pour la plaque, rien de plus. <!-- À CONFIRMER --></li>
+      </ul>
+      <p class="se-tech-title">Technologies</p>
+      <ul class="se-tech">
+        <li>Python</li><li>YOLOv8</li><li>OpenCV</li><li>PHP</li><li>PostgreSQL</li><li>Telegram</li>
+      </ul>
+    </div>
+    <figure class="se-sheet">
+      <img src="diagramme-classes.png" width="850" height="403" decoding="async"
+        alt="Diagramme de classes : une caméra (identifiant, nom, URL, lieu) a plusieurs détections ; une détection relie un véhicule (identifiant, type, plaque) et une photo (identifiant, chemin, date) et porte la date, la vitesse et le taux de confiance.">
+      <figcaption>Le modèle de données : caméra, véhicule, photo, détection.</figcaption>
+    </figure>
+  </section>
+
+</main>
+
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+</body>
+</html>

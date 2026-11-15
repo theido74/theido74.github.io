@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applis Android · GeLeprechaun</title>
+<meta name="description" content="Série de petites applications Android en Kotlin et Jetpack Compose, réalisées en apprentissage : dé, limonade, carte de visite, tâches, et d'autres exercices.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#12141a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Applis Android · GeLeprechaun">
+<meta property="og:description" content="Neuf petites applications Android en Jetpack Compose, reconstituées en animation.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body class="dm">
+<!-- À CONFIRMER : pas de README ; les écrans animés sont des reconstitutions déduites des noms de dossiers (et du code du lanceur de dés et des ressources de la limonade), pas des captures. -->
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../chatapp/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../image-scanner/" rel="next">Suivant</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="dm-hero" aria-labelledby="dm-title">
+    <div class="dm-glow" id="dm-glow" aria-hidden="true"></div>
+    <div class="dm-hero__in">
+      <h1 id="dm-title" class="dm-title">Applis Android</h1>
+      <p class="dm-lead">Neuf petites applications écrites en Kotlin avec Jetpack Compose, pour apprendre : un dé, une limonade, une carte de visite, une liste de tâches…</p>
+      <ul class="dm-meta" aria-label="Fiche du projet">
+        <li><span class="dm-badge">Privé</span></li>
+        <li>Kotlin</li>
+        <li>Jetpack Compose</li>
+        <li>Material 3</li>
+      </ul>
+      <p class="dm-private">Le code de ce projet est privé : il n'est pas publié.</p>
+    </div>
+
+    <div class="dm-stage" id="dm-stage" aria-roledescription="carrousel" aria-label="Galerie des applis">
+      <span class="dm-word" aria-hidden="true">Compose</span>
+      <div class="dm-scene" aria-hidden="true">
+        <div class="dm-ring" id="dm-ring">
+
+          <!-- 0 : lanceur de dés -->
+          <div class="dm-phone" data-app="dice">
+            <div class="dm-screen scr-dice">
+              <div class="dm-sb"><span>9:41</span><i></i></div>
+              <div class="dice-wrap">
+                <div class="dice">
+                  <i class="face f1"></i><i class="face f2"></i><i class="face f3"></i><i class="face f4"></i><i class="face f5"></i><i class="face f6"></i>
+                </div>
+                <span class="dice-btn">Lancer</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1 : limonade -->
+          <div class="dm-phone" data-app="lemonade">
+            <div class="dm-screen scr-lemon">
+              <div class="dm-sb"><span>9:41</span><i></i></div>
+              <div class="lem-bar">Limonade</div>
+              <div class="lem-body">
+                <div class="lem-card">
+                  <svg class="lem-s lem-s1" viewBox="0 0 100 100"><rect x="44" y="52" width="12" height="40" fill="#8a5a2b"/><circle cx="50" cy="38" r="30" fill="#4caf50"/><circle cx="38" cy="32" r="6" fill="#ffe14d"/><circle cx="58" cy="26" r="6" fill="#ffe14d"/><circle cx="56" cy="46" r="6" fill="#ffe14d"/></svg>
+                  <svg class="lem-s lem-s2" viewBox="0 0 100 100"><ellipse cx="50" cy="52" rx="34" ry="26" fill="#ffe14d"/><ellipse cx="50" cy="52" rx="34" ry="26" fill="none" stroke="#d9b800" stroke-width="3"/><path d="M82 52 q10 -4 12 4 q-6 2 -12 -2z" fill="#4caf50"/></svg>
+                  <svg class="lem-s lem-s3" viewBox="0 0 100 100"><path d="M26 22 H74 L68 88 H32 Z" fill="#dff3ff" opacity=".6"/><path d="M29 44 H71 L68 88 H32 Z" fill="#ffe14d"/><rect x="58" y="8" width="5" height="40" fill="#e84a5f" transform="rotate(14 60 28)"/></svg>
+                  <svg class="lem-s lem-s4" viewBox="0 0 100 100"><path d="M26 22 H74 L68 88 H32 Z" fill="#dff3ff" opacity=".6" stroke="#9cc" stroke-width="2"/></svg>
+                </div>
+                <p class="lem-txt"><span class="lt1">Touchez l'arbre</span><span class="lt2">Pressez le citron</span><span class="lt3">Touchez pour boire</span><span class="lt4">Touchez pour recommencer</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 : carte de visite -->
+          <div class="dm-phone" data-app="card">
+            <div class="dm-screen scr-card">
+              <div class="dm-sb"><span>9:41</span><i></i></div>
+              <div class="card-top">
+                <i class="card-av">PN</i>
+                <b>Prénom Nom</b>
+                <span>Développeur Android</span>
+              </div>
+              <ul class="card-lines">
+                <li><i></i>+00 00 000 00 00</li>
+                <li><i></i>@pseudo</li>
+                <li><i></i>prenom@exemple.org</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 3 : gestionnaire de tâches -->
+          <div class="dm-phone" data-app="tasks">
+            <div class="dm-screen scr-tasks">
+              <div class="dm-sb"><span>9:41</span><i></i></div>
+              <div class="task-bar">Mes tâches</div>
+              <ul class="task-list">
+                <li class="t1"><i></i>Ranger le bureau</li>
+                <li class="t2"><i></i>Écrire le rapport</li>
+                <li class="t3"><i></i>Appeler le garage</li>
+                <li class="t4"><i></i>Sauvegarder les photos</li>
+              </ul>
+              <div class="task-done"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="4"/><path d="M19 33 l9 9 l18 -20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Tout est fait</b><span>Bien joué !</span></div>
+            </div>
+          </div>
+
+          <!-- 4 : carte d'anniversaire -->
+          <div class="dm-phone" data-app="birthday">
+            <div class="dm-screen scr-bday">
+              <div class="dm-sb"><span>9:41</span><i></i></div>
+              <div class="confetti"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="cake"><i class="flame"></i><i class="candle"></i><i class="t t1"></i><i class="t t2"></i><i class="t t3"></i></div>
+              <p class="bday-txt">Joyeux anniversaire&nbsp;!</p>
+            </div>
+          </div>
+
+          <!-- 5 : carte de vœux -->
+          <div class="dm-phone" data-app="greeting">
+            <div class="dm-screen scr-greet">
+              <div class="dm-sb"><span>9:41</span><i></i></div>
+              <div class="greet-sun"></div><div class="greet-hill"></div>
+              <p class="greet-txt"><b>Un message pour vous</b><span>De la part de quelqu'un</span></p>
+            </div>
+          </div>
+
+          <!-- 6 : article -->
+          <div class="dm-phone" data-app="article">
+            <div class="dm-screen scr-art">
+              <div class="dm-sb"><span>9:41</span><i></i></div>
+              <div class="art-scroll">
+                <div class="art-img"></div>
+                <b class="art-h">Titre de l'article</b>
+                <p class="art-p"><i></i><i></i><i></i><i></i><i class="s"></i></p>
+                <p class="art-p"><i></i><i></i><i></i><i></i><i></i><i></i><i class="s"></i></p>
+                <p class="art-p"><i></i><i></i><i></i><i class="s"></i></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7 : quadrant -->
+          <div class="dm-phone" data-app="quadrant">
+            <div class="dm-screen scr-quad">
+              <div class="dm-sb"><span>9:41</span><i></i></div>
+              <div class="quad">
+                <div class="q q1"><b>Texte</b><i></i><i></i><i class="s"></i></div>
+                <div class="q q2"><b>Image</b><i></i><i></i><i class="s"></i></div>
+                <div class="q q3"><b>Ligne</b><i></i><i></i><i class="s"></i></div>
+                <div class="q q4"><b>Colonne</b><i></i><i></i><i class="s"></i></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="dm-controls">
+        <button type="button" class="dm-btn" id="dm-prev" aria-label="Appli précédente">&lsaquo;</button>
+        <button type="button" class="dm-btn dm-btn--wide" id="dm-pause" aria-pressed="false">Mettre en pause</button>
+        <button type="button" class="dm-btn" id="dm-next" aria-label="Appli suivante">&rsaquo;</button>
+      </div>
+      <div class="dm-cap" aria-live="polite">
+        <h2 class="dm-cap__name" id="dm-cap-name">DiceRoller</h2>
+        <p id="dm-cap-text">Un bouton lance le dé : un nombre de 1 à 6 est tiré au hasard et l'image du dé change.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dm-sec" aria-labelledby="dm-apps-title">
+    <h2 id="dm-apps-title" class="dm-h2">Les applis</h2>
+    <p class="dm-intro">Les écrans sont redessinés d'après les noms des projets : ce ne sont pas des captures.</p>
+    <ul class="dm-apps" id="dm-apps">
+      <li><button type="button" data-i="0"><b>DiceRoller</b><span>Lanceur de dé</span></button></li>
+      <li><button type="button" data-i="1"><b>Lemonade</b><span>Limonade : arbre, citron, verre</span></button></li>
+      <li><button type="button" data-i="2"><b>CartedeVisite</b><span>Carte de visite</span></button></li>
+      <li><button type="button" data-i="3"><b>GestionnaireTache</b><span>Gestionnaire de tâches</span></button></li>
+      <li><button type="button" data-i="4"><b>HappyBirthday</b><span>Carte d'anniversaire</span></button></li>
+      <li><button type="button" data-i="5"><b>GreetingCard</b><span>Carte de vœux</span></button></li>
+      <li><button type="button" data-i="6"><b>ArtcileCompose</b><span>Mise en page d'un article</span></button></li>
+      <li><button type="button" data-i="7"><b>QuadranCompose</b><span>Quatre quadrants</span></button></li>
+      <li class="dm-apps__more"><b>ProjetVM</b><span>Neuvième projet : son rôle n'est pas déduit de son nom.</span><!-- À CONFIRMER --></li>
+    </ul>
+  </section>
+
+  <section class="dm-sec dm-build" aria-labelledby="dm-build-title">
+    <div>
+      <h2 id="dm-build-title" class="dm-h2">Comment c'est construit</h2>
+      <ul class="dm-list">
+        <li>Chaque appli est un projet Gradle indépendant (Kotlin DSL), avec son catalogue de versions.</li>
+        <li>Une activité principale par appli, une interface déclarative en Jetpack Compose et un thème Material 3 : couleurs, typographie, thème.</li>
+        <li>Les tests d'exemple du gabarit Android Studio sont présents, unitaires et instrumentés.</li>
+        <li>Aucun serveur ni base de données n'apparaît dans l'arborescence.</li>
+      </ul>
+      <p class="dm-tech-title">Technologies</p>
+      <ul class="dm-tech"><li>Kotlin</li><li>Jetpack Compose</li><li>Material 3</li><li>Gradle</li></ul>
+    </div>
+    <figure class="dm-code">
+      <pre><code><span class="k">var</span> result <span class="k">by</span> remember {
+    mutableStateOf(<span class="n">1</span>)
+}
+Button(onClick = {
+    result = (<span class="n">1</span>..<span class="n">6</span>).random()
+}) { Text(<span class="s">"Lancer"</span>) }</code></pre>
+      <figcaption>Le principe du lanceur de dé : un état, un bouton, un nombre au hasard. Extrait simplifié.</figcaption>
+    </figure>
+  </section>
+
+</main>
+
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nim Game · GeLeprechaun</title>
+<meta name="description" content="Jeu de Nim (le jeu des bâtonnets) : jouez contre l'ordinateur, voyez pourquoi il ne perd jamais, puis regardez un agent apprendre par Q-learning. Projet étudiant en Python.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#12201c">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nim Game · GeLeprechaun">
+<meta property="og:description" content="Une partie de Nim jouable, la stratégie gagnante expliquée, et un agent qui apprend sous vos yeux.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body>
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../neworcinvasion/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../spotyfiles/" rel="next">Suivant</a>
+  </nav>
+</header>
+
+<main id="main" class="nim">
+
+  <section class="nim-wrap nim-hero" aria-labelledby="nim-h1">
+    <div class="nim-hero-text">
+      <h1 id="nim-h1" class="nim-title">Nim Game</h1>
+      <p class="nim-lead">Vingt et une allumettes. À tour de rôle, on en prend une, deux ou trois. Celui qui prend la dernière gagne.</p>
+      <p class="nim-small">Un projet étudiant en Python : un agent apprend à jouer au Nim par renforcement (Q-learning), puis un script trace ses statistiques. Cette page rejoue le jeu dans votre navigateur.</p>
+      <p class="nim-actions"><a class="nim-btn nim-btn-main" href="https://github.com/theido74/nimgame" rel="noopener">Code</a><a class="nim-btn" href="#labo">Voir l'agent apprendre</a></p>
+    </div>
+
+    <div class="nim-board" id="nim-board">
+      <div class="nim-tabs" role="tablist" aria-label="Variante du jeu">
+        <button type="button" role="tab" id="tab-one" aria-selected="true" aria-controls="panel-one" data-mode="one">Un tas (règle du dépôt)</button>
+        <button type="button" role="tab" id="tab-xor" aria-selected="false" aria-controls="panel-xor" data-mode="xor" tabindex="-1">Trois tas (XOR)</button>
+      </div>
+
+      <div class="nim-opts">
+        <label>Adversaire
+          <select id="nim-opp">
+            <option value="optimal">Ordinateur parfait</option>
+            <option value="agent">Agent entraîné ici</option>
+            <option value="random">Hasard</option>
+          </select>
+        </label>
+        <label>Qui commence ?
+          <select id="nim-first">
+            <option value="you">Moi</option>
+            <option value="cpu">L'ordinateur</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="panel-one" role="tabpanel" aria-labelledby="tab-one">
+        <div class="nim-stage" id="nim-stage-one" aria-label="Allumettes restantes"></div>
+        <div class="nim-ruler" id="nim-ruler" aria-hidden="true"></div>
+        <div class="nim-take" role="group" aria-label="Combien d'allumettes prendre ?">
+          <button type="button" class="nim-btn" data-take="1">Prendre 1</button>
+          <button type="button" class="nim-btn" data-take="2">Prendre 2</button>
+          <button type="button" class="nim-btn" data-take="3">Prendre 3</button>
+        </div>
+        <p class="nim-keyhint">Clavier : touches <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd>.</p>
+      </div>
+
+      <div id="panel-xor" role="tabpanel" aria-labelledby="tab-xor" hidden>
+        <div class="nim-rows" id="nim-rows"></div>
+        <p class="nim-keyhint">Cliquez une allumette : elle part avec toutes celles qui sont à sa droite, dans la même rangée.</p>
+        <table class="nim-bin" id="nim-bin">
+          <caption>Les tas en binaire. L'ordinateur cherche à laisser un XOR égal à 0.</caption>
+          <thead><tr><th scope="col">Rangée</th><th scope="col">Taille</th><th scope="col">4</th><th scope="col">2</th><th scope="col">1</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <p class="nim-msg" id="nim-msg" role="status" aria-live="polite">À vous de jouer.</p>
+      <div class="nim-bar">
+        <button type="button" class="nim-btn" id="nim-hint">Indice</button>
+        <button type="button" class="nim-btn" id="nim-new">Nouvelle partie</button>
+        <p class="nim-score" id="nim-score">Vous 0 · Ordinateur 0</p>
+      </div>
+      <p class="nim-why" id="nim-why"></p>
+    </div>
+  </section>
+
+  <section class="nim-wrap nim-sec" aria-labelledby="nim-secret">
+    <h2 id="nim-secret">Le secret : viser les multiples de 4</h2>
+    <div class="nim-cols">
+      <div>
+        <p>Si vous laissez 4 allumettes à l'adversaire, il en prend 1, 2 ou 3, et vous prenez le reste : vous gagnez. Même chose avec 8 : quoi qu'il prenne, vous complétez pour revenir à 4. Les multiples de 4 sont des positions perdantes pour celui qui doit jouer.</p>
+        <p>Le coup gagnant est donc de prendre <code>n % 4</code> allumettes (ou 1 si le reste est 0, en espérant une erreur). C'est exactement la « zone critique » du code.</p>
+      </div>
+      <div>
+        <p>Avec plusieurs tas, la règle se généralise : on écrit chaque tas en binaire et on calcule leur XOR (« ou exclusif »). XOR égal à 0 : position perdante. Sinon, il existe un tas qu'on peut réduire pour retomber à 0.</p>
+        <p class="nim-note">Le dépôt ne traite que le cas d'un seul tas (1 à 3 allumettes par tour). L'onglet « Trois tas » est un ajout de cette page, pour montrer d'où vient la règle.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="nim-wrap nim-sec" id="labo" aria-labelledby="nim-lab">
+    <h2 id="nim-lab">Un agent qui apprend</h2>
+    <p class="nim-sub">L'agent du dépôt ne connaît pas la règle. Il joue contre un adversaire qui joue au hasard, et gagne ou perd : +1 ou −1. Après chaque partie, il corrige la valeur de chacun de ses coups. Lancez l'entraînement ici et regardez la courbe monter.</p>
+    <div class="nim-lab">
+      <div class="nim-lab-ctl">
+        <div class="nim-lab-buttons">
+          <button type="button" class="nim-btn nim-btn-main" id="lab-run">Entraîner 3 000 parties</button>
+          <button type="button" class="nim-btn" id="lab-reset">Remettre à zéro</button>
+        </div>
+        <label class="nim-check"><input type="checkbox" id="lab-crit"> Règle de la zone critique (comme dans le dépôt)</label>
+        <dl class="nim-stats" aria-live="off">
+          <div><dt>Parties</dt><dd id="st-games">0</dd></div>
+          <div><dt>Victoires (100 dernières)</dt><dd id="st-win">–</dd></div>
+          <div><dt>Bons coups appris</dt><dd id="st-prec">–</dd></div>
+          <div><dt>Exploration</dt><dd id="st-eps">30 %</dd></div>
+        </dl>
+        <p class="nim-small">Réglages repris du dépôt : exploration 0,3 qui décroît de 0,5 % par partie jusqu'à 0,05 ; apprentissage 0,1 ; remise 0,9. « Bons coups appris » : part des états où le meilleur coup de la table est le coup gagnant. Version simplifiée de ma part.</p>
+      </div>
+      <figure class="nim-chart">
+        <canvas id="lab-chart" width="640" height="320" role="img" aria-label="Courbes d'apprentissage : taux de victoire et bons coups appris en fonction du nombre de parties"></canvas>
+        <figcaption><span class="nim-key nim-k1"></span> taux de victoire <span class="nim-key nim-k2"></span> bons coups appris <span class="nim-key nim-k3"></span> exploration</figcaption>
+      </figure>
+      <figure class="nim-heat">
+        <canvas id="lab-heat" width="640" height="190" role="img" aria-label="Valeurs Q de l'agent pour chaque nombre d'allumettes et chaque coup"></canvas>
+        <figcaption>Valeurs Q : pour chaque nombre d'allumettes restantes (de 1 à 21), une case par coup (1, 2, 3). Vert : bon, rouge : mauvais. Le cadre jaune marque le coup gagnant.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="nim-wrap nim-sec" aria-labelledby="nim-build">
+    <h2 id="nim-build">Comment c'est construit</h2>
+    <div class="nim-cols">
+      <ul class="nim-list">
+        <li>Chaque nombre d'allumettes restantes est un état ; à chaque coup possible, l'agent associe une valeur Q mise à jour au fil des parties.</li>
+        <li>Il explore au hasard avec une probabilité qui décroît jusqu'à un plancher, puis exploite ce qu'il a appris.</li>
+        <li>On peut créer, sauvegarder, charger et supprimer plusieurs agents, les entraîner contre un joueur simulé, puis les tester sans apprentissage. Un mode d'entraînement massif vise plusieurs millions de parties.</li>
+        <li>Les menus sont en console, en couleurs. Le dictionnaire de l'agent s'exporte en CSV (état, choix, valeur Q, visites).</li>
+      </ul>
+      <div>
+        <h3>Les fichiers</h3>
+        <ul class="nim-files">
+          <li><code>main.py</code><span>jeu, agents et menus, 22 Ko</span></li>
+          <li><code>nim_light.py</code><span>agent allégé pour l'entraînement massif, 13 Ko</span></li>
+          <li><code>stats.py</code><span>lit le CSV et produit <code>analyse_statistiques.png</code> (pandas, matplotlib, seaborn), 6 Ko</span></li>
+        </ul>
+        <ul class="nim-tags" aria-label="Technologies"><li>Python</li><li>numpy</li><li>pandas</li><li>matplotlib</li><li>seaborn</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="nim-wrap nim-sec" aria-labelledby="nim-retenu">
+    <h2 id="nim-retenu">Ce que j'en ai retenu</h2>
+    <ul class="nim-ideas">
+      <li><b>Q-learning</b>maximiser ses chances de gagner en mettant à jour des valeurs selon l'expérience.</li>
+      <li><b>Exploration et exploitation</b>tenter de nouveaux coups, ou répéter le meilleur connu : il faut arbitrer.</li>
+      <li><b>Gestion d'état</b>chaque configuration du jeu est un état, avec ses propres valeurs.</li>
+    </ul>
+    <p class="nim-small">Le README du dépôt est écrit comme un support pédagogique : c'est un projet d'étude, pas un produit.</p>
+    <p class="nim-actions"><a class="nim-btn nim-btn-main" href="https://github.com/theido74/nimgame" rel="noopener">Code</a></p>
+  </section>
+
+</main>
+
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+</body>
+</html>

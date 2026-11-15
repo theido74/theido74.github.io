@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Environnement IA personnel · GeLeprechaun</title>
+<meta name="description" content="Agents et skills Claude Code, serveurs MCP et installeur : un orchestrateur qui délègue à des spécialistes, pour reconstruire un environnement de travail sur n'importe quelle machine Linux.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#12141b">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Environnement IA personnel · GeLeprechaun">
+<meta property="og:description" content="Agents et skills Claude Code, serveurs MCP et installeur : un orchestrateur qui délègue à des spécialistes, pour reconstruire un environnement de travail sur n'importe quelle machine Linux.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+</head>
+<body class="sa">
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../pokemonbot/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../password-analyzer/" rel="next">Suivant</a>
+  </nav>
+</header>
+<main id="main">
+
+<section class="sa-hero" aria-labelledby="sa-titre">
+  <div class="sa-wrap">
+    <p class="sa-badges"><span class="sa-badge sa-badge--priv">Privé</span><span class="sa-badge">Python</span><span class="sa-badge">Shell</span><span class="sa-badge">MCP</span></p>
+    <h1 id="sa-titre">Environnement IA personnel</h1>
+    <p class="sa-lead">Une équipe d'agents dirigée par un orchestrateur, des skills chargés à la demande, des outils branchés par MCP, et un installeur pour tout reposer sur une machine Linux.</p>
+
+    <figure class="sa-rack">
+      <p class="sa-caption" id="sa-cap" aria-hidden="true">La demande arrive chez l'orchestrateur.</p>
+      <div class="sa-scroll" tabindex="0" role="group" aria-label="Schéma, défilable horizontalement sur petit écran">
+      <svg id="sa-svg" viewBox="0 0 1200 640" font-family="ui-sans-serif,system-ui,'Segoe UI',Roboto,Arial,sans-serif" role="img" aria-labelledby="sa-svg-t">
+        <title id="sa-svg-t">Schéma animé : une demande arrive à l'orchestrateur, qui délègue à trois agents d'exemple ; un agent hors liste est refusé ; les agents se branchent à trois serveurs MCP ; les résultats remontent, l'orchestrateur vérifie puis livre une synthèse.</title>
+        <g class="sa-cables" fill="none" stroke-width="5" stroke-linecap="round">
+        <path id="c0" d="M190 320 C240 320 250 320 300 320" stroke="#3fd6c4"/>
+        <path id="c1" d="M550 320 C620 320 570 110 640 110" stroke="#ffc14d"/>
+        <path id="c2" d="M550 320 C620 320 570 280 640 280" stroke="#ffc14d"/>
+        <path id="c3" d="M550 320 C620 320 570 450 640 450" stroke="#ffc14d"/>
+        <path id="c4" d="M550 320 C620 320 570 570 640 570" stroke="#ff7a6b" stroke-dasharray="3 12"/>
+        <path id="c5" d="M880 110 C940 110 950 80 1010 80" stroke="#a98bff"/>
+        <path id="c6" d="M880 110 C940 110 950 190 1010 190" stroke="#a98bff"/>
+        <path id="c7" d="M880 450 C940 450 950 440 1010 440" stroke="#a98bff"/>
+        </g>
+        <g class="sa-node n-dem" data-id="n-dem"><rect x="20" y="270" width="170" height="100" rx="16" fill="#1b1f2a" stroke="#2e3446" stroke-width="2"/><rect x="20" y="270" width="8" height="100" rx="4" fill="#3fd6c4"/><text x="46" y="316.0" font-size="24" font-weight="700" fill="#eceef4">Demande</text><text x="46" y="346.0" font-size="18" fill="#a9b0c3">en langage naturel</text></g>
+        <g class="sa-node n-orc" data-id="n-orc"><rect x="300" y="215" width="250" height="210" rx="16" fill="#1b1f2a" stroke="#2e3446" stroke-width="2"/><rect x="300" y="215" width="8" height="210" rx="4" fill="#3fd6c4"/><text x="326" y="316.0" font-size="24" font-weight="700" fill="#eceef4">Orchestrateur</text><text x="326" y="346.0" font-size="19" fill="#a9b0c3">découpe, délègue, vérifie</text></g>
+        <g class="sa-node n-a0" data-id="n-a0"><rect x="640" y="60" width="240" height="100" rx="16" fill="#1b1f2a" stroke="#2e3446" stroke-width="2"/><rect x="640" y="60" width="8" height="100" rx="4" fill="#ffc14d"/><text x="666" y="106.0" font-size="24" font-weight="700" fill="#eceef4">Documentation</text><text x="666" y="136.0" font-size="18" fill="#a9b0c3">agent d’exemple</text></g>
+        <g class="sa-node n-a1" data-id="n-a1"><rect x="640" y="230" width="240" height="100" rx="16" fill="#1b1f2a" stroke="#2e3446" stroke-width="2"/><rect x="640" y="230" width="8" height="100" rx="4" fill="#ffc14d"/><text x="666" y="276.0" font-size="24" font-weight="700" fill="#eceef4">Code</text><text x="666" y="306.0" font-size="18" fill="#a9b0c3">agent d’exemple</text></g>
+        <g class="sa-node n-a2" data-id="n-a2"><rect x="640" y="400" width="240" height="100" rx="16" fill="#1b1f2a" stroke="#2e3446" stroke-width="2"/><rect x="640" y="400" width="8" height="100" rx="4" fill="#ffc14d"/><text x="666" y="446.0" font-size="24" font-weight="700" fill="#eceef4">Retouche photo</text><text x="666" y="476.0" font-size="18" fill="#a9b0c3">agent d’exemple</text></g>
+        <g class="sa-node n-hl"><rect x="640" y="540" width="240" height="60" rx="14" fill="none" stroke="#ff7a6b" stroke-width="2" stroke-dasharray="6 6"/><text x="760" y="576" text-anchor="middle" font-size="20" fill="#ff9d92">agent hors liste</text></g>
+        <g class="sa-node n-p0" data-id="n-p0"><rect x="1010" y="42" width="186" height="76" rx="14" fill="#1b1f2a" stroke="#2e3446" stroke-width="2"/><rect x="1010" y="42" width="8" height="76" rx="4" fill="#a98bff"/><text x="1032" y="72" font-size="22" font-weight="700" fill="#eceef4">Bibliothèques</text><text x="1032" y="98" font-size="17" fill="#a9b0c3">documentation</text></g>
+        <g class="sa-node n-p1" data-id="n-p1"><rect x="1010" y="152" width="186" height="76" rx="14" fill="#1b1f2a" stroke="#2e3446" stroke-width="2"/><rect x="1010" y="152" width="8" height="76" rx="4" fill="#a98bff"/><text x="1032" y="182" font-size="22" font-weight="700" fill="#eceef4">Microsoft</text><text x="1032" y="208" font-size="17" fill="#a9b0c3">documentation</text></g>
+        <g class="sa-node n-p2" data-id="n-p2"><rect x="1010" y="402" width="186" height="76" rx="14" fill="#1b1f2a" stroke="#2e3446" stroke-width="2"/><rect x="1010" y="402" width="8" height="76" rx="4" fill="#a98bff"/><text x="1032" y="432" font-size="22" font-weight="700" fill="#eceef4">Photo</text><text x="1032" y="458" font-size="17" fill="#a9b0c3">serveur maison</text></g>
+        <circle cx="190" cy="320" r="11" fill="#0d0f15" stroke="#3fd6c4" stroke-width="3"/><circle cx="190" cy="320" r="4" fill="#3fd6c4" opacity=".5"/>
+        <circle cx="300" cy="320" r="11" fill="#0d0f15" stroke="#3fd6c4" stroke-width="3"/><circle cx="300" cy="320" r="4" fill="#3fd6c4" opacity=".5"/>
+        <circle cx="550" cy="320" r="11" fill="#0d0f15" stroke="#3fd6c4" stroke-width="3"/><circle cx="550" cy="320" r="4" fill="#3fd6c4" opacity=".5"/>
+        <circle cx="640" cy="110" r="11" fill="#0d0f15" stroke="#ffc14d" stroke-width="3"/><circle cx="640" cy="110" r="4" fill="#ffc14d" opacity=".5"/>
+        <circle cx="640" cy="280" r="11" fill="#0d0f15" stroke="#ffc14d" stroke-width="3"/><circle cx="640" cy="280" r="4" fill="#ffc14d" opacity=".5"/>
+        <circle cx="640" cy="450" r="11" fill="#0d0f15" stroke="#ffc14d" stroke-width="3"/><circle cx="640" cy="450" r="4" fill="#ffc14d" opacity=".5"/>
+        <circle cx="640" cy="570" r="11" fill="#0d0f15" stroke="#ff7a6b" stroke-width="3"/><circle cx="640" cy="570" r="4" fill="#ff7a6b" opacity=".5"/>
+        <circle cx="880" cy="110" r="11" fill="#0d0f15" stroke="#ffc14d" stroke-width="3"/><circle cx="880" cy="110" r="4" fill="#ffc14d" opacity=".5"/>
+        <circle cx="880" cy="450" r="11" fill="#0d0f15" stroke="#ffc14d" stroke-width="3"/><circle cx="880" cy="450" r="4" fill="#ffc14d" opacity=".5"/>
+        <circle cx="1010" cy="80" r="11" fill="#0d0f15" stroke="#a98bff" stroke-width="3"/><circle cx="1010" cy="80" r="4" fill="#a98bff" opacity=".5"/>
+        <circle cx="1010" cy="190" r="11" fill="#0d0f15" stroke="#a98bff" stroke-width="3"/><circle cx="1010" cy="190" r="4" fill="#a98bff" opacity=".5"/>
+        <circle cx="1010" cy="440" r="11" fill="#0d0f15" stroke="#a98bff" stroke-width="3"/><circle cx="1010" cy="440" r="4" fill="#a98bff" opacity=".5"/>
+        <g class="sa-pulses"></g>
+        <g class="sa-lock" opacity="0"><rect x="560" y="548" width="76" height="44" rx="10" fill="#2a1416" stroke="#ff7a6b" stroke-width="2"/><text x="598" y="578" text-anchor="middle" font-size="20" font-weight="700" fill="#ff9d92">refusé</text></g>
+        <g class="sa-check" opacity="0"><circle cx="530" cy="235" r="20" fill="#3fd6c4"/><path d="M520 235 L528 243 L541 227" fill="none" stroke="#0d0f15" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <text x="1100" y="30" text-anchor="middle" font-size="19" fill="#a9b0c3">outils MCP</text>
+      </svg>
+      </div>
+      <figcaption class="sa-note">Schéma simplifié : les rôles des agents sont des exemples. <button type="button" id="sa-pause" class="sa-btn sa-btn--s" aria-pressed="false">Mettre en pause</button></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="sa-sec" aria-labelledby="sa-orch">
+  <div class="sa-wrap sa-two">
+    <div>
+      <h2 id="sa-orch">Un chef d'orchestre, une liste fermée</h2>
+      <p>L'orchestrateur reçoit la demande, la découpe, délègue chaque morceau à un spécialiste, vérifie ce qui revient et livre une synthèse.</p>
+      <p>Il n'a le droit de déléguer qu'à une liste fermée d'agents : un agent qui n'y figure pas est refusé. À chaque démarrage de session, un hook rappelle l'équipe du projet en cours ou propose d'en choisir une.</p>
+    </div>
+    <ol class="sa-steps">
+      <li><b>Découper</b><span>la demande en tâches</span></li>
+      <li><b>Déléguer</b><span>aux agents de la liste</span></li>
+      <li><b>Vérifier</b><span>les résultats reçus</span></li>
+      <li><b>Livrer</b><span>une synthèse</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sa-sec sa-sec--panel" aria-labelledby="sa-skills">
+  <div class="sa-wrap sa-two">
+    <div>
+      <h2 id="sa-skills">Des skills chargés à la demande</h2>
+      <p>Un skill est un dossier d'instructions. Il reste fermé tant qu'on n'en a pas besoin : Claude ne l'ouvre que quand la demande s'y rapporte. L'un d'eux décrit une méthode d'orchestration.</p>
+      <p class="sa-note">Illustration : noms de skills d'exemple, sauf la méthode d'orchestration.</p>
+    </div>
+    <div class="sa-folders" id="sa-folders" aria-hidden="true">
+      <div class="sa-fold" data-i="0"><span class="sa-ft">méthode d'orchestration</span><span class="sa-fb"><i></i><i></i><i></i></span></div>
+      <div class="sa-fold" data-i="1"><span class="sa-ft">skill d'exemple A</span><span class="sa-fb"><i></i><i></i><i></i></span></div>
+      <div class="sa-fold" data-i="2"><span class="sa-ft">skill d'exemple B</span><span class="sa-fb"><i></i><i></i><i></i></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sa-sec" aria-labelledby="sa-mcp">
+  <div class="sa-wrap">
+    <h2 id="sa-mcp">Des outils qui se branchent comme des prises</h2>
+    <p class="sa-p">Trois serveurs MCP sont proposés en option. Chacun expose des outils qu'un agent peut utiliser.</p>
+    <ul class="sa-ports">
+      <li><span class="sa-plug" aria-hidden="true"></span><b>Documentation de bibliothèques</b><span>pour consulter une doc à jour</span></li>
+      <li><span class="sa-plug" aria-hidden="true"></span><b>Documentation Microsoft</b><span>pour les produits et services Microsoft</span></li>
+      <li><span class="sa-plug" aria-hidden="true"></span><b>Retouche photo</b><span>un serveur maison</span></li>
+    </ul>
+    <p class="sa-p">Un petit widget de bureau, optionnel lui aussi, montre les agents au travail. Il n'écoute que sur la boucle locale.</p>
+  </div>
+</section>
+
+<section class="sa-sec sa-sec--panel" aria-labelledby="sa-inst">
+  <div class="sa-wrap">
+    <h2 id="sa-inst">Un installeur qu'on peut relancer sans crainte</h2>
+    <div class="sa-modes" role="group" aria-label="Mode d'installation">
+      <button type="button" class="sa-btn" data-mode="link" aria-pressed="true">--link</button>
+      <button type="button" class="sa-btn" data-mode="copy" aria-pressed="false">--copy</button>
+    </div>
+    <p class="sa-modetxt" id="sa-modetxt">--link pose des liens symboliques vers le dépôt : une modification y est prise en compte tout de suite.</p>
+    <div class="sa-install">
+      <ol class="sa-seq" id="sa-seq">
+        <li><b>--dry-run</b><span>montre ce qui serait fait, sans rien écrire</span></li>
+        <li><b>Sauvegarde</b><span>tout fichier existant qui diffère est mis de côté d'abord</span></li>
+        <li><b>Pose</b><span id="sa-pose">liens symboliques vers le dépôt</span></li>
+        <li><b>Hook</b><span>fusionné dans les réglages par un outil Python, sans toucher au reste</span></li>
+        <li><b>Manifeste</b><span>la liste de ce qui a été posé</span></li>
+      </ol>
+      <svg id="sa-inst-svg" class="sa-inst-svg" viewBox="0 0 520 330" aria-hidden="true" font-family="ui-sans-serif,system-ui,sans-serif">
+        <rect x="10" y="10" width="190" height="310" rx="16" fill="#1b1f2a" stroke="#2e3446" stroke-width="2"/>
+        <text x="105" y="42" text-anchor="middle" font-size="19" fill="#a9b0c3">dépôt</text>
+        <rect x="320" y="10" width="190" height="310" rx="16" fill="#1b1f2a" stroke="#2e3446" stroke-width="2"/>
+        <text x="415" y="42" text-anchor="middle" font-size="19" fill="#a9b0c3">machine</text>
+        <g id="sa-items"></g>
+      </svg>
+    </div>
+    <p class="sa-p">Le désinstalleur s'appuie sur le manifeste : il ne retire que ce que l'installeur a posé. Des tests pytest couvrent l'installeur et le hook.</p>
+    <p class="sa-note">Illustration simplifiée : les éléments posés sont des exemples.</p>
+  </div>
+</section>
+
+<section class="sa-sec" aria-labelledby="sa-sec">
+  <div class="sa-wrap sa-two">
+    <div>
+      <h2 id="sa-sec">Rien de secret dans le dépôt</h2>
+      <p>Un dépôt Git garde tout l'historique : un secret commité reste récupérable même après suppression. Aucun jeton, mot de passe ni clé n'entre donc dans le dépôt.</p>
+      <p>Les réglages propres à une machine, les identifiants et les fichiers générés sont exclus du suivi.</p>
+    </div>
+    <figure class="sa-hist">
+      <svg viewBox="0 0 520 190" role="img" aria-labelledby="sa-hist-t" font-family="ui-sans-serif,system-ui,sans-serif">
+        <title id="sa-hist-t">Trois commits successifs : un secret est ajouté, puis supprimé, mais il reste présent dans l'historique.</title>
+        <path d="M40 95 H480" stroke="#2e3446" stroke-width="4"/>
+        <g class="sa-hc"><circle cx="90" cy="95" r="16" fill="#12141b" stroke="#ff7a6b" stroke-width="4"/><text x="90" y="40" text-anchor="middle" font-size="18" fill="#eceef4">commit 1</text><text x="90" y="66" text-anchor="middle" font-size="16" fill="#ff9d92">secret ajouté</text></g>
+        <g class="sa-hc"><circle cx="260" cy="95" r="16" fill="#12141b" stroke="#ffc14d" stroke-width="4"/><text x="260" y="40" text-anchor="middle" font-size="18" fill="#eceef4">commit 2</text><text x="260" y="66" text-anchor="middle" font-size="16" fill="#ffd27a">secret supprimé</text></g>
+        <g class="sa-hc"><circle cx="430" cy="95" r="16" fill="#12141b" stroke="#3fd6c4" stroke-width="4"/><text x="430" y="40" text-anchor="middle" font-size="18" fill="#eceef4">aujourd'hui</text></g>
+        <path d="M90 118 C90 175 430 175 430 118" fill="none" stroke="#ff7a6b" stroke-width="3" stroke-dasharray="6 6"/>
+        <text x="260" y="178" text-anchor="middle" font-size="16" fill="#ff9d92">encore lisible dans l'historique</text>
+      </svg>
+    </figure>
+  </div>
+</section>
+
+<section class="sa-sec sa-end" aria-label="Accès au code">
+  <div class="sa-wrap">
+    <p class="sa-private">Le code de ce projet est privé : il n'est pas publié.</p>
+  </div>
+</section>
+
+</main>
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+<script src="script.js" defer></script>
+</body>
+</html>

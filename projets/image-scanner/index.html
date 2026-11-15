@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image Scanner · GeLeprechaun</title>
+<meta name="description" content="Outil en ligne de commande en Rust, très rapide, pour scanner et cataloguer des images sur disque, sur le web ou dans Azure Blob, avec export CSV ou JSON.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0c1116">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Image Scanner · GeLeprechaun">
+<meta property="og:description" content="Outil en ligne de commande en Rust, très rapide, pour scanner et cataloguer des images sur disque, sur le web ou dans Azure Blob, avec export CSV ou JSON.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+</head>
+<body class="sc">
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../dmob/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../neworcinvasion/" rel="next">Suivant</a>
+  </nav>
+</header>
+<main id="main">
+
+<section class="sc-hero" aria-labelledby="sc-titre">
+  <div class="sc-wrap">
+    <div class="sc-intro">
+      <p class="sc-badges"><span class="sc-badge sc-badge--pub">Public</span><span class="sc-badge">Rust</span><span class="sc-badge">Licence MIT</span></p>
+      <h1 id="sc-titre">Image Scanner</h1>
+      <p class="sc-lead">Un outil en ligne de commande qui parcourt un dossier, un site web ou un conteneur Azure Blob, reconnaît les images, puis en tire un catalogue en CSV ou en JSON.</p>
+      <div class="sc-pick" role="group" aria-label="Choisir la source à scanner">
+        <button type="button" class="sc-pickbtn" data-src="local" aria-pressed="true">Dossier local</button>
+        <button type="button" class="sc-pickbtn" data-src="web" aria-pressed="false">Site web</button>
+        <button type="button" class="sc-pickbtn" data-src="azure" aria-pressed="false">Azure Blob</button>
+      </div>
+    </div>
+
+    <figure class="sc-stage">
+      <div class="sc-term" role="img" aria-label="Terminal simulé : la commande image-scanner s'exécute puis affiche un rapport JSON.">
+        <div class="sc-termbar"><i></i><i></i><i></i><span>image-scanner</span></div>
+<pre id="sc-out" class="sc-pre">$ image-scanner local -p ~/Pictures -o my_photos -f json
+[████████████████████████] 100 %
+
+{
+  "statistics": {
+    "scan_type": "local",
+    "total_files_scanned": 1500,
+    "images_found": 342,
+    "scan_duration_seconds": 5.23,
+    "files_per_second": 287.0,
+    "formats_found": [
+      {"format": "jpg", "count": 200},
+      {"format": "png", "count": 142}</pre>
+      </div>
+      <div class="sc-canvaswrap">
+        <canvas id="sc-cv" width="640" height="400" aria-label="Les fichiers défilent sur un tapis, passent sous un faisceau qui lit leurs premiers octets, puis les images tombent dans le bac de leur format."></canvas>
+      </div>
+      <figcaption class="sc-cap">Démonstration simulée : les vignettes sont dessinées par le script. Les chiffres du rapport reprennent l'exemple du README.
+        <button type="button" id="sc-pause" class="sc-pausebtn" aria-pressed="false">Mettre en pause</button></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="sc-sec" aria-labelledby="sc-sig">
+  <div class="sc-wrap sc-split">
+    <div>
+      <h2 id="sc-sig">Le nom ne suffit pas</h2>
+      <p>Une image se reconnaît à son extension, à ses premiers octets (la « signature »), ou aux deux. Trois fichiers d'exemple montrent pourquoi lire les octets change le résultat.</p>
+      <p class="sc-note">Le rapport CSV contient une colonne « Magic Verified ». Le README ne détaille pas la règle exacte du mode « both » : le tableau montre donc les deux indices côte à côte.</p>
+    </div>
+    <div class="sc-tablewrap">
+      <table class="sc-sigtable" id="sc-sigtable">
+        <caption class="sc-sr">Verdict selon l'extension et selon la signature, pour trois fichiers d'exemple</caption>
+        <thead><tr><th scope="col">Fichier</th><th scope="col">Premiers octets</th><th scope="col">Par l'extension</th><th scope="col">Par la signature</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>vacances.jpg</code></th><td data-l="Premiers octets"><code>FF D8 FF E0</code></td><td data-l="Par l'extension"><span class="sc-v sc-v--ok">image</span></td><td data-l="Par la signature"><span class="sc-v sc-v--ok">JPEG</span></td></tr>
+          <tr><th scope="row"><code>scan.png</code></th><td data-l="Premiers octets"><code>25 50 44 46</code></td><td data-l="Par l'extension"><span class="sc-v sc-v--ok">image</span></td><td data-l="Par la signature"><span class="sc-v sc-v--no">PDF, pas une image</span></td></tr>
+          <tr><th scope="row"><code>IMG_0042</code> <small>(sans extension)</small></th><td data-l="Premiers octets"><code>89 50 4E 47</code></td><td data-l="Par l'extension"><span class="sc-v sc-v--no">inconnu</span></td><td data-l="Par la signature"><span class="sc-v sc-v--ok">PNG</span></td></tr>
+        </tbody>
+      </table>
+      <p class="sc-note">Exemples fabriqués pour l'illustration.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sc-sec sc-sec--alt" aria-labelledby="sc-formats">
+  <div class="sc-wrap">
+    <h2 id="sc-formats">Des formats courants aux fichiers de studio</h2>
+    <ul class="sc-strip" aria-label="Familles de formats reconnus">
+      <li><b>Courants</b><span>JPG, PNG, GIF, BMP, WebP, TIFF, ICO, SVG</span></li>
+      <li><b>Modernes</b><span>HEIC, HEIF, AVIF, JFIF</span></li>
+      <li><b>RAW</b><span>CR2, CR3, NEF, ARW, DNG, ORF, RW2…</span></li>
+      <li><b>Professionnels</b><span>PSD, AI, EPS, EXR, HDR</span></li>
+      <li><b>Anciens</b><span>PCX, TGA, PBM, PGM, PPM, PNM</span></li>
+    </ul>
+    <p class="sc-note">Liste tirée du README (extraits).</p>
+  </div>
+</section>
+
+<section class="sc-sec" aria-labelledby="sc-perf">
+  <div class="sc-wrap sc-split">
+    <div>
+      <h2 id="sc-perf">Vitesse annoncée</h2>
+      <p>Le README donne des ordres de grandeur « sur un matériel typique ». Ces chiffres viennent du dépôt : ils n'ont pas été remesurés pour cette page.</p>
+      <p>Le parcours local répartit le travail sur les cœurs (Rayon). Le web et Azure attendent le réseau : leur débit dépend de lui.</p>
+    </div>
+    <div class="sc-bars" id="sc-bars">
+      <div class="sc-bar"><span class="sc-barlab">SSD local</span><span class="sc-track"><span class="sc-fill" style="--a:50%;--b:100%"></span></span><span class="sc-barval">500 à 1 000+ fichiers/s</span></div>
+      <div class="sc-bar"><span class="sc-barlab">Disque dur local</span><span class="sc-track"><span class="sc-fill" style="--a:20%;--b:40%"></span></span><span class="sc-barval">200 à 400 fichiers/s</span></div>
+      <div class="sc-bar"><span class="sc-barlab">Partage réseau (NFS)</span><span class="sc-track"><span class="sc-fill" style="--a:10%;--b:30%"></span></span><span class="sc-barval">100 à 300 fichiers/s</span></div>
+      <div class="sc-bar"><span class="sc-barlab">Exploration web</span><span class="sc-track sc-track--net"></span><span class="sc-barval">limitée par le réseau</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sc-sec sc-sec--alt" aria-labelledby="sc-build">
+  <div class="sc-wrap">
+    <h2 id="sc-build">Sous le capot</h2>
+    <p class="sc-intro2">Un seul binaire, trois sous-commandes. Chaque source a son moteur, puis tout converge vers la même détection et les mêmes exports. <span class="sc-note">Schéma simplifié.</span></p>
+    <div class="sc-flowwrap" tabindex="0" role="group" aria-label="Schéma, défilable horizontalement sur petit écran"><svg class="sc-flow" viewBox="0 0 960 330" role="img" aria-labelledby="sc-flow-t">
+      <title id="sc-flow-t">Schéma : la commande se divise en local (Rayon), web (Tokio, reqwest, analyseur HTML) et Azure (Tokio), puis la détection par signature (infer) et l'export (serde) en CSV, JSON ou texte.</title>
+      <defs><marker id="sc-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#4fd6c8"/></marker></defs>
+      <g class="sc-edges" fill="none" stroke="#4fd6c8" stroke-width="2.5" marker-end="url(#sc-ar)">
+        <path d="M200 165 C250 165 250 55 300 55"/>
+        <path d="M200 165 L300 165"/>
+        <path d="M200 165 C250 165 250 275 300 275"/>
+        <path d="M520 55 C570 55 570 165 620 165"/>
+        <path d="M520 165 L620 165"/>
+        <path d="M520 275 C570 275 570 165 620 165"/>
+        <path d="M790 165 L820 165" />
+      </g>
+      <g class="sc-nodes" font-family="ui-monospace,Menlo,Consolas,monospace">
+        <rect x="20" y="125" width="180" height="80" rx="14"/><text x="110" y="162" text-anchor="middle" class="t1">clap</text><text x="110" y="187" text-anchor="middle" class="t2">options</text>
+        <rect x="300" y="20" width="220" height="70" rx="14"/><text x="410" y="52" text-anchor="middle" class="t1">local</text><text x="410" y="75" text-anchor="middle" class="t2">Rayon : threads</text>
+        <rect x="300" y="130" width="220" height="70" rx="14"/><text x="410" y="162" text-anchor="middle" class="t1">web</text><text x="410" y="185" text-anchor="middle" class="t2">Tokio, reqwest, HTML</text>
+        <rect x="300" y="240" width="220" height="70" rx="14"/><text x="410" y="272" text-anchor="middle" class="t1">azure</text><text x="410" y="295" text-anchor="middle" class="t2">Tokio, async</text>
+        <rect x="620" y="125" width="170" height="80" rx="14"/><text x="705" y="162" text-anchor="middle" class="t1">infer</text><text x="705" y="187" text-anchor="middle" class="t2">signature</text>
+        <rect x="820" y="105" width="120" height="120" rx="14" class="out"/><text x="880" y="152" text-anchor="middle" class="t1">serde</text><text x="880" y="177" text-anchor="middle" class="t2">CSV</text><text x="880" y="198" text-anchor="middle" class="t2">JSON · TXT</text>
+      </g>
+    </svg></div>
+    <ul class="sc-points">
+      <li>Traitement au fil de l'eau, pour garder une faible empreinte mémoire.</li>
+      <li>Profil release optimisé : LTO, une seule unité de compilation, symboles retirés.</li>
+      <li>Sur le web : suivi des liens jusqu'à une profondeur donnée, en-têtes personnalisés (authentification), filtre d'URL par expression régulière, téléchargement optionnel.</li>
+      <li>Binaires Windows et Linux publiés ; compilation croisée depuis Linux documentée.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sc-sec sc-end" aria-labelledby="sc-code">
+  <div class="sc-wrap">
+    <h2 id="sc-code">Le code est public</h2>
+    <p>Rust, Tokio, Rayon. Sous licence MIT.</p>
+    <p><a class="sc-cta" href="https://github.com/theido74/image-scanner" rel="noopener">Code sur GitHub</a></p>
+  </div>
+</section>
+
+</main>
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+<script src="script.js" defer></script>
+</body>
+</html>

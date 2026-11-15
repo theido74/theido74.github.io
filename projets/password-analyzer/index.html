@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Password Analyzer · GeLeprechaun</title>
+<meta name="description" content="Analyseur de mots de passe : longueur, entropie, dictionnaire et fuites. Essayez-le ici, tout se calcule dans votre navigateur, rien n'est envoyé ni stocké.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#060b12">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Password Analyzer · GeLeprechaun">
+<meta property="og:description" content="Entropie en direct, variantes de dictionnaire et k-anonymat des fuites. Calcul local, aucun envoi.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body>
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../skills-agents/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../entrainement-abdd/" rel="next">Suivant</a>
+  </nav>
+</header>
+
+<main id="main" class="pwa">
+
+  <section class="pwa-hero" aria-labelledby="pwa-h1">
+    <canvas class="pwa-rain" aria-hidden="true"></canvas>
+    <div class="pwa-wrap">
+      <p class="pwa-prompt" aria-hidden="true">$ python3 main.py</p>
+      <h1 id="pwa-h1" class="pwa-title">Password Analyzer</h1>
+      <p class="pwa-lead">Un mot de passe est-il vraiment solide ? Le projet le mesure de quatre façons : longueur et variété, entropie, attaque par dictionnaire, fuites connues. Essayez-le ci-dessous.</p>
+      <p class="pwa-privacy"><b>Tout se passe dans votre navigateur.</b> Rien n'est envoyé sur le réseau, rien n'est stocké : ni cookie, ni mémoire locale. Fermez l'onglet et tout disparaît. Pour les tests ci-dessous, évitez quand même de taper un mot de passe que vous utilisez réellement.</p>
+
+      <div class="pwa-term" role="group" aria-labelledby="pwa-term-title">
+        <div class="pwa-term-bar"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><b id="pwa-term-title">password_analyzer · simulation dans le navigateur</b></div>
+
+        <div class="pwa-term-grid">
+          <div class="pwa-in">
+            <label for="pwa-input" class="pwa-label">Entrez le mot de passe à analyser :</label>
+            <div class="pwa-field">
+              <input id="pwa-input" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore placeholder="tapez ici" aria-describedby="pwa-privacy-hint">
+              <button type="button" id="pwa-eye" class="pwa-btn" aria-pressed="false">Afficher</button>
+            </div>
+            <p id="pwa-privacy-hint" class="pwa-hint">Calcul local, aucun envoi.</p>
+            <p class="pwa-ex-title" id="pwa-ex-title">Exemples à essayer</p>
+            <ul class="pwa-ex" aria-labelledby="pwa-ex-title">
+              <li><button type="button" class="pwa-btn" data-ex="password">password</button></li>
+              <li><button type="button" class="pwa-btn" data-ex="Passw0rd!">Passw0rd!</button></li>
+              <li><button type="button" class="pwa-btn" data-ex="123456789012">123456789012</button></li>
+              <li><button type="button" class="pwa-btn" data-ex="Zq7#nVd2!hKp">Zq7#nVd2!hKp</button></li>
+              <li><button type="button" class="pwa-btn" data-ex="le chat dort sur le toit rouge">phrase de passe</button></li>
+            </ul>
+          </div>
+
+          <div class="pwa-gauge-box">
+            <svg class="pwa-gauge" viewBox="0 0 220 130" role="img" aria-label="Jauge d'entropie">
+              <path class="pwa-g-track" d="M 20 115 A 90 90 0 0 1 200 115" pathLength="100"/>
+              <path class="pwa-g-fill" id="pwa-g-fill" d="M 20 115 A 90 90 0 0 1 200 115" pathLength="100"/>
+              <text x="110" y="92" class="pwa-g-num" id="pwa-g-num" text-anchor="middle">0</text>
+              <text x="110" y="114" class="pwa-g-unit" text-anchor="middle">bits d'entropie</text>
+            </svg>
+            <p class="pwa-verdict" id="pwa-verdict">En attente d'un mot de passe</p>
+            <p class="pwa-score">Score <b id="pwa-score">0</b>/6</p>
+            <p class="pwa-crack" id="pwa-crack"></p>
+          </div>
+
+          <div class="pwa-console-box">
+            <p class="pwa-cap" id="pwa-cap-console">Sortie, au format du script Python</p>
+            <pre class="pwa-console" id="pwa-console" aria-labelledby="pwa-cap-console"></pre>
+          </div>
+        </div>
+        <p id="pwa-status" class="pwa-sr" role="status" aria-live="polite"></p>
+      </div>
+      <p class="pwa-insight" id="pwa-insight"></p>
+    </div>
+  </section>
+
+  <section class="pwa-sec" aria-labelledby="pwa-s1">
+    <div class="pwa-wrap">
+      <h2 id="pwa-s1">Les six tests du score</h2>
+      <p class="pwa-sub">Chaque test réussi vaut un point. C'est exactement la liste du fichier <code>password_checker.py</code>.</p>
+      <ul class="pwa-tests" id="pwa-tests">
+        <li data-k="length"><span class="pwa-dot"></span><b>12 caractères ou plus</b><small>longueur minimale</small></li>
+        <li data-k="lower"><span class="pwa-dot"></span><b>Une minuscule</b><small>a à z</small></li>
+        <li data-k="upper"><span class="pwa-dot"></span><b>Une majuscule</b><small>A à Z</small></li>
+        <li data-k="digit"><span class="pwa-dot"></span><b>Un chiffre</b><small>0 à 9</small></li>
+        <li data-k="special"><span class="pwa-dot"></span><b>Un caractère spécial</b><small>ni lettre, ni chiffre, ni _</small></li>
+        <li data-k="common"><span class="pwa-dot"></span><b>Aucun motif courant</b><small>password, 123, admin, qwerty, ou que des chiffres</small></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pwa-sec" aria-labelledby="pwa-s2">
+    <div class="pwa-wrap pwa-two">
+      <div>
+        <h2 id="pwa-s2">L'entropie, pas à pas</h2>
+        <p class="pwa-sub">On regarde quels types de caractères apparaissent : cela donne la taille de l'« alphabet ». Puis entropie = longueur × log₂(taille de l'alphabet).</p>
+        <ul class="pwa-alpha" id="pwa-alpha">
+          <li data-a="lower"><b>a–z</b><span>26</span></li>
+          <li data-a="upper"><b>A–Z</b><span>26</span></li>
+          <li data-a="digit"><b>0–9</b><span>10</span></li>
+          <li data-a="special"><b>spéciaux</b><span>32</span></li>
+        </ul>
+        <p class="pwa-formula" id="pwa-formula" aria-live="off">0 × log₂(0) = 0 bits</p>
+        <p class="pwa-small">Limite de la formule : elle suppose des caractères tirés au hasard. « Passw0rd! » affiche beaucoup de bits alors que tout le monde l'essaie en premier. C'est pourquoi les deux autres tests existent.</p>
+      </div>
+      <figure class="pwa-code">
+        <figcaption><code>password_checker.py</code>, fonction <code>entropy</code></figcaption>
+<pre><code>if re.search(r'[a-z]', password): total_symbols += 26
+if re.search(r'[A-Z]', password): total_symbols += 26
+if re.search(r'[0-9]', password): total_symbols += 10
+if re.search(r'[\W]', password): total_symbols += 32
+...
+return len(password) * log(total_symbols, 2)</code></pre>
+      </figure>
+    </div>
+  </section>
+
+  <section class="pwa-sec" aria-labelledby="pwa-s3">
+    <div class="pwa-wrap">
+      <h2 id="pwa-s3">Attaque par dictionnaire : les variantes</h2>
+      <p class="pwa-sub">Le script ne teste pas seulement le mot de passe : il teste huit variantes habituelles contre une liste de mots de passe connus. Voici ces huit variantes pour votre saisie, comparées à une <b>petite liste de démonstration</b> (environ 80 mots courants). Le vrai projet utilise <code>rockyou.txt</code>, des millions de lignes, absent de cette page.</p>
+      <table class="pwa-table" id="pwa-variants">
+        <caption class="pwa-sr">Variantes testées</caption>
+        <thead><tr><th scope="col">Variante</th><th scope="col">Texte testé</th><th scope="col">Dans la liste ?</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="pwa-sec" aria-labelledby="pwa-s4">
+    <div class="pwa-wrap pwa-two">
+      <div>
+        <h2 id="pwa-s4">Fuites : le mot de passe ne part jamais</h2>
+        <p class="pwa-sub">Le projet interroge le service Pwned Passwords en <b>k-anonymat</b> : on calcule l'empreinte SHA-1 du mot de passe, on n'envoie que ses <b>cinq premiers caractères</b>, le service renvoie tous les suffixes qui commencent pareil (plusieurs centaines), et la comparaison du reste se fait chez soi.</p>
+        <p class="pwa-small">Ici, rien n'est envoyé : l'empreinte est calculée dans la page et comparée à la liste de démonstration, pour montrer le principe. Ce n'est pas une vraie vérification de fuite.</p>
+      </div>
+      <div class="pwa-hash" aria-live="off">
+        <p class="pwa-cap">Empreinte SHA-1 de votre saisie</p>
+        <p class="pwa-hash-line"><span class="pwa-pre" id="pwa-h-pre">·····</span><span class="pwa-suf" id="pwa-h-suf">·································</span></p>
+        <svg viewBox="0 0 440 150" class="pwa-flow" role="img" aria-label="Schéma : le navigateur envoie les cinq premiers caractères de l'empreinte au service, qui renvoie une liste de suffixes ; la comparaison se fait dans le navigateur.">
+          <defs><marker id="pwa-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#ffb347"/></marker><marker id="pwa-ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5fd4ff"/></marker></defs>
+          <rect x="6" y="30" width="150" height="90" rx="10" class="pwa-box"/>
+          <text x="81" y="58" text-anchor="middle" class="pwa-t1">Votre navigateur</text>
+          <text x="81" y="84" text-anchor="middle" class="pwa-t2">garde le mot de passe</text>
+          <text x="81" y="104" text-anchor="middle" class="pwa-t2">et compare en local</text>
+          <rect x="284" y="30" width="150" height="90" rx="10" class="pwa-box"/>
+          <text x="359" y="58" text-anchor="middle" class="pwa-t1">Service</text>
+          <text x="359" y="84" text-anchor="middle" class="pwa-t2">ne voit que</text>
+          <text x="359" y="104" text-anchor="middle" class="pwa-t2">5 caractères</text>
+          <path d="M160 55 H 280" class="pwa-line pwa-line-a" marker-end="url(#pwa-ar)"/>
+          <text x="220" y="44" text-anchor="middle" class="pwa-t3">préfixe (5)</text>
+          <path d="M280 98 H 160" class="pwa-line pwa-line-b" marker-end="url(#pwa-ar2)"/>
+          <text x="220" y="118" text-anchor="middle" class="pwa-t4">suffixes possibles</text>
+          <text x="220" y="142" text-anchor="middle" class="pwa-t2">simplifié</text>
+        </svg>
+        <p class="pwa-leak" id="pwa-leak">Aucune saisie.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pwa-sec" aria-labelledby="pwa-s5">
+    <div class="pwa-wrap pwa-two">
+      <div>
+        <h2 id="pwa-s5">Comment c'est construit</h2>
+        <ul class="pwa-list">
+          <li>Trois modules Python : <code>main.py</code> (interface console), <code>password_checker.py</code> (règles et entropie), <code>dic_attack.py</code> (dictionnaire et fuites).</li>
+          <li>Les variantes sont dans <code>is_vulnerable_to_common</code> ; l'appel au service est dans <code>check_hibp_password</code>, avec un délai de 3 secondes.</li>
+          <li>Le dictionnaire n'est pas dans le dépôt : le README demande de télécharger <code>rockyou.txt</code> dans un dossier <code>dics</code>.</li>
+        </ul>
+        <ul class="pwa-tags" aria-label="Technologies"><li>Python</li><li>hashlib</li><li>requests</li><li>re</li></ul>
+      </div>
+      <div class="pwa-warn">
+        <h3>Deux limites, dites franchement</h3>
+        <ul class="pwa-list">
+          <li>Si le service de fuites est injoignable, la fonction répond « non trouvé ». Un résultat rassurant n'est donc pas une preuve quand le réseau manque.</li>
+          <li>Le dépôt contient aussi une fonction <code>slow_hash</code> (PBKDF2, 100 000 itérations) que le script principal n'appelle pas.</li>
+          <li>Les repères de force et le temps estimé affichés plus haut sont des ajouts de cette page, indicatifs. Le dépôt ne donne que le score sur 6.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pwa-wrap">
+      <p class="pwa-actions"><a class="pwa-btn pwa-btn-main" href="https://github.com/theido74/password_analyzer" rel="noopener">Code</a></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+</body>
+</html>

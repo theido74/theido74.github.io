@@ -1,0 +1,134 @@
+/* Nim Game : tableau noir et allumettes. Classes préfixées « nim- », le reste ciblé sous main.nim. */
+body { background: #12201c; }
+main.nim {
+  --board: #12201c; --board2: #1b2e28; --chalk: #f3f0e4; --dim: #c4cfc7; --line: #ffffff33;
+  --wood: #e3b36d; --wood2: #b97f3a; --head: #e5452f; --blue: #8ad3f0; --yellow: #f6d96b; --green: #8fe3a8; --red: #ff8f7a;
+  --head-font: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
+  --body-font: system-ui, "Nimbus Sans", "Liberation Sans", Arial, sans-serif;
+  background:
+    radial-gradient(900px 500px at 15% 0%, #ffffff12, transparent 60%),
+    radial-gradient(700px 400px at 90% 60%, #ffffff0a, transparent 60%),
+    var(--board);
+  color: var(--chalk); font-family: var(--body-font); font-size: 1.125rem; line-height: 1.65; overflow-x: clip;
+}
+main.nim *, main.nim *::before, main.nim *::after { box-sizing: border-box; }
+main.nim :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+main.nim h1, main.nim h2, main.nim h3 { font-family: var(--head-font); font-style: italic; font-weight: 700; line-height: 1.15; margin: 0 0 .6rem; }
+main.nim h2 { font-size: clamp(1.6rem, 3.6vw, 2.3rem); color: var(--yellow); }
+main.nim h3 { font-size: 1.3rem; color: var(--blue); }
+main.nim p { margin: 0 0 1rem; max-width: 64ch; }
+main.nim code { font-family: "DejaVu Sans Mono", ui-monospace, monospace; font-size: .85em; color: var(--blue); background: #ffffff12; padding: .05em .4em; border-radius: 4px; overflow-wrap: anywhere; }
+main.nim kbd { font-family: "DejaVu Sans Mono", ui-monospace, monospace; font-size: .85em; border: 1px solid var(--dim); border-bottom-width: 3px; border-radius: 5px; padding: 0 .45em; }
+.nim-wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding-left: clamp(16px, 4vw, 40px); padding-right: clamp(16px, 4vw, 40px); }
+.nim-sec { padding-top: clamp(36px, 6vw, 72px); padding-bottom: clamp(20px, 4vw, 40px); border-top: 2px dashed var(--line); margin-top: clamp(24px, 4vw, 48px); }
+.nim-small { font-size: 1rem; color: var(--dim); }
+.nim-sub { color: var(--dim); max-width: 66ch; }
+.nim-note { border-left: 3px solid var(--blue); padding-left: .9rem; color: var(--dim); font-size: 1rem; }
+
+.nim-btn { font: 600 1rem/1 var(--body-font); color: var(--chalk); background: #ffffff14; border: 2px solid #ffffff55; border-radius: 12px; padding: .8em 1.2em; min-height: 48px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; transition: background .15s, border-color .15s, transform .15s; }
+.nim-btn:hover:not(:disabled) { background: #ffffff26; border-color: var(--yellow); }
+.nim-btn:disabled { opacity: .4; cursor: not-allowed; }
+.nim-btn-main { background: var(--yellow); color: #1a1f14; border-color: var(--yellow); }
+.nim-btn-main:hover:not(:disabled) { background: #ffe88f; }
+.nim-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1.4rem; }
+
+/* Hero */
+.nim-hero { display: grid; gap: clamp(24px, 4vw, 56px); grid-template-columns: 1fr; align-items: start; padding-top: clamp(24px, 4vw, 56px); }
+.nim-title { font-size: clamp(3rem, 10vw, 6rem); color: var(--chalk); letter-spacing: -.02em; margin-bottom: 1rem; text-shadow: 3px 3px 0 #ffffff22; position: relative; display: inline-block; }
+.nim-title::after { content: ""; display: block; height: 10px; margin-top: 4px; background: var(--yellow); border-radius: 99px; clip-path: polygon(0 60%, 12% 20%, 30% 70%, 52% 25%, 74% 75%, 100% 30%, 100% 100%, 0 100%); opacity: .9; }
+.nim-lead { font-size: clamp(1.25rem, 2.4vw, 1.55rem); line-height: 1.45; }
+
+/* Plateau (cadre en bois) */
+.nim-board { background: linear-gradient(#18291f, #12201c); border: 10px solid var(--wood2); border-image: linear-gradient(135deg, #e3b36d, #8d5a25 50%, #d9a45a) 1; box-shadow: 0 20px 50px #0008, inset 0 0 40px #0006; padding: clamp(14px, 3vw, 26px); }
+.nim-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.nim-tabs button { font: 600 1rem var(--body-font); color: var(--dim); background: transparent; border: 2px solid transparent; border-bottom-color: var(--line); padding: .6em .9em; min-height: 44px; cursor: pointer; }
+.nim-tabs button[aria-selected="true"] { color: var(--yellow); border-bottom-color: var(--yellow); }
+.nim-opts { display: flex; flex-wrap: wrap; gap: 10px 20px; margin-bottom: 16px; font-size: 1rem; }
+.nim-opts label { display: flex; flex-direction: column; gap: 4px; color: var(--dim); }
+.nim-opts select { font: 1rem var(--body-font); color: var(--chalk); background: #0c1613; border: 2px solid #ffffff55; border-radius: 8px; padding: .5em .7em; min-height: 44px; }
+
+.nim-stage { display: flex; justify-content: center; align-items: flex-end; gap: clamp(2px, .9vw, 7px); height: 170px; padding: 0 0 6px; }
+.nim-stick { position: relative; flex: 1 1 0; max-width: 20px; min-width: 8px; height: 150px; border-radius: 3px; background: linear-gradient(90deg, var(--wood2), var(--wood) 40%, #f4d49a 55%, var(--wood2)); box-shadow: 1px 3px 4px #0007; transition: transform .55s cubic-bezier(.2, .8, .2, 1), opacity .55s, box-shadow .2s; transform-origin: 50% 100%; }
+.nim-stick::before { content: ""; position: absolute; left: -2px; right: -2px; top: -6px; height: 20px; border-radius: 50% 50% 40% 40%; background: radial-gradient(circle at 35% 30%, #ff9b82, var(--head) 55%, #9c2412); }
+.nim-stick.is-gone { opacity: 0; transform: translateY(36px) rotate(var(--r, 12deg)); }
+.nim-stick.is-pick { box-shadow: 0 0 0 2px var(--yellow), 0 0 14px #f6d96b99; transform: translateY(-10px); }
+.nim-stick.is-hint { box-shadow: 0 0 0 2px var(--green), 0 0 14px #8fe3a899; }
+.nim-ruler { display: flex; justify-content: center; gap: clamp(2px, .9vw, 7px); margin-bottom: 14px; font: 600 .72rem "DejaVu Sans Mono", monospace; color: var(--dim); }
+.nim-ruler span { flex: 1 1 0; max-width: 20px; min-width: 8px; text-align: center; padding-top: 4px; border-top: 2px solid var(--line); }
+.nim-ruler span.is-target { color: var(--yellow); border-top-color: var(--yellow); font-size: .8rem; }
+.nim-ruler span.is-now { color: #12201c; background: var(--chalk); border-top-color: var(--chalk); border-radius: 0 0 4px 4px; }
+.nim-take { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.nim-keyhint { color: var(--dim); font-size: .95rem; margin: .6rem 0 0; }
+
+.nim-rows { display: grid; gap: 14px; margin-bottom: 8px; }
+.nim-row { display: flex; align-items: center; gap: 12px; }
+.nim-row-label { font: 600 .9rem "DejaVu Sans Mono", monospace; color: var(--dim); width: 4.2em; flex: none; }
+.nim-row-sticks { display: flex; gap: 8px; min-height: 76px; align-items: flex-end; flex-wrap: nowrap; }
+.nim-rowstick { position: relative; width: 20px; height: 70px; padding: 0; border: 0; border-radius: 3px; cursor: pointer; background: linear-gradient(90deg, var(--wood2), var(--wood) 40%, #f4d49a 55%, var(--wood2)); box-shadow: 1px 3px 4px #0007; transition: transform .5s cubic-bezier(.2, .8, .2, 1), opacity .5s; transform-origin: 50% 100%; }
+.nim-rowstick::before { content: ""; position: absolute; left: -2px; right: -2px; top: -5px; height: 16px; border-radius: 50% 50% 40% 40%; background: radial-gradient(circle at 35% 30%, #ff9b82, var(--head) 55%, #9c2412); }
+.nim-rowstick.is-gone { opacity: 0; transform: translateY(28px) rotate(14deg); pointer-events: none; }
+.nim-rowstick.is-pick { box-shadow: 0 0 0 2px var(--yellow), 0 0 12px #f6d96b99; transform: translateY(-8px); }
+.nim-rowstick.is-hint { box-shadow: 0 0 0 2px var(--green), 0 0 12px #8fe3a899; }
+.nim-rowstick:disabled { cursor: default; }
+.nim-bin { border-collapse: collapse; margin-top: 12px; font-family: "DejaVu Sans Mono", monospace; font-size: .95rem; width: 100%; max-width: 420px; }
+.nim-bin caption { text-align: left; color: var(--dim); font-family: var(--body-font); font-size: .95rem; padding-bottom: 6px; }
+.nim-bin th, .nim-bin td { padding: 6px 10px; text-align: center; border-bottom: 1px solid var(--line); }
+.nim-bin th:first-child, .nim-bin td:first-child { text-align: left; }
+.nim-bin td.on { color: #12201c; background: var(--blue); font-weight: 700; }
+.nim-bin tr.xor td { border-top: 2px solid var(--chalk); font-weight: 700; }
+.nim-bin tr.xor td.on { background: var(--yellow); }
+.nim-bin tr.xor.zero td:nth-child(n+3) { color: var(--green); }
+
+.nim-msg { margin: 16px 0 12px; min-height: 3.3em; font-size: 1.2rem; font-family: var(--head-font); font-style: italic; }
+.nim-msg.is-win { color: var(--green); } .nim-msg.is-lose { color: var(--red); }
+.nim-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.nim-score { margin: 0 0 0 auto; font: 600 1rem "DejaVu Sans Mono", monospace; color: var(--dim); }
+.nim-why { margin: 12px 0 0; color: var(--dim); font-size: 1rem; min-height: 1.6em; }
+
+/* Sections */
+.nim-cols { display: grid; gap: 28px 48px; grid-template-columns: 1fr; }
+.nim-list, .nim-files { margin: 0; padding-left: 1.2em; max-width: 64ch; }
+.nim-list li, .nim-files li { margin-bottom: .7rem; }
+.nim-list li::marker, .nim-files li::marker { color: var(--yellow); }
+.nim-files { list-style: none; padding: 0; }
+.nim-files li { display: grid; gap: 2px; padding-bottom: .7rem; border-bottom: 1px dashed var(--line); }
+.nim-files li span { color: var(--dim); font-size: 1rem; }
+.nim-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 1rem 0 0; }
+.nim-tags li { border: 1px solid var(--dim); color: var(--chalk); border-radius: 99px; padding: .2em .8em; font-size: .95rem; }
+.nim-ideas { list-style: none; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); padding: 0; margin: 0 0 1.4rem; }
+.nim-ideas li { border: 2px solid var(--line); border-radius: 14px; padding: 16px 18px; background: #ffffff08; }
+.nim-ideas b { display: block; font-family: var(--head-font); font-style: italic; font-size: 1.25rem; color: var(--blue); margin-bottom: 4px; }
+
+/* Laboratoire */
+.nim-lab { display: grid; gap: 28px; grid-template-columns: 1fr; }
+.nim-lab-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.nim-check { display: flex; gap: 10px; align-items: flex-start; font-size: 1rem; margin-bottom: 14px; cursor: pointer; }
+.nim-check input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--yellow); flex: none; }
+.nim-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 14px; }
+.nim-stats div { border: 2px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+.nim-stats dt { font-size: .85rem; color: var(--dim); line-height: 1.3; }
+.nim-stats dd { margin: 0; font: 700 1.6rem "DejaVu Sans Mono", monospace; color: var(--yellow); }
+.nim-chart, .nim-heat { margin: 0; }
+.nim-chart canvas, .nim-heat canvas { width: 100%; height: auto; display: block; background: #0c1613; border: 2px solid var(--line); border-radius: 12px; }
+.nim-chart figcaption, .nim-heat figcaption { color: var(--dim); font-size: .95rem; margin-top: 8px; }
+.nim-key { display: inline-block; width: 22px; height: 4px; vertical-align: middle; margin: 0 4px 0 12px; border-radius: 2px; }
+.nim-k1 { background: var(--yellow); } .nim-k2 { background: var(--green); } .nim-k3 { background: var(--blue); }
+
+@media (min-width: 960px) {
+  .nim-hero { grid-template-columns: .85fr 1.15fr; }
+  .nim-cols { grid-template-columns: 1fr 1fr; }
+  .nim-lab { grid-template-columns: 1fr 1.3fr; }
+  .nim-heat { grid-column: 1 / -1; }
+}
+@media (max-width: 420px) {
+  .nim-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .nim-score { margin-left: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nim-stick, .nim-rowstick, .nim-btn { transition: none; }
+}
+
+/* Les éléments de grille peuvent rétrécir sur mobile */
+.nim-hero > *, .nim-cols > *, .nim-lab > * { min-width: 0; }
+.nim-take .nim-btn { padding-left: .3em; padding-right: .3em; }
+@media (max-width: 420px) { .nim-take .nim-btn { font-size: .85rem; white-space: nowrap; } }

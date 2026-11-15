@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PokemonBot · GeLeprechaun</title>
+<meta name="description" content="Bot Discord qui scanne des annonces eBay pour repérer des cartes Pokémon vendues sous leur valeur en Europe et en Suisse, calcule le coût rendu en Suisse et envoie des alertes.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#10101f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PokemonBot · GeLeprechaun">
+<meta property="og:description" content="Bot Discord qui scanne des annonces eBay pour repérer des cartes Pokémon vendues sous leur valeur en Europe et en Suisse, calcule le coût rendu en Suisse et envoie des alertes.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+</head>
+<body class="pk">
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../spotyfiles/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../skills-agents/" rel="next">Suivant</a>
+  </nav>
+</header>
+<main id="main">
+
+<section class="pk-hero" aria-labelledby="pk-titre">
+  <div class="pk-wrap">
+    <p class="pk-badges"><span class="pk-badge pk-badge--priv">Privé</span><span class="pk-badge">Python</span><span class="pk-badge">Discord</span><span class="pk-badge">API eBay</span></p>
+    <h1 id="pk-titre">PokemonBot</h1>
+    <p class="pk-lead">Un bot Discord qui lit des annonces eBay, repère les cartes Pokémon vendues sous leur valeur en Europe et en Suisse, et envoie une alerte quand l'affaire est bonne.</p>
+
+    <div class="pk-stage">
+      <figure class="pk-belt">
+        <canvas id="pk-cv" width="900" height="300" aria-label="Des annonces défilent sur un tapis et traversent quatre portes : filtrer, reconnaître, estimer, comparer. La plupart sont écartées ; une seule arrive au bout."></canvas>
+        <figcaption class="pk-cap">Démonstration simulée : annonces et montants factices.
+          <button type="button" id="pk-pause" class="pk-btn pk-btn--s" aria-pressed="false">Mettre en pause</button></figcaption>
+      </figure>
+
+      <div class="pk-chat" aria-label="Aperçu d'une alerte dans un salon de discussion">
+        <p class="pk-chat-head"><span aria-hidden="true">#</span> alertes</p>
+        <div class="pk-msg" id="pk-msg">
+          <div class="pk-avatar" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M20 3 35 12v16L20 37 5 28V12z" fill="#5df2c2"/><circle cx="14" cy="19" r="3" fill="#10101f"/><circle cx="26" cy="19" r="3" fill="#10101f"/><path d="M14 27h12" stroke="#10101f" stroke-width="2.5" stroke-linecap="round"/></svg></div>
+          <div class="pk-msgbody">
+            <p class="pk-who"><b>PokemonBot</b> <span class="pk-tag">BOT</span></p>
+            <div class="pk-embed" id="pk-embed">
+              <p class="pk-etitle" id="pk-etitle">Bonne affaire probable</p>
+              <div class="pk-ethumb" aria-hidden="true"><canvas id="pk-thumb" width="84" height="116"></canvas></div>
+              <dl class="pk-fields">
+                <div><dt>Prix converti</dt><dd id="pk-f0">58.00 CHF</dd></div>
+                <div><dt>Port</dt><dd id="pk-f1">7.50 CHF</dd></div>
+                <div><dt>TVA</dt><dd id="pk-f2">5.31 CHF</dd></div>
+                <div><dt>Dédouanement</dt><dd id="pk-f3">6.00 CHF</dd></div>
+                <div class="pk-hl"><dt>Coût rendu en Suisse</dt><dd id="pk-f4">76.81 CHF</dd></div>
+                <div><dt>Valeur de référence</dt><dd id="pk-f5">110.00 CHF</dd></div>
+              </dl>
+              <div class="pk-conf"><span>Confiance</span><span class="pk-bar"><i id="pk-confbar"></i><b class="pk-thr" title="seuil d'alerte"></b></span><span id="pk-confv">0,91</span></div>
+              <p class="pk-fake">Annonce synthétique du mode démo.</p>
+            </div>
+          </div>
+        </div>
+        <p class="pk-wait" id="pk-wait">En attente d'une alerte…</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pk-sec" aria-labelledby="pk-cout">
+  <div class="pk-wrap pk-two">
+    <div>
+      <h2 id="pk-cout">Du prix affiché au coût rendu</h2>
+      <p>Une carte à 58 CHF sur l'annonce ne coûte pas 58 CHF à la maison. Le bot ajoute le port, la TVA et les frais de dédouanement avant de comparer à une valeur de référence.</p>
+      <p>Les montants sont des décimaux exacts, arrondis au centime à chaque étape : jamais des flottants.</p>
+      <p class="pk-note">Exemple chiffré fictif, taux et frais d'illustration.</p>
+    </div>
+    <div class="pk-wf" id="pk-wf" aria-label="Décomposition d'un coût rendu fictif">
+      <div class="pk-row" style="--w:52.7%;--l:0%;--c:#7aa2ff"><span class="pk-rl">Prix converti</span><span class="pk-rt"><i></i></span><span class="pk-rv">58.00</span></div>
+      <div class="pk-row" style="--w:6.8%;--l:52.7%;--c:#ffb86b"><span class="pk-rl">Port</span><span class="pk-rt"><i></i></span><span class="pk-rv">+ 7.50</span></div>
+      <div class="pk-row" style="--w:4.8%;--l:59.5%;--c:#ff7aa8"><span class="pk-rl">TVA (65.50 × 8,1 %)</span><span class="pk-rt"><i></i></span><span class="pk-rv">+ 5.31</span></div>
+      <div class="pk-row" style="--w:5.5%;--l:64.3%;--c:#b58bff"><span class="pk-rl">Dédouanement</span><span class="pk-rt"><i></i></span><span class="pk-rv">+ 6.00</span></div>
+      <div class="pk-row pk-total" style="--w:69.8%;--l:0%;--c:#5df2c2"><span class="pk-rl">Coût rendu</span><span class="pk-rt"><i></i><u></u></span><span class="pk-rv">76.81</span></div>
+      <p class="pk-refline"><span>La ligne verticale marque la valeur de référence : 110.00 CHF.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="pk-sec pk-sec--alt" aria-labelledby="pk-cmd">
+  <div class="pk-wrap pk-two">
+    <div>
+      <h2 id="pk-cmd">Pilotable depuis Discord</h2>
+      <p>Les commandes <code>/watch</code>, <code>/deals</code> et <code>/price</code> gèrent les veilles. La commande <code>/moi effacer</code> supprime les données de la personne qui la lance.</p>
+      <p>Sans clé eBay, un mode démo fait passer des annonces synthétiques, dont quelques vraies bonnes affaires, par le même traitement.</p>
+    </div>
+    <div>
+      <div class="pk-input" aria-hidden="true"><span class="pk-slash">/</span><span id="pk-typed">watch</span><span class="pk-caret"></span></div>
+      <ul class="pk-cmds" aria-label="Commandes">
+        <li><span><code>/watch</code> <code>/deals</code> <code>/price</code></span><span>gèrent les veilles</span></li>
+        <li><span><code>/moi effacer</code></span><span>supprime les données de la personne</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="pk-sec" aria-labelledby="pk-build">
+  <div class="pk-wrap">
+    <h2 id="pk-build">Comment c'est construit</h2>
+    <p class="pk-intro2">Un seul processus Python asynchrone fait tourner le planificateur de scans et le bot Discord ensemble. <span class="pk-note">Schéma simplifié.</span></p>
+    <div class="pk-scroll" tabindex="0" role="group" aria-label="Schéma, défilable horizontalement sur petit écran">
+    <svg class="pk-flow" viewBox="0 0 1100 360" role="img" aria-labelledby="pk-flow-t" font-family="ui-rounded,'Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif">
+      <title id="pk-flow-t">Schéma : trois sources interchangeables (démo, API eBay, flux) alimentent une chaîne en étapes : annonces brutes, enregistrement, rapprochement avec le catalogue, évaluation, règles, événements d'alerte. Une transaction englobe chaque annonce ; les alertes partent après validation.</title>
+      <defs><marker id="pk-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#5df2c2"/></marker></defs>
+      <g fill="#1b1c33" stroke="#3a3c66" stroke-width="2">
+        <rect x="10" y="40" width="150" height="56" rx="14"/><rect x="10" y="152" width="150" height="56" rx="14"/><rect x="10" y="264" width="150" height="56" rx="14"/>
+      </g>
+      <g fill="#eceeff" font-size="20" font-weight="700" text-anchor="middle"><text x="85" y="75">démo</text><text x="85" y="187">API eBay</text><text x="85" y="299">flux</text></g>
+      <text x="85" y="24" text-anchor="middle" font-size="16" fill="#aab0e0">sources interchangeables</text>
+      <g class="pk-edges" fill="none" stroke="#5df2c2" stroke-width="3" marker-end="url(#pk-ar)">
+        <path d="M160 68 C200 68 190 180 232 180"/><path d="M160 180 H232"/><path d="M160 292 C200 292 190 180 232 180"/>
+      </g>
+      <rect x="232" y="80" width="780" height="200" rx="22" fill="none" stroke="#ffb86b" stroke-width="3" stroke-dasharray="10 8"/>
+      <text x="622" y="64" text-anchor="middle" font-size="17" fill="#ffc98f">une transaction par annonce</text>
+      <g class="pk-chain" fill="#1b1c33" stroke="#3a3c66" stroke-width="2">
+        <rect x="248" y="130" width="112" height="100" rx="14"/><rect x="376" y="130" width="112" height="100" rx="14"/><rect x="504" y="130" width="112" height="100" rx="14"/>
+        <rect x="632" y="130" width="112" height="100" rx="14"/><rect x="760" y="130" width="112" height="100" rx="14"/><rect x="888" y="130" width="112" height="100" rx="14"/>
+      </g>
+      <g fill="#eceeff" font-size="17" font-weight="700" text-anchor="middle">
+        <text x="304" y="176">annonces</text><text x="304" y="198">brutes</text>
+        <text x="432" y="187">enregistrer</text>
+        <text x="560" y="176">rapprocher</text><text x="560" y="198">catalogue</text>
+        <text x="688" y="187">évaluer</text>
+        <text x="816" y="187">règles</text>
+        <text x="944" y="176">événements</text><text x="944" y="198">d'alerte</text>
+      </g>
+      <g class="pk-edges" fill="none" stroke="#5df2c2" stroke-width="3" marker-end="url(#pk-ar)">
+        <path d="M360 180 H372"/><path d="M488 180 H500"/><path d="M616 180 H628"/><path d="M744 180 H756"/><path d="M872 180 H884"/>
+      </g>
+      <path class="pk-edges" d="M944 280 V318 H622" fill="none" stroke="#ff7aa8" stroke-width="3" stroke-dasharray="8 8"/>
+      <text x="780" y="345" text-anchor="middle" font-size="17" fill="#ff9fc0">alertes envoyées après validation, une seule fois (contrainte d'unicité)</text>
+    </svg>
+    </div>
+    <ul class="pk-points">
+      <li>Une erreur sur une annonce est journalisée et comptée, jamais propagée.</li>
+      <li>Les sources sont interchangeables derrière une même interface : démo, API eBay, flux.</li>
+      <li>Si Discord coupe la connexion, le bot se reconnecte tout seul sans interrompre le scan.</li>
+      <li>Base SQLite en mode WAL, réglages par variables d'environnement, conteneur Docker, intégration continue avec ruff, mypy et pytest.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="pk-sec pk-end" aria-label="Mentions">
+  <div class="pk-wrap">
+    <p class="pk-private">Le code de ce projet est privé : il n'est pas publié.</p>
+    <p class="pk-note">Pokémon, Discord et eBay sont des marques de leurs propriétaires respectifs. Ce projet n'est affilié à aucune de ces sociétés. Les cartes dessinées sur cette page sont des illustrations génériques.</p>
+  </div>
+</section>
+
+</main>
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+<script src="script.js" defer></script>
+</body>
+</html>

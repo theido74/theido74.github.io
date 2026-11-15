@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cabanes Alpines (PostgreSQL) · GeLeprechaun</title>
+<meta name="description" content="Base d'entraînement PostgreSQL 16 : un réseau fictif de cabanes de montagne avec réservations, facturation en CHF avec TVA, sécurité par ligne, exercices corrigés et tests automatiques.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b1626">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cabanes Alpines (PostgreSQL) · GeLeprechaun">
+<meta property="og:description" content="Base d'entraînement PostgreSQL 16 : un réseau fictif de cabanes de montagne avec réservations, facturation en CHF avec TVA, sécurité par ligne, exercices corrigés et tests automatiques.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+</head>
+<body class="ca">
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../password-analyzer/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../streeteye/" rel="next">Suivant</a>
+  </nav>
+</header>
+<main id="main">
+
+<section class="ca-hero" aria-labelledby="ca-titre">
+  <canvas id="ca-snow" class="ca-snow" aria-hidden="true"></canvas>
+  <div class="ca-hero-txt">
+    <p class="ca-badges"><span class="ca-badge ca-badge--priv">Privé</span><span class="ca-badge">PostgreSQL 16</span><span class="ca-badge">PL/pgSQL</span><span class="ca-badge">Docker</span></p>
+    <h1 id="ca-titre">Cabanes Alpines</h1>
+    <p class="ca-lead">Une base PostgreSQL pour s'entraîner au SQL : un réseau fictif de cabanes de montagne en Suisse romande, ses réservations, sa buvette et ses factures en CHF.</p>
+  </div>
+  <svg class="ca-scene" viewBox="0 0 1600 520" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="ca-glow"><stop offset="0" stop-color="#ffd27a" stop-opacity=".95"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
+      <linearGradient id="ca-m1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a4468"/><stop offset="1" stop-color="#16294a"/></linearGradient>
+      <linearGradient id="ca-m2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b3354"/><stop offset="1" stop-color="#0f2039"/></linearGradient>
+    </defs>
+    <g class="ca-stars" fill="#eef4f9"></g>
+    <circle cx="1210" cy="110" r="38" fill="#eef4f9" opacity=".92"/><circle cx="1224" cy="100" r="38" fill="#0b1626" opacity=".0"/>
+    <g data-px=".10"><path d="M0 330 L140 210 L230 280 L360 150 L520 300 L640 220 L800 330 L960 200 L1100 290 L1250 170 L1400 280 L1600 190 L1600 520 L0 520Z" fill="url(#ca-m1)"/>
+      <path d="M360 150 L318 196 L350 190 L372 212 L392 186 L418 200Z M1250 170 L1214 210 L1240 206 L1256 226 L1280 200 L1300 212Z M960 200 L930 236 L956 230 L972 246 L992 226Z" fill="#dfeaf3" opacity=".85"/></g>
+    <g data-px=".05"><path d="M0 400 L120 330 L260 380 L420 290 L600 390 L760 340 L940 410 L1120 320 L1300 400 L1450 340 L1600 400 L1600 520 L0 520Z" fill="url(#ca-m2)"/></g>
+    <path d="M0 450 C300 420 520 470 800 450 C1080 430 1300 465 1600 440 L1600 520 L0 520Z" fill="#e8f0f6"/>
+    <path d="M0 480 C320 462 560 490 840 478 C1100 466 1360 490 1600 474 L1600 520 L0 520Z" fill="#cfdde9"/>
+    <!-- pins -->
+    <g fill="#0f3a33"><path d="M180 470 L215 380 L250 470Z"/><path d="M190 440 L225 350 L260 440Z" transform="translate(-10 4)"/><path d="M290 480 L330 380 L370 480Z"/><path d="M1380 470 L1420 370 L1460 470Z"/><path d="M1460 478 L1500 390 L1540 478Z"/></g>
+    <g fill="#eef4f9" opacity=".9"><path d="M215 380 L200 410 L230 410Z"/><path d="M330 380 L314 414 L346 414Z"/><path d="M1420 370 L1404 406 L1436 406Z"/></g>
+    <!-- cabane -->
+    <g transform="translate(860 330)">
+      <ellipse cx="150" cy="140" rx="190" ry="40" fill="url(#ca-glow)" opacity=".16"/>
+      <rect x="70" y="40" width="160" height="100" fill="#6b4328"/>
+      <g stroke="#4d2f1b" stroke-width="3"><path d="M70 62H230M70 84H230M70 106H230M70 128H230"/></g>
+      <rect x="200" y="0" width="22" height="46" fill="#4d4a4a"/><rect x="196" y="-6" width="30" height="10" fill="#eef4f9"/>
+      <path d="M52 52 L150 -18 L248 52Z" fill="#3b2a22"/><path d="M52 52 L150 -18 L248 52 L236 52 L150 -6 L64 52Z" fill="#eef4f9"/>
+      <rect x="100" y="76" width="44" height="44" rx="3" fill="#ffd27a"/><circle cx="122" cy="98" r="62" fill="url(#ca-glow)" opacity=".5"/>
+      <path d="M122 76V120M100 98H144" stroke="#6b4328" stroke-width="4"/>
+      <rect x="168" y="84" width="34" height="56" rx="3" fill="#3a2517"/>
+      <g class="ca-smoke" fill="#cfdde9"></g>
+    </g>
+  </svg>
+</section>
+
+<section class="ca-sec" aria-labelledby="ca-modele">
+  <div class="ca-wrap">
+    <h2 id="ca-modele">Un réseau de cabanes, des tables qui se répondent</h2>
+    <p class="ca-p">La base est découpée en domaines : exploitation, finance, ressources humaines et audit. Chaque flèche part d'une table qui fait référence à une autre, par une clé étrangère.</p>
+    <div class="ca-scroll" tabindex="0" role="group" aria-label="Schéma des tables, défilable horizontalement sur petit écran">
+    <svg id="ca-er" class="ca-er" viewBox="0 0 1000 520" role="img" aria-labelledby="ca-er-t">
+      <title id="ca-er-t">Schéma relationnel illustratif : les réservations, les ventes de buvette, les gardiens se rattachent à une cabane ; les factures à une réservation ; les guides à une réservation ; le journal d'audit à une facture.</title>
+      <defs><marker id="ca-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#ffd27a"/></marker></defs>
+      <g fill="none" stroke="#ffd27a" stroke-width="2.5" marker-end="url(#ca-arr)" class="ca-edges">
+        <path pathLength="1" d="M250 100 C320 100 320 235 390 235"/>
+        <path pathLength="1" d="M750 100 C680 100 680 235 610 235"/>
+        <path pathLength="1" d="M750 440 C680 440 680 285 610 285"/>
+        <path pathLength="1" d="M140 380 L140 130"/>
+        <path pathLength="1" d="M390 75 L250 75"/>
+        <path pathLength="1" d="M390 437 L250 437"/>
+      </g>
+      <g class="ca-tables" font-family="ui-monospace,Menlo,Consolas,monospace"><g class="ca-tb" data-i="0" transform="translate(30 20)"><rect width="220" height="114" rx="12" fill="#12243a" stroke="#8fd3e8" stroke-width="2"/><path d="M0 12a12 12 0 0 1 12-12h196a12 12 0 0 1 12 12v22H0z" fill="#8fd3e8"/><text x="14" y="23" font-size="17" font-weight="700" fill="#0b1626">reservation</text><text x="14" y="58" font-size="15" fill="#eef4f9">id</text><text x="206" y="58" font-size="13" text-anchor="end" fill="#8fd3e8" font-weight="700">PK</text><text x="14" y="82" font-size="15" fill="#eef4f9">cabane_id</text><text x="206" y="82" font-size="13" text-anchor="end" fill="#8fd3e8" font-weight="700">FK</text><text x="14" y="106" font-size="15" fill="#eef4f9">date_arrivee</text></g><g class="ca-tb" data-i="1" transform="translate(390 20)"><rect width="220" height="114" rx="12" fill="#12243a" stroke="#8fdcae" stroke-width="2"/><path d="M0 12a12 12 0 0 1 12-12h196a12 12 0 0 1 12 12v22H0z" fill="#8fdcae"/><text x="14" y="23" font-size="17" font-weight="700" fill="#0b1626">guide</text><text x="14" y="58" font-size="15" fill="#eef4f9">id</text><text x="206" y="58" font-size="13" text-anchor="end" fill="#8fdcae" font-weight="700">PK</text><text x="14" y="82" font-size="15" fill="#eef4f9">reservation_id</text><text x="206" y="82" font-size="13" text-anchor="end" fill="#8fdcae" font-weight="700">FK</text><text x="14" y="106" font-size="15" fill="#eef4f9">specialite</text></g><g class="ca-tb" data-i="2" transform="translate(750 20)"><rect width="220" height="114" rx="12" fill="#12243a" stroke="#8fd3e8" stroke-width="2"/><path d="M0 12a12 12 0 0 1 12-12h196a12 12 0 0 1 12 12v22H0z" fill="#8fd3e8"/><text x="14" y="23" font-size="17" font-weight="700" fill="#0b1626">vente_buvette</text><text x="14" y="58" font-size="15" fill="#eef4f9">id</text><text x="206" y="58" font-size="13" text-anchor="end" fill="#8fd3e8" font-weight="700">PK</text><text x="14" y="82" font-size="15" fill="#eef4f9">cabane_id</text><text x="206" y="82" font-size="13" text-anchor="end" fill="#8fd3e8" font-weight="700">FK</text><text x="14" y="106" font-size="15" fill="#eef4f9">total_ht</text></g><g class="ca-tb" data-i="3" transform="translate(390 200)"><rect width="220" height="114" rx="12" fill="#12243a" stroke="#8fd3e8" stroke-width="2"/><path d="M0 12a12 12 0 0 1 12-12h196a12 12 0 0 1 12 12v22H0z" fill="#8fd3e8"/><text x="14" y="23" font-size="17" font-weight="700" fill="#0b1626">cabane</text><text x="14" y="58" font-size="15" fill="#eef4f9">id</text><text x="206" y="58" font-size="13" text-anchor="end" fill="#8fd3e8" font-weight="700">PK</text><text x="14" y="82" font-size="15" fill="#eef4f9">nom</text><text x="14" y="106" font-size="15" fill="#eef4f9">capacite</text></g><g class="ca-tb" data-i="4" transform="translate(30 380)"><rect width="220" height="114" rx="12" fill="#12243a" stroke="#ffd27a" stroke-width="2"/><path d="M0 12a12 12 0 0 1 12-12h196a12 12 0 0 1 12 12v22H0z" fill="#ffd27a"/><text x="14" y="23" font-size="17" font-weight="700" fill="#0b1626">facture</text><text x="14" y="58" font-size="15" fill="#eef4f9">id</text><text x="206" y="58" font-size="13" text-anchor="end" fill="#ffd27a" font-weight="700">PK</text><text x="14" y="82" font-size="15" fill="#eef4f9">reservation_id</text><text x="206" y="82" font-size="13" text-anchor="end" fill="#ffd27a" font-weight="700">FK</text><text x="14" y="106" font-size="15" fill="#eef4f9">total_ttc</text></g><g class="ca-tb" data-i="5" transform="translate(390 380)"><rect width="220" height="114" rx="12" fill="#12243a" stroke="#f2a0b3" stroke-width="2"/><path d="M0 12a12 12 0 0 1 12-12h196a12 12 0 0 1 12 12v22H0z" fill="#f2a0b3"/><text x="14" y="23" font-size="17" font-weight="700" fill="#0b1626">journal_audit</text><text x="14" y="58" font-size="15" fill="#eef4f9">id</text><text x="206" y="58" font-size="13" text-anchor="end" fill="#f2a0b3" font-weight="700">PK</text><text x="14" y="82" font-size="15" fill="#eef4f9">facture_id</text><text x="206" y="82" font-size="13" text-anchor="end" fill="#f2a0b3" font-weight="700">FK</text><text x="14" y="106" font-size="15" fill="#eef4f9">action</text></g><g class="ca-tb" data-i="6" transform="translate(750 380)"><rect width="220" height="114" rx="12" fill="#12243a" stroke="#8fdcae" stroke-width="2"/><path d="M0 12a12 12 0 0 1 12-12h196a12 12 0 0 1 12 12v22H0z" fill="#8fdcae"/><text x="14" y="23" font-size="17" font-weight="700" fill="#0b1626">gardien</text><text x="14" y="58" font-size="15" fill="#eef4f9">id</text><text x="206" y="58" font-size="13" text-anchor="end" fill="#8fdcae" font-weight="700">PK</text><text x="14" y="82" font-size="15" fill="#eef4f9">cabane_id</text><text x="206" y="82" font-size="13" text-anchor="end" fill="#8fdcae" font-weight="700">FK</text><text x="14" y="106" font-size="15" fill="#eef4f9">saison</text></g></g><g transform="translate(760 215)"><circle cx="8" cy="8" r="8" fill="#8fd3e8"/><text x="26" y="14" font-size="16" fill="#cbd8e4" font-family="ui-sans-serif,system-ui,sans-serif">exploitation</text><circle cx="8" cy="38" r="8" fill="#ffd27a"/><text x="26" y="44" font-size="16" fill="#cbd8e4" font-family="ui-sans-serif,system-ui,sans-serif">finance</text><circle cx="8" cy="68" r="8" fill="#8fdcae"/><text x="26" y="74" font-size="16" fill="#cbd8e4" font-family="ui-sans-serif,system-ui,sans-serif">ressources humaines</text><circle cx="8" cy="98" r="8" fill="#f2a0b3"/><text x="26" y="104" font-size="16" fill="#cbd8e4" font-family="ui-sans-serif,system-ui,sans-serif">audit</text></g>
+    </svg>
+    </div>
+    <p class="ca-note">Schéma illustratif, simplifié : les noms de tables et de colonnes sont inventés pour cette page.</p>
+  </div>
+</section>
+
+<section class="ca-sec ca-sec--lit" aria-labelledby="ca-req">
+  <div class="ca-wrap ca-two">
+    <div>
+      <h2 id="ca-req">Une requête, un résultat</h2>
+      <p class="ca-p">Les exercices vont de une à trois étoiles, avec des indices et des corrigés testés. Celui-ci réunit trois tables pour totaliser le chiffre d'affaires par cabane.</p>
+      <button type="button" class="ca-btn" id="ca-replay">Rejouer la requête</button>
+      <p class="ca-note">Requête écrite pour l'illustration. Données fictives.</p>
+    </div>
+    <div class="ca-sqlbox">
+<pre class="ca-code" id="ca-sql" aria-label="Requête SQL d'exemple">SELECT c.nom AS cabane,
+       count(*) AS reservations,
+       sum(f.total_ttc) AS chiffre_chf
+FROM facture f
+JOIN reservation r ON r.id = f.reservation_id
+JOIN cabane c ON c.id = r.cabane_id
+GROUP BY c.nom
+ORDER BY chiffre_chf DESC;</pre>
+      <div class="ca-result" id="ca-result">
+        <table>
+          <caption class="ca-sr">Résultat de la requête</caption>
+          <thead><tr><th scope="col">cabane</th><th scope="col" class="ca-num">reservations</th><th scope="col" class="ca-num">chiffre_chf</th></tr></thead>
+          <tbody>
+            <tr><td>Les Mélèzes</td><td class="ca-num">128</td><td class="ca-num">14&#8239;820.40</td></tr>
+            <tr><td>Le Névé</td><td class="ca-num">97</td><td class="ca-num">11&#8239;306.10</td></tr>
+            <tr><td>La Combe</td><td class="ca-num">74</td><td class="ca-num">8&#8239;944.90</td></tr>
+          </tbody>
+        </table>
+        <p class="ca-rows">(3 lignes)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ca-sec" aria-labelledby="ca-rls">
+  <div class="ca-wrap ca-two">
+    <div>
+      <h2 id="ca-rls">Chacun ne voit que ses lignes</h2>
+      <p class="ca-p">Avec la sécurité par ligne, la même requête ne renvoie pas les mêmes réservations selon le rôle : un gardien ne voit que sa cabane.</p>
+      <div class="ca-roles" role="group" aria-label="Choisir le rôle de connexion">
+        <button type="button" class="ca-role" data-role="gardien" aria-pressed="true">Gardien des Mélèzes</button>
+        <button type="button" class="ca-role" data-role="admin" aria-pressed="false">Rôle sans restriction</button>
+      </div>
+<pre class="ca-code ca-code--s" aria-label="Exemple de politique de sécurité par ligne">CREATE POLICY gardien_sa_cabane
+  ON reservation
+  USING (cabane_id = ma_cabane());</pre>
+      <p class="ca-note">Pseudo-code d'illustration, pas un extrait du projet.</p>
+    </div>
+    <div>
+      <table class="ca-rls" id="ca-rls-t">
+        <caption class="ca-sr">Réservations visibles selon le rôle</caption>
+        <thead><tr><th scope="col">réservation</th><th scope="col">cabane</th><th scope="col" class="ca-num">nuits</th></tr></thead>
+        <tbody>
+          <tr data-c="m"><td>R-1041</td><td>Les Mélèzes</td><td class="ca-num">2</td></tr>
+          <tr data-c="n"><td>R-1042</td><td>Le Névé</td><td class="ca-num">1</td></tr>
+          <tr data-c="c"><td>R-1043</td><td>La Combe</td><td class="ca-num">3</td></tr>
+          <tr data-c="m"><td>R-1044</td><td>Les Mélèzes</td><td class="ca-num">1</td></tr>
+          <tr data-c="n"><td>R-1045</td><td>Le Névé</td><td class="ca-num">2</td></tr>
+          <tr data-c="c"><td>R-1046</td><td>La Combe</td><td class="ca-num">1</td></tr>
+          <tr data-c="m"><td>R-1047</td><td>Les Mélèzes</td><td class="ca-num">4</td></tr>
+          <tr data-c="n"><td>R-1048</td><td>Le Névé</td><td class="ca-num">2</td></tr>
+        </tbody>
+      </table>
+      <p class="ca-count" id="ca-count" aria-live="polite">Ce rôle voit 3 lignes sur 8.</p>
+    </div>
+  </div>
+</section>
+
+<section class="ca-sec ca-sec--lit" aria-labelledby="ca-chiffres">
+  <div class="ca-wrap">
+    <h2 id="ca-chiffres">De quoi s'entraîner pendant six semaines</h2>
+    <ul class="ca-figs" id="ca-figs">
+      <li><b data-n="470000">470&#8239;000</b><span>lignes de données, identiques à chaque réinitialisation</span></li>
+      <li><b data-n="17">17</b><span>fichiers de corrigés qui se rejouent automatiquement</span></li>
+      <li><b data-n="58">58</b><span>tests qui vérifient l'état de la base</span></li>
+      <li><b data-n="6">6</b><span>semaines de plan d'entraînement, avec examen blanc corrigé</span></li>
+    </ul>
+    <div class="ca-tests" id="ca-tests" aria-hidden="true"></div>
+    <p class="ca-note">Les 58 carrés représentent les 58 tests ; l'animation est une illustration, pas une exécution réelle.</p>
+  </div>
+</section>
+
+<section class="ca-sec" aria-labelledby="ca-fait">
+  <div class="ca-wrap ca-two">
+    <div>
+      <h2 id="ca-fait">Ce que contient le projet</h2>
+      <ul class="ca-list">
+        <li>Réservations, buvette, factures en CHF avec TVA, gardiens et guides.</li>
+        <li>Exercices par thème, plan sur six semaines, grille de suivi.</li>
+        <li>Rôles de formation avec sécurité par ligne.</li>
+        <li>Fiche d'équivalences pour passer d'Oracle à PostgreSQL.</li>
+        <li>Animations HTML : parcours d'une requête, MVCC et VACUUM, deadlock.</li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="ca-h2s">Comment c'est construit</h2>
+      <ul class="ca-list">
+        <li>PostgreSQL dans un conteneur Docker ; des scripts démarrent, réinitialisent et ouvrent une session <code>psql</code>. pgAdmin est en option.</li>
+        <li>Schéma commenté avec fonctions, vues et triggers.</li>
+        <li>Scripts d'administration : rôles, sauvegarde, maintenance, supervision, deadlocks.</li>
+        <li>Un dossier métier : processus, règles de gestion, audit de TVA.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="ca-sec ca-sec--lit ca-end" aria-labelledby="ca-ret">
+  <div class="ca-wrap">
+    <h2 id="ca-ret">Des failles posées exprès</h2>
+    <p class="ca-p">Un thème d'exercices porte sur l'audit de sécurité : la base contient volontairement de vraies faiblesses à trouver puis corriger, comme des vues sans <code>security_invoker</code> ou des routines <code>SECURITY DEFINER</code> trop puissantes. C'est acceptable parce que tout reste local, et à ne jamais reproduire en production.</p>
+    <p class="ca-private">Le code de ce projet est privé : il n'est pas publié.</p>
+  </div>
+</section>
+
+</main>
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+<script src="script.js" defer></script>
+</body>
+</html>

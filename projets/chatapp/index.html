@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChatApp · GeLeprechaun</title>
+<meta name="description" content="Application de bureau VB.NET en couches (formulaires, logique métier, accès aux données) avec une base Oracle PL/SQL : messages privés et forums.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b6a73">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ChatApp · GeLeprechaun">
+<meta property="og:description" content="Messagerie de bureau Windows en VB.NET, en couches, avec Oracle : la fenêtre et les couches en démonstration animée.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body class="ca">
+<!-- À CONFIRMER : pas de README dans le dépôt ; rôle exact de l'application et correspondance précise entre chaque action de la démonstration et chaque classe déduits de la structure des fichiers. -->
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../streeteye/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../dmob/" rel="next">Suivant</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="ca-hero" aria-labelledby="ca-title">
+    <div class="ca-hero__in">
+      <h1 id="ca-title" class="ca-title">ChatApp</h1>
+      <p class="ca-lead">Une messagerie de bureau Windows : on se connecte, on écrit à quelqu'un, on discute dans des forums. Derrière chaque clic, quatre couches se passent le relais.</p>
+      <ul class="ca-meta" aria-label="Fiche du projet">
+        <li><span class="ca-badge">Public</span></li>
+        <li>VB.NET</li>
+        <li>PL/SQL</li>
+        <li>Oracle</li>
+        <li><a class="ca-code" href="https://github.com/theido74/ChatApp" rel="noopener">Code</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ca-stage" aria-labelledby="ca-demo-title">
+    <h2 id="ca-demo-title" class="ca-h2">La démonstration</h2>
+    <p class="ca-intro">Une reconstitution dessinée pour la page, avec une conversation inventée. Choisissez une scène : la couche qui travaille s'allume à droite.</p>
+
+    <div class="ca-tabs" role="group" aria-label="Scène de démonstration">
+      <button type="button" class="ca-tab" data-scene="login" aria-pressed="true">Connexion</button>
+      <button type="button" class="ca-tab" data-scene="dm" aria-pressed="false">Message privé</button>
+      <button type="button" class="ca-tab" data-scene="forum" aria-pressed="false">Forum</button>
+      <button type="button" class="ca-tab ca-tab--pause" id="ca-pause" aria-pressed="false">Mettre en pause</button>
+    </div>
+
+    <div class="ca-grid">
+      <div class="ca-desk" aria-hidden="true">
+        <div class="ca-icons">
+          <span class="ca-icon"><i class="ca-icon__g ca-icon__g--chat"></i>Messagerie</span>
+          <span class="ca-icon"><i class="ca-icon__g ca-icon__g--forum"></i>Forums</span>
+        </div>
+
+        <div class="ca-wins">
+          <!-- Fenêtre de connexion -->
+          <div class="ca-win ca-win--login" data-win="login">
+            <div class="ca-title-bar"><span>Connexion</span><span class="ca-ctl"><i>_</i><i>□</i><i>×</i></span></div>
+            <div class="ca-win__body">
+              <p class="ca-row"><span class="ca-lbl">Utilisateur</span><span class="ca-field" id="ca-user"><span class="ca-caret"></span></span></p>
+              <p class="ca-row"><span class="ca-lbl">Mot de passe</span>
+                <span class="ca-field ca-field--pw"><span id="ca-pw"></span><span class="ca-caret"></span></span>
+                <span class="ca-eye" id="ca-eye"><img id="ca-eye-img" src="eye_closed.png" width="20" height="20" alt=""></span>
+              </p>
+              <p class="ca-row ca-row--btn"><span class="ca-btn" id="ca-login-btn">Connexion</span><span class="ca-btn">S'inscrire</span></p>
+              <p class="ca-status" id="ca-login-status">Entrez vos identifiants.</p>
+            </div>
+          </div>
+
+          <!-- Messages privés -->
+          <div class="ca-win ca-win--dm" data-win="dm" hidden>
+            <div class="ca-title-bar"><span>Messages privés</span><span class="ca-ctl"><i>_</i><i>□</i><i>×</i></span></div>
+            <div class="ca-win__body ca-dm">
+              <ul class="ca-convs" id="ca-convs">
+                <li data-c="sam" class="is-unread"><i class="ca-av">S</i><span>Sam</span><b class="ca-dot">1</b></li>
+                <li data-c="noe"><i class="ca-av ca-av--b">N</i><span>Noé</span></li>
+                <li data-c="lina"><i class="ca-av ca-av--c">L</i><span>Lina</span></li>
+              </ul>
+              <div class="ca-chat">
+                <div class="ca-msgs" id="ca-dm-msgs"></div>
+                <div class="ca-compose"><span class="ca-field" id="ca-dm-in"><span class="ca-caret"></span></span><span class="ca-btn" id="ca-dm-send">Envoyer</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Forums -->
+          <div class="ca-win ca-win--forum" data-win="forum" hidden>
+            <div class="ca-title-bar"><span>Forums</span><span class="ca-ctl"><i>_</i><i>□</i><i>×</i></span></div>
+            <div class="ca-win__body ca-dm">
+              <div class="ca-forums">
+                <span class="ca-field" id="ca-f-search"><span class="ca-caret"></span></span>
+                <ul class="ca-convs" id="ca-f-list">
+                  <li data-f="general"><span>Général</span></li>
+                  <li data-f="photo"><span>Photo</span></li>
+                  <li data-f="cuisine"><span>Cuisine</span></li>
+                  <li data-f="jeux"><span>Jeux</span></li>
+                </ul>
+                <span class="ca-btn">Créer un forum</span>
+              </div>
+              <div class="ca-chat">
+                <div class="ca-msgs" id="ca-f-msgs"><p class="ca-empty">Choisissez un forum.</p></div>
+                <div class="ca-compose"><span class="ca-field" id="ca-f-in"><span class="ca-caret"></span></span><span class="ca-btn" id="ca-f-send">Envoyer</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ca-task">
+          <span class="ca-start">Démarrer</span>
+          <span class="ca-task__win" id="ca-task-win">Connexion</span>
+          <span class="ca-clock">09:41</span>
+        </div>
+      </div>
+
+      <div class="ca-layers-wrap">
+        <h3 class="ca-h3">Les couches</h3>
+        <ol class="ca-layers" id="ca-layers">
+          <li class="ca-layer ca-layer--ui" data-l="0">
+            <b>Formulaires</b>
+            <small>Windows Forms : Login, Main, MessagePrive, Forum</small>
+            <span class="ca-detail" data-d></span>
+          </li>
+          <li class="ca-layer ca-layer--bl" data-l="1">
+            <b>Logique métier</b>
+            <small>Modèles et services : authService, MessageService, ForumService, PasswordHasher, ClientValidator</small>
+            <span class="ca-detail" data-d></span>
+          </li>
+          <li class="ca-layer ca-layer--da" data-l="2">
+            <b>Accès aux données</b>
+            <small>UserDateAccess, messageDataAccess, ForumDataAccess, LogsDataAccess</small>
+            <span class="ca-detail" data-d></span>
+          </li>
+          <li class="ca-layer ca-layer--db" data-l="3">
+            <b>Oracle</b>
+            <small>Base et script PL/SQL du dépôt</small>
+            <span class="ca-detail" data-d></span>
+          </li>
+        </ol>
+        <p class="ca-log"><i class="ca-log__dot"></i>LogService : une journalisation des actions est prévue, côté métier et en base.</p>
+      </div>
+    </div>
+
+    <p class="ca-caption" id="ca-caption" aria-live="polite">Scène : connexion. L'utilisateur saisit ses identifiants et valide.</p>
+  </section>
+
+  <section class="ca-sec" aria-labelledby="ca-do-title">
+    <div class="ca-cols">
+      <div>
+        <h2 id="ca-do-title" class="ca-h2">Ce que fait le projet</h2>
+        <ul class="ca-list">
+          <li>Une application de bureau Windows (Windows Forms) de messagerie, avec inscription et connexion.</li>
+          <li>Des messages privés entre utilisateurs, avec le repérage des conversations qui contiennent des messages non lus.</li>
+          <li>Des forums : création, recherche et échange de messages.</li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="ca-h2">Comment c'est construit</h2>
+        <ul class="ca-list">
+          <li>Une architecture en couches : formulaires, logique métier (modèles et services), puis accès aux données.</li>
+          <li>VB.NET sur .NET Framework 4.7.2, avec le pilote Oracle managé. Un script SQL avec du code PL/SQL est fourni dans le dépôt.</li>
+          <li>Requêtes paramétrées liées par nom, écritures dans des transactions, identifiants tirés de séquences Oracle.</li>
+          <li>Mots de passe hachés avec un sel aléatoire (PBKDF2-SHA256), jamais stockés en clair. Un fichier de tests existe pour ce composant.</li>
+          <li>Un composant de validation contrôle les saisies côté application.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="ca-tech-title">Technologies</p>
+    <ul class="ca-tech"><li>VB.NET</li><li>.NET Framework 4.7.2</li><li>Windows Forms</li><li>Oracle</li><li>PL/SQL</li></ul>
+  </section>
+
+</main>
+
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+</body>
+</html>

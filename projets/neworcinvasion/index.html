@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New Orc Invasion · GeLeprechaun</title>
+<meta name="description" content="Jeu de tir inspiré de Space Invaders dans l'univers du Seigneur des Anneaux (Python, pygame, SQLite, bcrypt). Mini-démo jouable au clavier, sprites et explosion image par image tirés du dépôt.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0814">
+<meta property="og:type" content="website">
+<meta property="og:title" content="New Orc Invasion · GeLeprechaun">
+<meta property="og:description" content="Un tir à la Space Invaders chez les orcs : mini-démo jouable, bestiaire, explosion de 46 images.">
+<meta property="og:image" content="img/presstoplay.webp">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body>
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../image-scanner/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../nimgame/" rel="next">Suivant</a>
+  </nav>
+</header>
+
+<main id="main" class="noi">
+
+  <section class="noi-hero" aria-labelledby="noi-h1">
+    <canvas class="noi-embers" aria-hidden="true"></canvas>
+    <div class="noi-wrap noi-hero-grid">
+      <div class="noi-hero-text">
+        <h1 id="noi-h1" class="noi-title">New Orc<br>Invasion</h1>
+        <p class="noi-lead">Un jeu de tir à la Space Invaders, chez les orcs du Seigneur des Anneaux. Premier chapitre : cinq niveaux, des boss, un compte joueur pour garder son meilleur score.</p>
+        <p class="noi-note">À droite, une mini-démo web que j'ai refaite avec les vrais sprites du dépôt. Ce n'est pas le jeu pygame lui-même.</p>
+        <dl class="noi-keys" aria-label="Commandes">
+          <div><dt><kbd>S</kbd></dt><dd>démarrer</dd></div>
+          <div><dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>se déplacer</dd></div>
+          <div><dt><kbd>Espace</kbd></dt><dd>tirer</dd></div>
+        </dl>
+        <p class="noi-actions">
+          <a class="noi-btn noi-btn-main" href="https://github.com/theido74/neworcinvasion" rel="noopener">Code</a>
+          <a class="noi-btn" href="#construction">Comment c'est construit</a>
+        </p>
+        <ul class="noi-tags" aria-label="Technologies">
+          <li>Python</li><li>pygame</li><li>SQLite</li><li>bcrypt</li><li>Tkinter</li><li>Pillow</li>
+        </ul>
+      </div>
+
+      <div class="noi-cab" id="noi-cab">
+        <p class="noi-marquee" aria-hidden="true">★ démo jouable ★</p>
+        <canvas id="noi-game" class="noi-game" width="480" height="738" tabindex="0"
+                aria-label="Démo jouable : le magicien tire sur des orcs. Touche S pour démarrer, flèches pour bouger, espace pour tirer, P pour la pause.">
+          Cette démo demande JavaScript. Le jeu d'origine se lance avec Python (voir le dépôt).
+        </canvas>
+        <div class="noi-pad" role="group" aria-label="Commandes tactiles">
+          <button type="button" class="noi-key" data-act="left">Gauche</button>
+          <button type="button" class="noi-key noi-key-fire" data-act="fire">Tirer</button>
+          <button type="button" class="noi-key" data-act="right">Droite</button>
+        </div>
+        <p class="noi-pad-row">
+          <button type="button" class="noi-btn noi-btn-main" id="noi-start">Jouer (S)</button>
+          <button type="button" class="noi-btn" id="noi-pause">Pause (P)</button>
+        </p>
+        <p id="noi-status" class="noi-sr" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="noi-sec" aria-labelledby="noi-bestiaire">
+    <div class="noi-wrap">
+      <h2 id="noi-bestiaire">Le héros et ses ennemis</h2>
+      <p class="noi-sub">Chaque créature est une classe dans <code>enemy.py</code> (le héros, lui, est dans <code>player.py</code>). Images extraites telles quelles du dépôt, réduites pour le web.</p>
+      <ul class="noi-bestiary">
+        <li style="--d:0s"><img src="img/gandalf.png" width="80" height="80" alt="Le magicien, héros en pixel art, bâton à la main" class="noi-px"><b>Le magicien</b><code>player.py</code></li>
+        <li style="--d:-.6s"><img src="img/orc.webp" width="192" height="192" alt="Un orc vert cornu en armure" loading="lazy"><b>Orc</b><code>Enemy</code><code>Boss</code></li>
+        <li style="--d:-1.2s"><img src="img/warg.webp" width="192" height="192" alt="Un warg, grand loup sombre" loading="lazy"><b>Warg</b><code>EnemyWarg</code><code>BossWarg</code></li>
+        <li style="--d:-1.8s"><img src="img/nain.webp" width="192" height="192" alt="Un nain barbu armé d'une hache" loading="lazy"><b>Nain</b><code>EnemyDwarf</code><code>BossDwarf</code></li>
+        <li style="--d:-2.4s"><img src="img/gobelin.webp" width="192" height="192" alt="Un gobelin archer" loading="lazy"><b>Gobelin</b><code>EnemyGobelinArcher</code><code>EnemyGobelinMassue</code></li>
+        <li style="--d:-3s"><img src="img/balrog.webp" width="256" height="256" alt="Le balrog, géant de flammes vertes et d'épines" loading="lazy"><b>Balrog</b><code>BossBalrog</code></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="noi-sec noi-sec-levels" aria-labelledby="noi-niveaux">
+    <div class="noi-wrap">
+      <h2 id="noi-niveaux">Cinq niveaux, cinq décors</h2>
+      <p class="noi-sub">Les niveaux alternent ennemis variés et boss : orcs, wargs, nains, gobelins, puis le balrog. Dialogues, bonus et sons accompagnent le tout. Voici les cinq fonds du dépôt.</p>
+      <ol class="noi-levels">
+        <li><img src="img/fond1.webp" width="480" height="738" alt="Décor du niveau 1 : une tour sous un ciel d'orage" loading="lazy"><span>Niveau 1</span><code>fondlvl1.jpg</code></li>
+        <li><img src="img/fond2.webp" width="480" height="738" alt="Décor du niveau 2 : un soleil rose sur un lac violet" loading="lazy"><span>Niveau 2</span><code>fondlvl2.png</code></li>
+        <li><img src="img/fond3.webp" width="480" height="738" alt="Décor du niveau 3 : une caverne sombre aux lueurs bleues" loading="lazy"><span>Niveau 3</span><code>fondlvl3.png</code></li>
+        <li><img src="img/fond4.webp" width="480" height="738" alt="Décor du niveau 4 : un couchant rouge sur des rochers" loading="lazy"><span>Niveau 4</span><code>fondlvl4.png</code></li>
+        <li><img src="img/fond5.webp" width="480" height="738" alt="Décor du niveau 5 : un pont de pierre au-dessus de la lave" loading="lazy"><span>Niveau 5</span><code>fondlvl5.png</code></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="noi-sec" aria-labelledby="noi-explosion">
+    <div class="noi-wrap noi-boom">
+      <div class="noi-boom-text">
+        <h2 id="noi-explosion">Une explosion en 46 images</h2>
+        <p class="noi-sub">Le dossier <code>anime/explose/</code> contient <code>explose1.png</code> à <code>explose46.png</code>. Le jeu les enchaîne pour détruire un ennemi. Ici elles sont regroupées dans une planche ; faites glisser le curseur pour avancer image par image.</p>
+        <div class="noi-boom-ctl">
+          <button type="button" class="noi-btn" id="noi-boom-play" aria-pressed="true">Pause</button>
+          <label for="noi-boom-range">Image <output id="noi-boom-out">1</output> sur 46</label>
+          <input id="noi-boom-range" type="range" min="1" max="46" value="1">
+        </div>
+      </div>
+      <div class="noi-boom-view">
+        <canvas id="noi-boom" width="288" height="288" role="img" aria-label="Explosion de feu, image courante de l'animation"></canvas>
+        <div class="noi-sheet" aria-hidden="true">
+          <img src="img/explosion.webp" width="768" height="576" alt="" loading="lazy">
+          <i id="noi-sheet-hi"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="noi-sec" id="construction" aria-labelledby="noi-build">
+    <div class="noi-wrap">
+      <h2 id="noi-build">Comment c'est construit</h2>
+      <p class="noi-sub">Du Python découpé par rôle. pygame fait la boucle de jeu, les sprites et le son ; Tkinter et Pillow gèrent l'inscription et la connexion ; SQLite garde les comptes et les meilleurs scores, avec des mots de passe hachés par bcrypt.</p>
+      <div class="noi-build">
+        <figure class="noi-bars">
+          <figcaption>Taille des fichiers du dépôt, en Ko (les plus gros)</figcaption>
+          <ul>
+            <li style="--w:100%"><code>enemy.py</code><span class="noi-bar"><i></i></span><b>36</b></li>
+            <li style="--w:86%"><code>levellogic.py</code><span class="noi-bar"><i></i></span><b>31</b></li>
+            <li style="--w:55%"><code>projectiles.py</code><span class="noi-bar"><i></i></span><b>20</b></li>
+            <li style="--w:47%"><code>maingame.py</code><span class="noi-bar"><i></i></span><b>17</b></li>
+            <li style="--w:24%"><code>bonus.py</code><span class="noi-bar"><i></i></span><b>9</b></li>
+            <li style="--w:21%"><code>testsqlite.py</code><span class="noi-bar"><i></i></span><b>7</b></li>
+            <li style="--w:17%"><code>login.py</code><span class="noi-bar"><i></i></span><b>6</b></li>
+            <li style="--w:5%"><code>player.py</code><span class="noi-bar"><i></i></span><b>2</b></li>
+          </ul>
+        </figure>
+        <div class="noi-flow">
+          <h3>Du lancement à la partie</h3>
+          <ol>
+            <li><code>testsqlite.py</code><span>point de lancement indiqué par le README, base SQLite et bcrypt</span></li>
+            <li><code>login.py</code><span>fenêtres Tkinter : connexion ou inscription</span></li>
+            <li><code>levellogic.py</code><span>fonction <code>run_game</code>, enchaîne les niveaux</span></li>
+            <li><code>maingame.py</code><span>classe <code>Game</code> : joueur, ennemis, bonus, sons</span></li>
+          </ol>
+          <p class="noi-small">Ordre déduit des imports. Le dépôt contient aussi <code>path_dos2nix.sh</code>, un correctif pour les chemins avec crochets sous Linux et macOS.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="noi-sec" aria-labelledby="noi-scores">
+    <div class="noi-wrap noi-scores-wrap">
+      <div>
+        <h2 id="noi-scores">Tableau des scores</h2>
+        <p class="noi-sub">Décoratif : les noms et les scores sont inventés. Le vrai jeu enregistre le meilleur score de chaque compte dans SQLite. Ici, rien n'est stocké : votre score de la démo apparaît seulement jusqu'à la fermeture de la page.</p>
+      </div>
+      <table class="noi-table">
+        <caption>Scores fictifs</caption>
+        <thead><tr><th scope="col">Rang</th><th scope="col">Joueur</th><th scope="col">Score</th></tr></thead>
+        <tbody id="noi-score-body">
+          <tr><td>1</td><td>Aragorn-Fan</td><td>12&#8239;400</td></tr>
+          <tr><td>2</td><td>Pippin</td><td>9&#8239;850</td></tr>
+          <tr><td>3</td><td>Sam</td><td>7&#8239;120</td></tr>
+          <tr><td>4</td><td>Merry</td><td>4&#8239;300</td></tr>
+          <tr><td>5</td><td>Gollum</td><td>990</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="noi-sec noi-credits" aria-labelledby="noi-notes">
+    <div class="noi-wrap">
+      <h2 id="noi-notes">À savoir</h2>
+      <ul class="noi-list">
+        <li>Les images viennent du dépôt <code>theido74/neworcinvasion</code> (dossiers <code>image/</code>, <code>anime/explose/</code>). Je les ai seulement redimensionnées et compressées.</li>
+        <li>L'univers du Seigneur des Anneaux appartient à ses ayants droit : c'est un projet de passion, sans visée commerciale.</li>
+        <li>La démo reprend les commandes du README (S, flèches, espace) mais ses niveaux, son équilibrage et son code sont simplifiés. Pas de son.</li>
+        <li>Le README du dépôt est en anglais et invite à envoyer des retours.</li>
+      </ul>
+      <p class="noi-actions"><a class="noi-btn noi-btn-main" href="https://github.com/theido74/neworcinvasion" rel="noopener">Code</a></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+</body>
+</html>

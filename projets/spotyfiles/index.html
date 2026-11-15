@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="fr-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#232327">
+  <title>Spotyfiles&nbsp;: le temps passé sur vos dossiers, mesuré tout seul</title>
+  <meta name="description" content="Spotyfiles mesure le temps passé sur vos fichiers et le range dans le bon mandat, sans saisie. CHF&nbsp;180 par poste et par an, installé sur votre serveur.">
+  <!-- Partage sur les réseaux et messageries. Pas encore d'og:image ni d'og:url :
+       il n'existe ni image de partage ni nom de domaine. À ajouter quand ils existeront. -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_CH">
+  <meta property="og:title" content="Spotyfiles&nbsp;: le temps passé sur vos dossiers, mesuré tout seul">
+  <meta property="og:description" content="Spotyfiles mesure le temps passé sur vos fichiers et le range dans le bon mandat, sans saisie. CHF&nbsp;180 par poste et par an, installé sur votre serveur.">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000'/%3E%3Crect x='7' y='9' width='18' height='3' rx='1.5' fill='%23fff'/%3E%3Crect x='7' y='15' width='12' height='3' rx='1.5' fill='%23fff'/%3E%3Crect x='7' y='21' width='7' height='3' rx='1.5' fill='%23fff'/%3E%3C/svg%3E">
+  <!-- ?v= : changer la date à chaque mise en ligne, sinon un ancien main.js resté en cache se mélange à la nouvelle page. -->
+  <link rel="stylesheet" href="style.css?v=2026-11-09b">
+  <script>
+    (function () {
+      var racine = document.documentElement;
+      racine.classList.add('js');
+      // Le défilement animé n'est activé que si JavaScript tourne, que le visiteur
+      // n'a pas demandé de réduire les animations et que l'écran est assez haut.
+      // Sinon, tout se lit à plat.
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches ||
+          matchMedia('(max-height: 620px)').matches) {
+        return;
+      }
+      racine.classList.add('cine');
+      // Secours : si main.js n'a pas signalé son démarrage (window.spotyCineOk)
+      // trois secondes après le chargement, la page repasse à plat.
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          if (!window.spotyCineOk) racine.classList.remove('cine');
+        }, 3000);
+      });
+    })();
+  </script>
+</head>
+<body>
+  <a class="evitement" href="#mandats">Passer l'animation</a>
+
+  <header class="nav">
+    <a class="nav__nom" href="#haut">Spotyfiles</a>
+    <nav class="nav__liens" aria-label="Navigation principale">
+      <a class="nav__lien--large" href="#mandats">Mandats</a>
+      <a class="nav__lien--large" href="#confiance">Confidentialité</a>
+      <a href="#tarif">Tarif</a>
+    </nav>
+    <a class="nav__action" href="#contact">Nous écrire</a>
+  </header>
+
+  <main>
+    <section class="histoire" id="haut">
+      <div class="scene">
+
+        <div class="halo" aria-hidden="true"></div>
+
+        <div class="accroche">
+          <h1>Le temps passé sur vos dossiers, mesuré tout seul.</h1>
+          <p class="accroche__texte">Spotyfiles compte le temps passé sur vos fichiers et le range dans le bon mandat. Sans minuteur, sans saisie.</p>
+          <div class="actions">
+            <a class="bouton" href="#tarif">Voir le tarif</a>
+            <a class="lien" href="#contact">Nous écrire</a>
+          </div>
+        </div>
+        <p class="indice" aria-hidden="true">Faites défiler pour commencer</p>
+
+        <!-- L'ordinateur portable, construit en 3D. Son écran reçoit une copie de la
+             scène d'arrivée (fond, lumière et tableau de bord ci-dessous à 8 h 47),
+             ajoutée par main.js : en plongeant dans l'écran, on y entre sans coupure. -->
+        <div class="ordi-monde" aria-hidden="true">
+          <div class="ordi">
+            <div class="ordi__sol"></div>
+            <div class="ordi__ombre"></div>
+            <div class="ordi__base">
+              <div class="clavier" data-clavier></div>
+              <div class="pave"></div>
+              <div class="base__reflet"></div>
+            </div>
+            <i class="base__bord base__bord--avant"></i>
+            <i class="base__bord base__bord--gauche"></i>
+            <i class="base__bord base__bord--droite"></i>
+            <div class="ordi__capot">
+              <div class="capot__aura"></div>
+              <div class="capot__face">
+                <div class="capot__dalle">
+                  <div class="capot__contenu" data-ecran></div>
+                  <div class="capot__reflet"></div>
+                </div>
+              </div>
+              <div class="capot__dos"><span>Spotyfiles</span></div>
+              <i class="capot__tranche capot__tranche--haut"></i>
+              <i class="capot__tranche capot__tranche--gauche"></i>
+              <i class="capot__tranche capot__tranche--droite"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Les cinq étapes, pour les lecteurs d'écran : même texte que les légendes
+             animées ci-dessous, qui leur sont masquées. -->
+        <ol class="invisible">
+          <li>
+            <p>8&nbsp;h&nbsp;47</p>
+            <h2>Ouvrez un fichier. Le compteur démarre.</h2>
+            <p>Aucun bouton à presser. Le fichier est dans le dossier du mandat, le temps va sur ce mandat.</p>
+          </li>
+          <li>
+            <p>10&nbsp;h&nbsp;32</p>
+            <h2>Changez de fichier. Le temps change de client.</h2>
+            <p>La Menuiserie Rochat s'arrête après 1&nbsp;h&nbsp;45 de travail. Le Cabinet Favre prend le relais.</p>
+          </li>
+          <li>
+            <p>12&nbsp;h&nbsp;04</p>
+            <h2>Partez manger. Le compteur s'arrête.</h2>
+            <p>Après deux minutes sans clavier ni souris, votre pause ne finit pas sur la facture. (Voir la note&nbsp;1 en bas de page.)</p>
+          </li>
+          <li>
+            <p>15&nbsp;h&nbsp;20</p>
+            <h2>Le réseau tombe. Vous continuez.</h2>
+            <p>Vos heures attendent sur le poste et partent d'elles-mêmes au retour de la connexion.</p>
+          </li>
+          <li>
+            <p>17&nbsp;h&nbsp;30</p>
+            <h2>Votre journée est rangée. Vous n'avez rien saisi.</h2>
+            <p>Chaque heure passée sur vos fichiers est sur le bon client, prête pour la facture.</p>
+          </li>
+        </ol>
+
+        <ol class="legendes" aria-hidden="true">
+          <li class="legende">
+            <p class="legende__heure">8&nbsp;h&nbsp;47</p>
+            <h2>Ouvrez un fichier. Le compteur démarre.</h2>
+            <p>Aucun bouton à presser. Le fichier est dans le dossier du mandat, le temps va sur ce mandat.</p>
+          </li>
+          <li class="legende">
+            <p class="legende__heure">10&nbsp;h&nbsp;32</p>
+            <h2>Changez de fichier. Le temps change de client.</h2>
+            <p>La Menuiserie Rochat s'arrête après 1&nbsp;h&nbsp;45 de travail. Le Cabinet Favre prend le relais.</p>
+          </li>
+          <li class="legende">
+            <p class="legende__heure">12&nbsp;h&nbsp;04</p>
+            <h2>Partez manger. Le compteur s'arrête.</h2>
+            <p>Après deux minutes sans clavier ni souris, votre pause ne finit pas sur la facture.<sup><a href="#note-1" tabindex="-1" aria-label="note 1">1</a></sup></p>
+          </li>
+          <li class="legende">
+            <p class="legende__heure">15&nbsp;h&nbsp;20</p>
+            <h2>Le réseau tombe. Vous continuez.</h2>
+            <p>Vos heures attendent sur le poste et partent d'elles-mêmes au retour de la connexion.</p>
+          </li>
+          <li class="legende">
+            <p class="legende__heure">17&nbsp;h&nbsp;30</p>
+            <h2>Votre journée est rangée. Vous n'avez rien saisi.</h2>
+            <p>Chaque heure passée sur vos fichiers est sur le bon client, prête pour la facture.</p>
+          </li>
+        </ol>
+
+        <div class="ombre-jour" aria-hidden="true"></div>
+        <div class="fenetre" aria-hidden="true">
+          <div class="fenetre__barre">
+            <span class="fenetre__points"><i></i><i></i><i></i></span>
+            <span class="fenetre__adresse">votre-serveur/tableau-de-bord</span>
+          </div>
+          <div class="fenetre__corps">
+            <div class="jour">
+              <p class="titre-bloc">Aujourd'hui, <span data-heure>17&nbsp;h&nbsp;30</span></p>
+              <p class="jour__total" data-total>7&nbsp;h&nbsp;34</p>
+              <p class="jour__etat" data-etat="fini"><i></i><span data-etat-texte>Journée terminée</span></p>
+            </div>
+            <div class="detail">
+              <div class="clients">
+                <p class="titre-bloc">Temps par client</p>
+                <ul>
+                  <li><span>Menuiserie Rochat</span><b data-duree="a">3&nbsp;h&nbsp;50</b><i class="barre"><i class="bloc--a" data-barre="a" style="width:100%"></i></i></li>
+                  <li><span>Cabinet Favre</span><b data-duree="b">1&nbsp;h&nbsp;34</b><i class="barre"><i class="bloc--b" data-barre="b" style="width:40.9%"></i></i></li>
+                  <li><span>Garage du Lac SA</span><b data-duree="c">2&nbsp;h&nbsp;10</b><i class="barre"><i class="bloc--c" data-barre="c" style="width:56.5%"></i></i></li>
+                </ul>
+              </div>
+              <div class="fichiers">
+                <p class="titre-bloc">Derniers fichiers travaillés</p>
+                <ul data-fichiers>
+                  <li><span>TVA_T3_2026.pdf</span><small>Garage du Lac SA</small></li>
+                  <li><span>bouclement_2025.xlsx</span><small>Menuiserie Rochat</small></li>
+                  <li><span>salaires_octobre.xlsx</span><small>Cabinet Favre</small></li>
+                </ul>
+              </div>
+            </div>
+            <div class="frise">
+              <div class="frise__piste">
+                <i class="frise__bloc bloc--a" data-frise="0"></i>
+                <i class="frise__bloc bloc--b" data-frise="1"></i>
+                <i class="frise__bloc bloc--a" data-frise="2"></i>
+                <i class="frise__bloc bloc--c" data-frise="3"></i>
+              </div>
+              <div class="frise__heures"><span>8&nbsp;h</span><span>13&nbsp;h</span><span>18&nbsp;h</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section section--halo-haut" id="mandats">
+      <h2 class="titre-section">Vous savez où en est chaque mandat, avant la facture.</h2>
+
+      <div class="grille">
+        <article class="carte carte--large">
+          <div class="carte__texte">
+            <h3>Chaque mandat, face à son devis.</h3>
+            <p>Les heures réalisées, comparées au budget prévu. Vous voyez quel mandat tient, et lequel déborde.</p>
+          </div>
+          <ul class="budgets" aria-label="Exemple de mandats">
+            <li style="--avance:95%">
+              <div><strong>Bouclement 2025</strong><span>Menuiserie Rochat</span></div>
+              <i></i>
+              <p><b>38&nbsp;h</b> sur 40&nbsp;h</p>
+            </li>
+            <li style="--avance:80%">
+              <div><strong>Comptabilité et TVA 2026</strong><span>Garage du Lac SA</span></div>
+              <i></i>
+              <p><b>64&nbsp;h</b> sur 80&nbsp;h</p>
+            </li>
+            <li style="--avance:63%">
+              <div><strong>Salaires 2026</strong><span>Cabinet Favre</span></div>
+              <i></i>
+              <p><b>38&nbsp;h</b> sur 60&nbsp;h</p>
+            </li>
+            <li style="--avance:40%">
+              <div><strong>Déclaration d'impôt 2025</strong><span>Domaine des Trois Tilleuls</span></div>
+              <i></i>
+              <p><b>12&nbsp;h</b> sur 30&nbsp;h</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="carte carte--moitie">
+          <div class="carte__texte">
+            <h3>Une alerte avant le dépassement.</h3>
+            <p>Choisissez le seuil, mandat par mandat. Une alerte s'affiche dans votre tableau de bord dès que le seuil est atteint.</p>
+          </div>
+          <div class="anneau" aria-hidden="true"><span>80&nbsp;%</span></div>
+        </article>
+
+        <article class="carte carte--moitie">
+          <div class="carte__texte">
+            <h3>À plusieurs sur un mandat.</h3>
+            <p>Un mandat peut être partagé entre collègues. Les heures s'additionnent et vous voyez qui a fait quoi.</p>
+          </div>
+          <div class="equipe">
+            <p class="equipe__total"><b>35&nbsp;h</b> sur 100&nbsp;h</p>
+            <div class="equipe__barre" aria-hidden="true"><i style="width:20%"></i><i style="width:15%"></i></div>
+            <ul>
+              <li><i class="pastille pastille--claire"></i>Claire, 20&nbsp;h</li>
+              <li><i class="pastille pastille--moyenne"></i>Marc, 15&nbsp;h</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="carte carte--tiers">
+          <div class="carte__texte">
+            <h3>Vos chiffres en PDF.</h3>
+            <p>Exportez vos statistiques pour préparer une facture ou répondre à un client.</p>
+          </div>
+          <div class="feuille" aria-hidden="true">
+            <b>Rapport</b>
+            <i style="width:92%"></i><i style="width:78%"></i><i style="width:86%"></i><i style="width:54%"></i>
+          </div>
+        </article>
+
+        <article class="carte carte--deux-tiers">
+          <div class="carte__texte">
+            <h3>Un agent sur chaque poste.</h3>
+            <p>Un petit programme, l'agent, s'installe sur chaque ordinateur. Il démarre avec la session de chacun, puis travaille sans rien demander.</p>
+          </div>
+          <p class="systemes">Windows<br>macOS<br>Linux</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section--halo-haut" id="confiance">
+      <h2 class="declaration" data-declaration>
+        <span>L'agent ne regarde pas ce que vous tapez.</span>
+        <span>Ni votre écran.</span>
+        <span>Ni le contenu de vos fichiers.</span>
+      </h2>
+      <div class="colonnes">
+        <div>
+          <h3>Ce qu'il enregistre</h3>
+          <p>Le nom, l'emplacement, la taille et la date de création du fichier, l'heure de début et de fin, et l'identifiant de l'ordinateur. Uniquement dans les dossiers rattachés à un mandat. Pour reconnaître le fichier ouvert, il lit le titre de la fenêtre active, et rien d'autre à l'écran.</p>
+        </div>
+        <div>
+          <h3>Sur votre serveur</h3>
+          <p>L'application s'installe sur votre serveur Linux. Heures, clients et mandats y restent.</p>
+        </div>
+        <div>
+          <h3>Clair pour tout le monde</h3>
+          <p>Chaque employé voit son temps. Son responsable voit celui de son équipe, pour la facturation. Employeur et employés acceptent des conditions d'utilisation avant de commencer.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section tarif" id="tarif">
+      <h2 class="titre-section">Un tarif simple.</h2>
+      <p class="tarif__prix"><span>CHF</span>&nbsp;180</p>
+      <p class="tarif__unite">par poste, par an.</p>
+      <p class="tarif__chapo">Un poste, c'est un ordinateur équipé de l'agent. Pour une équipe de dix postes, cela fait CHF&nbsp;1&nbsp;800 par an.</p>
+
+      <div class="tarif__compris">
+        <h3>Compris dans le prix</h3>
+        <ul>
+          <li><strong>L'agent sur chaque poste,</strong> qui mesure le temps tout seul.</li>
+          <li><strong>L'application web,</strong> avec un compte administrateur pour gérer les clients, les mandats et l'équipe, et voir les statistiques.</li>
+          <li><strong>L'export des statistiques en PDF,</strong> pour préparer une facture.</li>
+        </ul>
+      </div>
+
+      <!-- Sans JavaScript, les options restent lisibles sous forme de liste. -->
+      <ul class="tarif__statique">
+        <li><strong>Fonctionnalités sur mesure</strong><span>CHF&nbsp;1&nbsp;000 par fonctionnalité</span></li>
+        <li><strong>Base de données adaptée</strong><span>CHF&nbsp;200 de l'heure</span></li>
+      </ul>
+
+      <div class="tarif__action">
+        <button type="button" class="bouton bouton--sombre" data-modifier aria-expanded="false" aria-controls="personnalisation">Calculer pour mon équipe</button>
+      </div>
+
+      <div class="personnalisation" id="personnalisation" hidden>
+        <p class="tarif__chapo">Indiquez votre nombre de postes. Les deux options sur mesure ne sont pas comprises dans l'estimation.</p>
+
+        <div class="calculateur" data-calculateur>
+          <div class="options">
+            <div class="option">
+              <div class="option__texte">
+                <h3><label for="choix-postes">Postes</label></h3>
+                <p>CHF&nbsp;180 par poste, par an. Un poste, c'est un ordinateur équipé de l'agent.</p>
+              </div>
+              <div class="compteur">
+                <button type="button" class="compteur__bouton" data-moins aria-label="Retirer un poste">&minus;</button>
+                <input class="compteur__valeur" id="choix-postes" type="number" inputmode="numeric" min="1" step="1" value="10">
+                <button type="button" class="compteur__bouton" data-plus aria-label="Ajouter un poste">+</button>
+              </div>
+              <input class="curseur" data-curseur type="range" min="1" max="500" step="1" value="10" aria-label="Nombre de postes, de 1 à 500">
+              <p class="tarif__au-dela" data-au-dela hidden>Plus de 500 postes&nbsp;? Écrivez-nous, nous établirons un devis.</p>
+            </div>
+
+            <div class="option">
+              <div class="option__texte">
+                <h3>Fonctionnalités sur mesure</h3>
+                <p>Nous développons ce qui manque à votre façon de travailler.</p>
+              </div>
+              <p class="option__prix"><b>CHF&nbsp;1&nbsp;000</b> par fonctionnalité</p>
+            </div>
+
+            <div class="option">
+              <div class="option__texte">
+                <h3>Base de données adaptée</h3>
+                <p>Nous adaptons la base de données à votre organisation.</p>
+              </div>
+              <p class="option__prix"><b>CHF&nbsp;200</b> de l'heure</p>
+            </div>
+
+            <!-- Sur téléphone : le total reste visible pendant les réglages. -->
+            <div class="options__total" aria-hidden="true">
+              <span>Par an</span>
+              <b data-total-court>CHF&nbsp;1&nbsp;800</b>
+            </div>
+          </div>
+
+          <aside class="resume" aria-labelledby="resume-titre">
+            <h3 id="resume-titre">Votre estimation</h3>
+            <p class="resume__libelle" data-libelle>10&nbsp;postes à CHF&nbsp;180</p>
+            <p class="resume__total"><span>CHF</span>&nbsp;<b data-total>1&nbsp;800</b></p>
+            <p class="resume__suite">par an</p>
+            <a class="bouton resume__action" data-devis href="#contact">Demander ce devis</a>
+            <p class="resume__note">Montant indicatif, sans les options sur mesure. Confirmé avec vous avant toute commande.</p>
+            <p class="invisible" data-annonce aria-live="polite"></p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--halo-haut contact" id="contact">
+      <h2 class="titre-section">Une question&nbsp;? Demandez une démonstration.</h2>
+      <a class="contact__mail" href="mailto:contact@spotyfiles.example?subject=Spotyfiles%20%3A%20demande%20d%27information">contact@spotyfiles.example</a>
+      <p class="contact__note">Dites-nous combien de postes vous avez et ce que vous facturez au temps. Nous répondons par e-mail sous deux jours ouvrables.</p>
+    </section>
+  </main>
+
+  <footer class="pied">
+    <ol>
+      <li id="note-1">Après deux minutes sans clavier ni souris, le compteur s'arrête&nbsp;; ces deux minutes restent comptées. Le délai se règle à l'installation. La mise en pause automatique dépend du système de chaque poste.</li>
+    </ol>
+    <p>Les écrans de cette page sont des illustrations. Clients, fichiers et chiffres sont inventés.</p>
+    <p>Spotyfiles, par Arnaud, Martin et Matyas.</p>
+  </footer>
+
+  <script src="main.js?v=2026-11-09b"></script>
+  <script src="tarif.js?v=2026-11-09b"></script>
+  <script src="lumiere.js?v=2026-11-09b"></script>
+</body>
+</html>
