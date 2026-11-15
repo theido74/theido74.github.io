@@ -79,6 +79,34 @@
       return s;
     }).join("") + "</g>";
 
+  V["esig-individuel"] =
+    '<rect class="o" x="10" y="14" width="74" height="62" rx="3"/><path class="o" style="opacity:.55" d="M46 14v26M10 46h36M62 46v30"/>' +
+    '<circle class="f1 a-roam" cx="24" cy="30" r="3.5"/>' +
+    '<rect class="o" x="104" y="22" width="26" height="15" rx="3"/><circle class="f1" cx="132" cy="29.5" r="4.5"/><path class="f2 a-blink" d="M136 29.5l16-13v46z"/>' +
+    '<rect class="o a-pop" style="--d:.6s" x="140" y="26" width="9" height="14" rx="1.5" stroke-dasharray="3 2"/><path class="o" d="M117 37v9h-8M117 46h14"/>';
+
+  V["esig-weba"] =
+    '<path class="f2" d="M24 30l-10-14 16 5zM60 30l10-14-16 5z"/><ellipse class="o" cx="42" cy="48" rx="20" ry="18"/>' +
+    '<circle class="f1 a-blink" cx="34" cy="44" r="2.4"/><circle class="f1 a-blink" cx="50" cy="44" r="2.4"/><ellipse class="f1" cx="42" cy="54" rx="4.5" ry="3.2"/><path class="o" d="M42 57v4M36 62q6 4 12 0"/>' +
+    '<circle class="f1" cx="106" cy="68" r="4.5"/><path class="o a-pop" style="--d:.3s" d="M104 56a12 12 0 0 1 12 12" stroke-width="3"/><path class="o a-pop" style="--d:.8s" d="M104 44a24 24 0 0 1 24 24" stroke-width="3"/><path class="o a-pop" style="--d:1.3s" d="M104 32a36 36 0 0 1 36 36" stroke-width="3"/>';
+
+  V["esig-apo"] =
+    '<rect class="o" x="10" y="12" width="72" height="66" rx="5"/><path class="o" d="M10 24h72"/>' +
+    '<rect class="f2" x="18" y="32" width="40" height="3" rx="1.5"/><rect class="f2" x="18" y="40" width="28" height="3" rx="1.5"/><rect class="f2" x="18" y="48" width="48" height="3" rx="1.5"/><rect class="f1" x="18" y="58" width="5" height="8" rx="1"/><rect class="f1 a-blink" x="26" y="58" width="5" height="8" rx="1"/>' +
+    '<rect class="f1 a-pop" style="--d:0s" x="98" y="66" width="52" height="11" rx="2"/><rect class="f2 a-pop" style="--d:.5s" x="98" y="52" width="52" height="11" rx="2"/><rect class="f2 a-pop" style="--d:1s" x="98" y="38" width="52" height="11" rx="2"/><rect class="f2 a-pop" style="--d:1.5s" x="98" y="24" width="52" height="11" rx="2"/>';
+
+  V["esig-inlo"] = (function () {
+    var teeth = "";
+    for (var k = 0; k < 8; k++) {
+      var a = k * Math.PI / 4, c = Math.cos(a), s = Math.sin(a);
+      teeth += "M" + (36 + c * 15).toFixed(1) + " " + (45 + s * 15).toFixed(1) + "L" + (36 + c * 21).toFixed(1) + " " + (45 + s * 21).toFixed(1);
+    }
+    return '<g class="a-gear"><circle class="o" cx="36" cy="45" r="14"/><circle class="o" cx="36" cy="45" r="5"/><path class="o" stroke-width="4" d="' + teeth + '"/></g>' +
+      '<rect class="o" x="80" y="16" width="70" height="58" rx="5" stroke-dasharray="4 3"/>' +
+      '<rect class="f2 a-pop" style="--d:0s" x="88" y="26" width="34" height="3" rx="1.5"/><rect class="f2 a-pop" style="--d:.5s" x="88" y="35" width="48" height="3" rx="1.5"/><rect class="f2 a-pop" style="--d:1s" x="88" y="44" width="26" height="3" rx="1.5"/>' +
+      '<path class="f1 a-pulse" d="M130 58l9 5-9 5z"/>';
+  })();
+
   var fallback = '<path class="o" d="M60 28L36 45l24 17M100 28l24 17-24 17M90 20L70 70"/>';
 
   H.preview = function (id) {

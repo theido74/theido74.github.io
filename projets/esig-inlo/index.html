@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>INLO · GeLeprechaun</title>
+<meta name="description" content="Formation ESIG, module INLO, projet de groupe : une plateforme d'apprentissage de Python écrite en Rust. Architecture, bac à sable d'exécution, plan de refonte et ma part du travail d'après l'historique du dépôt.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b1a2e">
+<meta property="og:type" content="website">
+<meta property="og:title" content="INLO · GeLeprechaun">
+<meta property="og:description" content="Une plateforme pour apprendre Python, écrite en Rust : bac à sable, tuteur qui pose des questions, parcours adaptatif. Projet de groupe ESIG.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body>
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../esig-apo/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../spotyfiles/" rel="next">Suivant</a>
+  </nav>
+</header>
+
+<main id="main" class="inl">
+
+  <section class="inl-hero" aria-labelledby="inl-h1">
+    <div class="inl-wrap">
+      <p class="inl-badge">Formation ESIG · module INLO · projet de groupe</p>
+      <h1 id="inl-h1" class="inl-title">INLO</h1>
+      <p class="inl-lead">Une plateforme pour apprendre Python, écrite en Rust. L'idée : un tuteur qui pose des questions au lieu de donner les réponses, et un code d'apprenant toujours exécuté dans une boîte fermée.</p>
+      <p class="inl-status"><b>Où en est le projet.</b> Le dépôt est jeune (créé le 12 novembre 2026). Il contient un socle (quatre modules Rust, une API qui répond à un test de santé, une migration, un exercice), des décisions d'architecture et un plan sur sept sprints. Une grande partie de ce qui est décrit ici reste à construire, et les pages le disent.</p>
+      <p class="inl-note">Dépôt privé de l'ESIG (Genève) : le code n'est pas public, donc pas de lien vers lui.</p>
+
+      <div class="inl-lab">
+        <div class="inl-lab-head">
+          <h2 id="inl-lab-t">Que devient un code soumis ?</h2>
+          <p class="inl-sub">Simulation pédagogique et simplifiée de la conception : le conteneur d'exécution réel est encore à implémenter. Choisissez un code d'apprenant et soumettez-le.</p>
+        </div>
+
+        <fieldset class="inl-pick">
+          <legend>Code de l'apprenant</legend>
+          <label><input type="radio" name="inl-case" value="ok" checked><span><b>Tout est juste</b><small>4 tests sur 4</small></span></label>
+          <label><input type="radio" name="inl-case" value="partial"><span><b>Un test échoue</b><small>3 tests sur 4</small></span></label>
+          <label><input type="radio" name="inl-case" value="loop"><span><b>Boucle infinie</b><small><code>while True</code></small></span></label>
+          <label><input type="radio" name="inl-case" value="flood"><span><b>Affichage sans fin</b><small>sortie énorme</small></span></label>
+        </fieldset>
+        <p class="inl-run"><button type="button" class="inl-btn inl-btn-main" id="inl-submit">Soumettre</button></p>
+
+        <ol class="inl-rail" id="inl-rail" aria-label="Parcours d'une soumission (simplifié)">
+          <li data-s="web"><b>Navigateur</b><small>inlo-web · Leptos</small></li>
+          <li data-s="api"><b>API</b><small>inlo-api · Axum</small></li>
+          <li data-s="run" class="inl-run-st"><b>Bac à sable</b><small>inlo-runner</small>
+            <div class="inl-meters" aria-hidden="true">
+              <p><span>temps</span><i><u id="m-time"></u></i><em id="v-time">0,0 / 5 s</em></p>
+              <p><span>sortie</span><i><u id="m-out"></u></i><em id="v-out">0 / 64 Kio</em></p>
+              <p><span>mémoire</span><i class="inl-static"><u></u></i><em>128 Mo max</em></p>
+            </div>
+          </li>
+          <li data-s="core"><b>Score</b><small>inlo-core</small></li>
+          <li data-s="db"><b>Base</b><small>PostgreSQL</small></li>
+          <li class="inl-token" id="inl-token" aria-hidden="true"></li>
+        </ol>
+
+        <div class="inl-result" id="inl-result" role="status" aria-live="polite">
+          <p class="inl-result-t">En attente d'une soumission.</p>
+          <ul class="inl-tests" id="inl-tests"></ul>
+          <p class="inl-formula" id="inl-formula"></p>
+        </div>
+        <p class="inl-small">Limites par défaut lues dans le code du module d'exécution : 5 secondes, 128 Mo de mémoire, 64 Kio de sortie. Le temps de la simulation est accéléré. Ce que fait vraiment le dépôt aujourd'hui : un module « bac à sable » qui définit ces limites et ses erreurs, sans encore de conteneur derrière.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="inl-sec" aria-labelledby="inl-crates">
+    <div class="inl-wrap">
+      <h2 id="inl-crates">Quatre modules, des frontières nettes</h2>
+      <p class="inl-sub">Le projet est découpé en modules Rust (des « crates »), avec une règle par module. Choisissez-en un.</p>
+      <div class="inl-crates">
+        <div class="inl-tabs" role="tablist" aria-label="Modules Rust">
+          <button type="button" role="tab" aria-selected="true" id="c-core" data-c="core">inlo-core</button>
+          <button type="button" role="tab" aria-selected="false" id="c-runner" data-c="runner" tabindex="-1">inlo-runner</button>
+          <button type="button" role="tab" aria-selected="false" id="c-api" data-c="api" tabindex="-1">inlo-api</button>
+          <button type="button" role="tab" aria-selected="false" id="c-web" data-c="web" tabindex="-1">inlo-web</button>
+        </div>
+        <svg class="inl-graph" viewBox="0 0 360 240" role="img" aria-label="Schéma : le navigateur parle à l'API ; l'API utilise le domaine ; le module d'exécution renvoie des résultats de tests définis dans le domaine.">
+          <defs><marker id="inl-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7fd4ff"/></marker></defs>
+          <g class="inl-gn" data-n="web"><rect x="110" y="8" width="140" height="44" rx="8"/><text x="180" y="36" text-anchor="middle">inlo-web</text></g>
+          <g class="inl-gn" data-n="api"><rect x="110" y="80" width="140" height="44" rx="8"/><text x="180" y="108" text-anchor="middle">inlo-api</text></g>
+          <g class="inl-gn" data-n="runner"><rect x="8" y="188" width="140" height="44" rx="8"/><text x="78" y="216" text-anchor="middle">inlo-runner</text></g>
+          <g class="inl-gn" data-n="core"><rect x="212" y="188" width="140" height="44" rx="8"/><text x="282" y="216" text-anchor="middle">inlo-core</text></g>
+          <path d="M180 54 V76" class="inl-ge" marker-end="url(#inl-ar)"/>
+          <path d="M160 126 L100 184" class="inl-ge inl-ge-d" marker-end="url(#inl-ar)"/>
+          <path d="M215 126 L260 184" class="inl-ge" marker-end="url(#inl-ar)"/>
+          <path d="M150 210 H208" class="inl-ge" marker-end="url(#inl-ar)"/>
+          <text x="262" y="160" class="inl-gt">utilise</text><text x="8" y="150" class="inl-gt">à retravailler</text>
+        </svg>
+        <div class="inl-card" id="inl-card" role="tabpanel" tabindex="0" aria-live="polite"></div>
+      </div>
+      <p class="inl-small">Le trait en pointillé signale un point que le plan de refonte veut corriger : l'API ne devrait jamais pouvoir exécuter de code. Le plan prévoit aussi de découper davantage (worker, tuteur, stockage…).</p>
+    </div>
+  </section>
+
+  <section class="inl-sec" aria-labelledby="inl-vise">
+    <div class="inl-wrap">
+      <h2 id="inl-vise">Ce que la plateforme vise</h2>
+      <p class="inl-sub">Trois axes sont prévus dans le plan. Aucun n'est livré pour l'instant.</p>
+      <ul class="inl-axes">
+        <li><h3>Un tuteur qui questionne</h3><p>Des indices gradués : une question, une piste, un concept, un exemple voisin. Il part de l'erreur réelle de l'apprenant et ne doit jamais donner la solution.</p><span class="inl-tag">prévu</span></li>
+        <li><h3>Un parcours adaptatif</h3><p>Un graphe de compétences, une maîtrise estimée pour chacune, et un exercice suivant recommandé avec la raison du choix.</p><span class="inl-tag">prévu</span></li>
+        <li><h3>Du social en direct</h3><p>Un mode classe où l'enseignant voit qui est bloqué, et une programmation en binôme pilote et copilote.</p><span class="inl-tag">prévu</span></li>
+      </ul>
+      <h3 class="inl-h3">Ordre de livraison prévu, sur sept sprints de deux semaines</h3>
+      <div class="inl-sprints" id="inl-sprints" role="img" aria-label="Frise : le socle aux sprints 1 et 2, le tuteur au sprint 3, l'adaptatif au sprint 4, le temps réel aux sprints 5 et 6.">
+        <ol class="inl-sp-head" aria-hidden="true"><li>S1</li><li>S2</li><li>S3</li><li>S4</li><li>S5</li><li>S6</li><li>S7</li></ol>
+        <div class="inl-sp-bars" aria-hidden="true">
+          <p style="--a:1;--b:3"><span>Socle : soumission, exécution isolée, score</span></p>
+          <p style="--a:3;--b:4"><span>Tuteur</span></p>
+          <p style="--a:4;--b:5"><span>Adaptatif</span></p>
+          <p style="--a:5;--b:7"><span>Temps réel</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="inl-sec" aria-labelledby="inl-part">
+    <div class="inl-wrap">
+      <h2 id="inl-part">Ma part, d'après l'historique du dépôt</h2>
+      <p class="inl-sub">Projet de groupe, équipe de trois. Voici seulement ce que les commits et les tickets prouvent, au 15 novembre 2026. L'historique visible porte mon identité : huit commits sur la branche principale, et tous les tickets ouverts à ce jour.</p>
+      <ul class="inl-stats" id="inl-stats">
+        <li><b data-n="8">8</b><span>commits sur la branche principale</span></li>
+        <li><b data-n="13">13</b><span>tickets et demandes de fusion ouverts</span></li>
+        <li><b data-n="3">3</b><span>demandes de fusion acceptées</span></li>
+        <li><b data-n="934">934</b><span>lignes ajoutées dans le spike en revue</span></li>
+      </ul>
+      <div class="inl-board">
+        <section aria-labelledby="k-done"><h3 id="k-done">Fusionné</h3>
+          <ul>
+            <li>L'environnement de travail : espace de travail Rust, outillage d'assistance IA, intégration continue.</li>
+            <li>Un guide de travail en équipe avec Git et GitHub : tickets, branches, worktrees.</li>
+            <li>Des agents et des compétences pour l'assistant Copilot.</li>
+            <li>Le plan de refonte complet : vision, architecture cible, roadmap, backlog et risques.</li>
+          </ul></section>
+        <section aria-labelledby="k-review"><h3 id="k-review">En revue</h3>
+          <ul>
+            <li><b>Spike de l'éditeur de code</b> : CodeMirror 6 branché sur Leptos par un pont WebAssembly, avec synchronisation dans les deux sens sans boucle, démontage propre et repli sur un champ de texte. Les modules sont regroupés en local et vérifiés par la CI.</li>
+          </ul></section>
+        <section aria-labelledby="k-todo"><h3 id="k-todo">À faire (tickets ouverts)</h3>
+          <ul>
+            <li>Rédiger et faire accepter les décisions d'architecture.</li>
+            <li>Durcir le bac à sable et son image.</li>
+            <li>Créer les modules cibles et un contrôle des frontières en CI.</li>
+            <li>Passer le contenu au format v2.</li>
+            <li>Migrer le schéma de base de données.</li>
+            <li>Unifier l'outillage IA.</li>
+            <li>Implémenter l'exécution par conteneur et son faux pour les tests.</li>
+          </ul></section>
+      </div>
+      <p class="inl-small">Je ne prétends rien sur les parties du groupe qui ne sont pas visibles dans cet historique.</p>
+    </div>
+  </section>
+
+  <section class="inl-sec" aria-labelledby="inl-score">
+    <div class="inl-wrap inl-two">
+      <div>
+        <h2 id="inl-score">Un petit calcul, en Rust</h2>
+        <p class="inl-sub">Le domaine contient déjà la fonction qui note une soumission : le pourcentage de tests réussis, en nombres entiers. Cochez les tests réussis pour voir la division entière à l'œuvre.</p>
+        <fieldset class="inl-checks" id="inl-checks"><legend>Tests réussis</legend></fieldset>
+        <p class="inl-formula" id="inl-calc" role="status" aria-live="polite"></p>
+        <div class="inl-gauge" aria-hidden="true"><i id="inl-gauge"></i></div>
+      </div>
+      <figure class="inl-code">
+        <figcaption>La fonction de notation, recopiée du code</figcaption>
+<pre><code>pub fn score(outcomes: &amp;[TestOutcome]) -&gt; u8 {
+    if outcomes.is_empty() {
+        return 0;
+    }
+    let passed = outcomes.iter().filter(|o| o.passed).count();
+    // passed &lt;= len, donc le résultat est dans 0..=100.
+    u8::try_from(passed * 100 / outcomes.len()).unwrap_or(100)
+}</code></pre>
+      </figure>
+    </div>
+  </section>
+
+  <section class="inl-sec" aria-labelledby="inl-build">
+    <div class="inl-wrap inl-two">
+      <div>
+        <h2 id="inl-build">Comment c'est construit</h2>
+        <ul class="inl-list">
+          <li><b>Rust</b> (édition 2024) en espace de travail à plusieurs modules, avec Clippy en mode pédantique et <code>unsafe</code> interdit.</li>
+          <li><b>API</b> avec Axum et PostgreSQL (sqlx) ; <b>interface</b> avec Leptos, compilée en WebAssembly.</li>
+          <li><b>Exercices</b> en Python, chacun avec énoncé, code de départ, solution et tests pytest ; la solution doit passer ses propres tests.</li>
+          <li><b>Intégration continue</b> : formatage, lints et tests Rust, tests des exercices, construction de l'image du bac à sable et tests d'évasion.</li>
+          <li><b>Méthode d'équipe</b> : une branche par tâche, jamais de commit direct sur la branche principale, messages en « Conventional Commits », relecture par au moins une autre personne.</li>
+        </ul>
+        <ul class="inl-tags" aria-label="Technologies"><li>Rust</li><li>Axum</li><li>sqlx</li><li>PostgreSQL</li><li>Leptos</li><li>WebAssembly</li><li>Docker</li><li>Python</li><li>GitHub Actions</li></ul>
+      </div>
+      <div class="inl-box">
+        <h3>Sécurité : le code d'un apprenant est hostile par défaut</h3>
+        <p>Règle de la conception : aucun accès au réseau, système de fichiers en lecture seule, utilisateur sans droits, limites de temps, de mémoire et de sortie. Rien n'est jamais exécuté hors du bac à sable, tests compris.</p>
+        <p class="inl-small">C'est l'intention documentée du projet ; la mise en œuvre complète est dans les tickets à faire.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+</body>
+</html>

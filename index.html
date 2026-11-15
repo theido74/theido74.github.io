@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#080a10">
 <meta property="og:type" content="website">
 <meta property="og:title" content="GeLeprechaun, développeur et photographe">
-<meta property="og:description" content="Treize projets : bots, sécurité et embarqué, SQL, web, outils et jeux.">
+<meta property="og:description" content="Dix-sept projets : bots, sécurité et embarqué, SQL, web, outils, jeux et projets de formation ESIG.">
 <meta property="og:locale" content="fr_CH">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -58,6 +58,7 @@
         <div class="tl">Outils et projets personnels en Rust et en C, jusque sur Flipper Zero.</div>
         <div class="tl">Photo, avec développement des fichiers sous darktable.</div>
         <div class="tl">Une petite activité indépendante.</div>
+        <div class="tl">Formation : ESIG (Genève).</div>
       </div>
       <form class="term-form js-only" id="term-form" autocomplete="off">
         <label class="ps" for="term-in">$<span class="sr"> Commande</span></label>
@@ -75,11 +76,12 @@
 
   <section class="sec projets" id="projets" aria-labelledby="projets-titre">
     <div class="wrap">
-      <h2 id="projets-titre"><span data-count="projects">13</span> projets, <span data-count="techs">24</span> technologies, <span data-count="cats">6</span> catégories</h2>
+      <h2 id="projets-titre"><span data-count="projects">17</span> projets, <span data-count="techs">29</span> technologies, <span data-count="cats">6</span> catégories</h2>
 
       <div class="filters js-only">
         <div class="mix" id="mix" aria-hidden="true"></div>
         <div class="legend" id="cat-legend" role="group" aria-label="Filtrer par catégorie"></div>
+        <div class="chips" id="org-bar" role="group" aria-label="Filtrer par formation" hidden></div>
         <div class="techs" role="group" aria-label="Filtrer par technologie">
           <div class="chips" id="tech-top"></div>
           <details class="more"><summary id="tech-more-sum">Autres technologies</summary><div class="chips" id="tech-more"></div></details>
@@ -105,6 +107,10 @@
           <li><strong>Image Scanner</strong> (Public) : Outil en ligne de commande très rapide pour scanner et cataloguer des images (disque, web, Azure Blob) avec export CSV/JSON. <a href="https://github.com/theido74/image-scanner" rel="noopener">Code de Image Scanner</a> <a href="projets/image-scanner/">Page de Image Scanner</a></li>
           <li><strong>New Orc Invasion</strong> (Public) : Jeu de tir inspiré de Space Invaders dans l'univers du Seigneur des Anneaux, avec comptes et scores sauvegardés. <a href="https://github.com/theido74/neworcinvasion" rel="noopener">Code de New Orc Invasion</a> <a href="projets/neworcinvasion/">Page de New Orc Invasion</a></li>
           <li><strong>Nim Game</strong> (Public) : Jeu de Nim avec agent et analyse statistique des parties (graphiques). Projet étudiant. <a href="https://github.com/theido74/nimgame" rel="noopener">Code de Nim Game</a> <a href="projets/nimgame/">Page de Nim Game</a></li>
+          <li><strong>Projet individuel (StreetEye, version de cours)</strong> (Privé, formation ESIG) : Projet individuel de la formation ESIG : surveillance de rue par caméra avec détection YOLOv8, interface PHP et base PostgreSQL, mis en regard de la description fonctionnelle. <a href="projets/esig-individuel/">Page de Projet individuel (StreetEye, version de cours)</a></li>
+          <li><strong>SPA Dog Refuge</strong> (Privé, formation ESIG) : Projet WEBA de la formation ESIG : application Flask et SQLite qui réunit des annonces de chiens de refuges suisses, avec une lecture de flux RSS défendue (IP privées, redirections, XML hostile). En cours. <a href="projets/esig-weba/">Page de SPA Dog Refuge</a></li>
+          <li><strong>Aventure textuelle en Java</strong> (Privé, formation ESIG) : Jeu d'aventure en console : quatre classes, une liste de scénarios et une méthode récursive. Démo jouable et pile d'appels en direct. <a href="projets/esig-apo/">Page de Aventure textuelle en Java</a></li>
+          <li><strong>INLO : apprendre Python avec Rust</strong> (Privé, formation ESIG) : Projet de groupe : une plateforme d'apprentissage de Python écrite en Rust, avec bac à sable d'exécution et tuteur qui pose des questions. Simulation interactive et état réel du dépôt. <a href="projets/esig-inlo/">Page de INLO : apprendre Python avec Rust</a></li>
         </ul>
       </noscript>
     </div>
@@ -117,6 +123,7 @@
         <!-- À CONFIRMER -->
         <p>Je travaille en informatique de gestion : Java, Kotlin, Python, développement web et SQL. Je développe aussi des outils et des projets personnels en Rust et en C, jusque sur Flipper Zero.</p>
         <p>Côté image, je fais de la photo et je développe mes fichiers avec darktable. Je mène une petite activité indépendante.</p>
+        <p>Formation : ESIG (Genève). Quatre projets de cours sont dans la liste, repérés par le badge ESIG.</p>
       </div>
       <pre class="code" aria-hidden="true"><code><span class="k">const</span> <span class="v">dev</span> = {
   <span class="p">nom</span>:       <span class="s">"GeLeprechaun"</span>,
@@ -126,6 +133,7 @@
   <span class="p">web</span>:       [<span class="s">"PHP"</span>, <span class="s">"JS"</span>, <span class="s">"HTML"</span>, <span class="s">"CSS"</span>],
   <span class="p">systeme</span>:   <span class="s">"Linux"</span>,
   <span class="p">image</span>:     <span class="s">"photo, darktable"</span>,
+  <span class="p">formation</span>: <span class="s">"ESIG (Genève)"</span>,
   <span class="p">statut</span>:    <span class="s">"petite activité indépendante"</span>,
 };</code></pre>
     </div>

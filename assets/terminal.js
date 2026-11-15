@@ -12,7 +12,8 @@
     "Informatique de gestion : Java, Kotlin, Python, web et SQL.",
     "Outils et projets personnels en Rust et en C, jusque sur Flipper Zero.",
     "Photo, avec développement des fichiers sous darktable.",
-    "Une petite activité indépendante."
+    "Une petite activité indépendante.",
+    "Formation : ESIG (Genève)."
   ];
 
   // Une ligne = liste de morceaux : texte simple, ou {t, c (classe), href, cmd (commande à lancer au clic)}
@@ -37,7 +38,7 @@
   var commands = {
     help: function () {
       line("Commandes :");
-      [["ls [filtre]", "lister les projets (ex. ls python, ls bots)"], ["cat about", "qui je suis"], ["cat <projet>", "détail d'un projet"],
+      [["ls [filtre]", "lister les projets (ex. ls python, ls bots, ls esig)"], ["cat about", "qui je suis"], ["cat <projet>", "détail d'un projet"],
        ["open <projet>", "ouvrir sa page"], ["categories", "les catégories"], ["techs", "les technologies"],
        ["stats", "chiffres"], ["contact", "me joindre"], ["clear", "vider l'écran"]].forEach(function (r) {
         line(["  ", { t: r[0], c: "k-cmd" }, "  " + r[1]]);
@@ -50,7 +51,7 @@
       else {
         var f = H.resolve(w);
         if (!f) { line(["Aucun filtre « " + w + " ». Essaie ", { t: "categories", cmd: "categories" }, " ou ", { t: "techs", cmd: "techs" }, "."], "err"); return; }
-        H.setFilter(f.cat || null, f.tech || null);
+        H.setFilter(f.cat || null, f.tech || null, undefined, f.org || null);
       }
       var list = H.matching();
       list.forEach(function (p) { line([dot(p.category), { t: p.id, cmd: "cat " + p.id, c: "k-id" }, "  " + H.catLabel(p.category)]); });
@@ -66,6 +67,7 @@
       line([dot(p.category), { t: p.title, c: "k-id" }, "  (" + (p.visibility === "public" ? "public" : "privé") + ")"]);
       line(p.desc);
       line(["technos : ", { t: p.tech.join(", "), c: "k-str" }]);
+      if (p.org) line(["formation : ", { t: p.org, cmd: "ls " + p.org, c: "k-id" }]);
       var parts = [];
       if (p.page) parts.push({ t: "page", href: p.page, c: "k-link" });
       if (p.visibility === "public" && p.repo) { if (parts.length) parts.push("  "); parts.push({ t: "code", href: p.repo, c: "k-link" }); }
@@ -89,6 +91,7 @@
     stats: function () {
       line([{ t: String(H.projects.length), c: "k-num" }, " projets : " + H.publicCount + " publics, " + (H.projects.length - H.publicCount) + " privés."]);
       line([{ t: String(H.techs.length), c: "k-num" }, " technologies, " + H.categories.length + " catégories."]);
+      H.orgNames.forEach(function (o) { line(H.orgs[o] + " projets de formation (" + o + ").  ls " + o.toLowerCase() + " les liste."); });
       line("Technologie la plus utilisée : " + H.techs[0].name + " (" + H.techs[0].count + " projets).");
     },
     contact: function () {
@@ -124,7 +127,7 @@
     else if (ev.key === "Tab" && !ev.shiftKey && input.value.trim()) { // complétion : commande, puis projet, catégorie ou technologie
       var v = input.value, sp = v.split(/\s+/), last = sp[sp.length - 1].toLowerCase(), pool;
       if (sp.length === 1) pool = Object.keys(commands);
-      else if (sp[0] === "ls") pool = H.categories.map(function (c) { return c.id; }).concat(H.techs.map(function (t) { return t.name.toLowerCase(); }));
+      else if (sp[0] === "ls") pool = H.orgNames.map(function (o) { return o.toLowerCase(); }).concat(H.categories.map(function (c) { return c.id; })).concat(H.techs.map(function (t) { return t.name.toLowerCase(); }));
       else pool = H.projects.map(function (p) { return p.id; }).concat(sp[0] === "cat" ? ["about"] : []);
       var m = pool.filter(function (x) { return x.indexOf(last) === 0; });
       if (m.length) { ev.preventDefault(); sp[sp.length - 1] = m[0]; input.value = sp.join(" ") + (m.length === 1 ? " " : ""); }

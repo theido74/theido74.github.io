@@ -1,6 +1,7 @@
 // Adresse e-mail de contact : si la valeur est null, aucun lien mailto n'est affiché.
 const CONTACT_EMAIL = "geleprechaun@ik.me";
 
+// Le champ facultatif org (ex. "ESIG") désigne l'organisation d'un projet de formation : badge, filtre et regroupement dans le graphe.
 // Pour ajouter un projet, ajouter un objet à PROJECTS (le champ confirm est un simple rappel, jamais affiché).
 const CATEGORIES = [
   {id:"bots", label:"Bots & automatisation"},
@@ -23,5 +24,9 @@ const PROJECTS = [
   {id:"dmob", title:"Applications Android (Kotlin)", desc:"Série de petites applications Android en Jetpack Compose réalisées en apprentissage.", category:"web", tech:["Kotlin","Jetpack Compose"], visibility:"private", repo:null, page:"projets/dmob/", featured:false, confirm:true},
   {id:"image-scanner", title:"Image Scanner", desc:"Outil en ligne de commande très rapide pour scanner et cataloguer des images (disque, web, Azure Blob) avec export CSV/JSON.", category:"outils", tech:["Rust","Tokio","Rayon"], visibility:"public", repo:"https://github.com/theido74/image-scanner", page:"projets/image-scanner/", featured:false, confirm:false},
   {id:"neworcinvasion", title:"New Orc Invasion", desc:"Jeu de tir inspiré de Space Invaders dans l'univers du Seigneur des Anneaux, avec comptes et scores sauvegardés.", category:"jeux", tech:["Python","pygame","SQLite"], visibility:"public", repo:"https://github.com/theido74/neworcinvasion", page:"projets/neworcinvasion/", featured:false, confirm:false},
-  {id:"nimgame", title:"Nim Game", desc:"Jeu de Nim avec agent et analyse statistique des parties (graphiques). Projet étudiant.", category:"jeux", tech:["Python"], visibility:"public", repo:"https://github.com/theido74/nimgame", page:"projets/nimgame/", featured:false, confirm:false}
+  {id:"nimgame", title:"Nim Game", desc:"Jeu de Nim avec agent et analyse statistique des parties (graphiques). Projet étudiant.", category:"jeux", tech:["Python"], visibility:"public", repo:"https://github.com/theido74/nimgame", page:"projets/nimgame/", featured:false, confirm:false},
+  {id:"esig-individuel", title:"Projet individuel (StreetEye, version de cours)", desc:"Projet individuel de la formation ESIG : surveillance de rue par caméra avec détection YOLOv8, interface PHP et base PostgreSQL, mis en regard de la description fonctionnelle.", category:"web", tech:["PHP","Python","YOLOv8","PostgreSQL"], visibility:"private", repo:null, page:"projets/esig-individuel/", featured:false, org:"ESIG"},
+  {id:"esig-weba", title:"SPA Dog Refuge", desc:"Projet WEBA de la formation ESIG : application Flask et SQLite qui réunit des annonces de chiens de refuges suisses, avec une lecture de flux RSS défendue (IP privées, redirections, XML hostile). En cours.", category:"web", tech:["Python","Flask","SQLite","Jinja"], visibility:"private", repo:null, page:"projets/esig-weba/", featured:false, org:"ESIG"},
+  {id:"esig-apo", title:"Aventure textuelle en Java", desc:"Jeu d'aventure en console : quatre classes, une liste de scénarios et une méthode récursive. Démo jouable et pile d'appels en direct.", category:"jeux", tech:["Java"], visibility:"private", repo:null, page:"projets/esig-apo/", featured:false, org:"ESIG"},
+  {id:"esig-inlo", title:"INLO : apprendre Python avec Rust", desc:"Projet de groupe : une plateforme d'apprentissage de Python écrite en Rust, avec bac à sable d'exécution et tuteur qui pose des questions. Simulation interactive et état réel du dépôt.", category:"web", tech:["Rust","Axum","PostgreSQL","Leptos","Docker","Python"], visibility:"private", repo:null, page:"projets/esig-inlo/", featured:false, org:"ESIG"}
 ];

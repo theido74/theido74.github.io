@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPA Dog Refuge · GeLeprechaun</title>
+<meta name="description" content="Projet WEBA de la formation ESIG (Genève) : une application web Flask et SQLite qui réunit les annonces de chiens des refuges suisses, avec une lecture de flux RSS défendue contre les données hostiles.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0f1b17">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SPA Dog Refuge · GeLeprechaun">
+<meta property="og:description" content="Flask, SQLite et un garde-barrière pour les flux RSS : un projet web en cours, démonstration interactive.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body class="ew">
+<!-- À CONFIRMER : pas de README dans le dépôt ; projet en cours (dépôt créé le 4 novembre 2026). Le nom « SPA Dog Refuge » vient du portfolio et de l'agent du dépôt. Les chiens Milo, Luna et Rex sont les données de démonstration du dépôt. -->
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../esig-individuel/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../esig-apo/" rel="next">Suivant</a>
+  </nav>
+</header>
+
+<!-- Chiens dessinés pour la page : le gabarit est cloné par script.js -->
+<template id="ew-t-floppy">
+  <svg class="ew-dog" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+    <g class="ear ear-l"><ellipse cx="22" cy="48" rx="12" ry="24" transform="rotate(14 22 48)" fill="var(--ear)"/></g>
+    <g class="ear ear-r"><ellipse cx="78" cy="48" rx="12" ry="24" transform="rotate(-14 78 48)" fill="var(--ear)"/></g>
+    <ellipse cx="50" cy="52" rx="28" ry="27" fill="var(--coat)"/>
+    <ellipse class="patch" cx="38" cy="45" rx="10" ry="11" fill="var(--patch, transparent)"/>
+    <ellipse cx="50" cy="65" rx="15" ry="12" fill="var(--snout)"/>
+    <path class="tongue" d="M45 72 q5 14 10 0z" fill="#ff8fa3"/>
+    <ellipse cx="50" cy="58" rx="6" ry="4.2" fill="#1d1a17"/>
+    <path d="M50 62 V68 M50 68 q-5 4 -9 1 M50 68 q5 4 9 1" stroke="#1d1a17" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <g class="eyes"><circle cx="39" cy="46" r="3.6" fill="#1d1a17"/><circle cx="61" cy="46" r="3.6" fill="#1d1a17"/><circle cx="40" cy="45" r="1.1" fill="#fff"/><circle cx="62" cy="45" r="1.1" fill="#fff"/></g>
+  </svg>
+</template>
+<template id="ew-t-pointy">
+  <svg class="ew-dog" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+    <g class="ear ear-l"><polygon points="20,50 24,10 44,30" fill="var(--ear)"/></g>
+    <g class="ear ear-r"><polygon points="80,50 76,10 56,30" fill="var(--ear)"/></g>
+    <ellipse cx="50" cy="54" rx="27" ry="26" fill="var(--coat)"/>
+    <ellipse class="patch" cx="50" cy="42" rx="5" ry="14" fill="var(--patch, transparent)"/>
+    <ellipse cx="50" cy="66" rx="14" ry="11" fill="var(--snout)"/>
+    <path class="tongue" d="M45 73 q5 14 10 0z" fill="#ff8fa3"/>
+    <ellipse cx="50" cy="59" rx="6" ry="4.2" fill="#1d1a17"/>
+    <path d="M50 63 V69 M50 69 q-5 4 -9 1 M50 69 q5 4 9 1" stroke="#1d1a17" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <g class="eyes"><circle cx="39" cy="48" r="3.6" fill="#f5f0e0"/><circle cx="61" cy="48" r="3.6" fill="#f5f0e0"/><circle cx="39.6" cy="48" r="2" fill="#1d1a17"/><circle cx="61.6" cy="48" r="2" fill="#1d1a17"/></g>
+  </svg>
+</template>
+
+<main id="main">
+
+  <section class="ew-hero" aria-labelledby="ew-title">
+    <div class="ew-hero__in">
+      <h1 id="ew-title" class="ew-title">SPA Dog Refuge</h1>
+      <p class="ew-lead">Une application web qui réunit les annonces de chiens des refuges suisses, pour les trouver au même endroit.</p>
+      <ul class="ew-meta" aria-label="Fiche du projet">
+        <li><span class="ew-badge ew-badge--ecole">Formation ESIG (Genève) · WEBA</span></li>
+        <li><span class="ew-badge ew-badge--prive">Privé</span></li>
+        <li>Python</li>
+        <li>Flask</li>
+        <li>SQLite</li>
+        <li>En cours</li>
+      </ul>
+    </div>
+
+    <div class="ew-fence-wrap">
+      <ul class="ew-fence" id="ew-fence" aria-label="Annonces de démonstration">
+        <li data-dog="milo"><div class="ew-slot" aria-hidden="true"></div><span class="ew-plate">Milo</span></li>
+        <li data-dog="luna"><div class="ew-slot" aria-hidden="true"></div><span class="ew-plate">Luna</span></li>
+        <li data-dog="rex"><div class="ew-slot" aria-hidden="true"></div><span class="ew-plate">Rex</span></li>
+      </ul>
+      <p class="ew-fence__note">Milo, Luna et Rex sont les chiens de démonstration du projet, dessinés pour la page. Aucune vraie annonce.</p>
+    </div>
+  </section>
+
+  <section class="ew-sec" aria-labelledby="ew-site-title">
+    <h2 id="ew-site-title" class="ew-h2">Le site, tel qu'il répond</h2>
+    <p class="ew-intro">Deux pages : la liste des annonces et le détail d'une annonce. Essayez des adresses, y compris des mauvaises : le serveur répond 404 quand l'annonce n'existe pas ou que l'identifiant n'est pas un nombre.</p>
+
+    <div class="ew-browser" id="ew-browser">
+      <div class="ew-urlbar">
+        <span class="ew-url" id="ew-url" aria-live="polite">/</span>
+        <span class="ew-status" id="ew-status">200</span>
+      </div>
+      <div class="ew-page" id="ew-page" aria-live="polite">
+        <noscript><p>Cette démonstration demande JavaScript.</p></noscript>
+      </div>
+    </div>
+    <div class="ew-try" role="group" aria-label="Adresses à essayer">
+      <button type="button" class="ew-chip" data-go="/" aria-pressed="true">/</button>
+      <button type="button" class="ew-chip" data-go="/annonce/2" aria-pressed="false">/annonce/2</button>
+      <button type="button" class="ew-chip" data-go="/annonce/999" aria-pressed="false">/annonce/999</button>
+      <button type="button" class="ew-chip" data-go="/annonce/abc" aria-pressed="false">/annonce/abc</button>
+      <button type="button" class="ew-chip ew-chip--alt" id="ew-empty" aria-pressed="false">Vider la liste</button>
+    </div>
+  </section>
+
+  <section class="ew-sec ew-sec--board" aria-labelledby="ew-gate-title">
+    <h2 id="ew-gate-title" class="ew-h2">Le garde-barrière des flux</h2>
+    <p class="ew-intro">Le contenu d'un flux RSS vient d'un site tiers : il n'est jamais cru sur parole. Choisissez un cas, et regardez à quelle étape il passe ou s'arrête. Chaque cas hostile a un test écrit dans le dépôt.</p>
+
+    <div class="ew-lab">
+      <div class="ew-cases" role="group" aria-label="Cas à essayer" id="ew-cases"></div>
+
+      <ol class="ew-gates" id="ew-gates" aria-label="Étapes de vérification">
+        <li data-g="0"><b>L'adresse</b><span>http ou https, sans identifiants, hôte valide, toutes les adresses IP résolues publiques</span></li>
+        <li data-g="1"><b>La connexion</b><span>vers l'adresse déjà vérifiée, sans nouvelle résolution ; en HTTPS, nom d'hôte et certificat contrôlés</span></li>
+        <li data-g="2"><b>La réponse</b><span>redirections et erreurs HTTP refusées</span></li>
+        <li data-g="3"><b>La taille</b><span>10 Mio au plus, mesurés après décompression</span></li>
+        <li data-g="4"><b>Le XML</b><span>lu avec defusedxml, déclaration DTD interdite</span></li>
+        <li data-g="5"><b>Les liens</b><span>seuls les liens http(s) valides sont gardés</span></li>
+        <li data-g="6"><b>Le texte</b><span>le HTML des descriptions devient du texte brut</span></li>
+      </ol>
+
+      <div class="ew-verdict" id="ew-verdict" aria-live="polite">
+        <p class="ew-verdict__tag" id="ew-vtag">Choisissez un cas</p>
+        <p class="ew-verdict__txt" id="ew-vtxt">Le résultat s'affiche ici.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ew-sec" aria-labelledby="ew-build-title">
+    <h2 id="ew-build-title" class="ew-h2">Comment c'est construit</h2>
+    <div class="ew-cols">
+      <div>
+        <ul class="ew-list">
+          <li>Flask avec une fabrique d'application et un blueprint pour les routes. Les pages sont rendues côté serveur avec Jinja, qui échappe les valeurs.</li>
+          <li>SQLite, avec les clés étrangères activées et des contraintes sur l'espèce et le format des sources. Des commandes Flask initialisent, alimentent et affichent la base.</li>
+          <li>Les requêtes passent par des valeurs liées (<code>?</code>) : l'identifiant reçu n'est jamais collé dans le SQL.</li>
+          <li>Le module RSS sépare deux gestes : télécharger, puis lire. Le premier est strict sur le réseau, le second sur le contenu.</li>
+          <li>30 tests écrits en trois fichiers : lecture et téléchargement des flux, sources, pages. Les essais HTTPS utilisent un serveur local de test.</li>
+        </ul>
+        <p class="ew-tech-title">Technologies</p>
+        <ul class="ew-tech"><li>Python</li><li>Flask</li><li>Jinja</li><li>SQLite</li><li>defusedxml</li><li>urllib3</li><li>unittest</li></ul>
+      </div>
+
+      <figure class="ew-er" aria-label="Tables de la base">
+        <div class="ew-er__grid">
+          <div class="ew-tbl ew-tbl--src"><b>sources</b><ul><li>id</li><li>nom, région</li><li>url</li><li>format : rss, json_zurich, json_wordpress</li><li>espèce</li></ul></div>
+          <div class="ew-link" aria-hidden="true"><span>1 source</span><span>plusieurs annonces</span></div>
+          <div class="ew-tbl ew-tbl--ann"><b>annonces</b><ul><li>id</li><li>source</li><li>titre</li><li>lien (unique)</li><li>résumé, image</li><li>espèce : chien, chat, autre</li><li>publiée le</li></ul></div>
+          <div class="ew-tbl ew-tbl--cat"><b>catégories exclues</b><ul><li>source</li><li>catégorie</li></ul></div>
+        </div>
+        <figcaption>Le schéma de la base. Le format RSS est le seul qui a un lecteur pour l'instant.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="ew-sec" aria-labelledby="ew-state-title">
+    <h2 id="ew-state-title" class="ew-h2">Où en est le projet</h2>
+    <p class="ew-intro">État au 15 novembre 2026. Le dépôt date du 4 novembre.</p>
+    <ul class="ew-axes">
+      <li class="is-done"><b>Serveur</b><span>Prototype réalisé : l'application Flask, la base, deux pages, le module RSS.</span></li>
+      <li class="is-todo"><b>JavaScript et Ajax</b><span>À venir : la page est générée côté serveur, sans JavaScript.</span></li>
+      <li class="is-wip"><b>Sécurité</b><span>En cours : requêtes liées, flux défendus, tests des cas hostiles.</span></li>
+      <li class="is-wip"><b>Progression</b><span>Une compétence de méthode : comprendre un problème, essayer, ajuster. <!-- À CONFIRMER --></span></li>
+    </ul>
+    <p class="ew-next"><b>Reste à faire.</b> Brancher le téléchargement des flux à leur lecture et à l'enregistrement des annonces : les annonces affichées ici restent des données de démonstration.</p>
+  </section>
+
+</main>
+
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+</body>
+</html>

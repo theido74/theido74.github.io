@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projet individuel · GeLeprechaun</title>
+<meta name="description" content="Projet individuel de la formation ESIG (Genève) : StreetEye, surveillance de rue par caméra. Ce que la description fonctionnelle prévoyait, et ce que le code contient vraiment.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a1530">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Projet individuel · GeLeprechaun">
+<meta property="og:description" content="StreetEye, version de cours : la description fonctionnelle, mise en regard du code, cas d'utilisation par cas d'utilisation.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body class="ie">
+<!-- À CONFIRMER : module exact de la formation non précisé dans le dépôt (dépôt de cours « projet individuel »). Le code est le même que celui du dépôt public StreetEye (fichiers principaux identiques). -->
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../nimgame/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../esig-weba/" rel="next">Suivant</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="ie-hero" aria-labelledby="ie-title">
+    <div class="ie-hero__in">
+      <div class="ie-hero__txt">
+        <h1 id="ie-title" class="ie-title">Projet individuel</h1>
+        <p class="ie-sub">StreetEye, tel que rendu au cours</p>
+        <p class="ie-lead">La description fonctionnelle annonçait une caméra sur une rue, des véhicules détectés, mesurés et rangés dans une base. Cette page la met en regard du code, cas d'utilisation par cas d'utilisation.</p>
+        <p class="ie-link"><a href="../streeteye/">Voir StreetEye en démonstration animée</a></p>
+      </div>
+
+      <!-- Cartouche de plan : l'identité du dossier -->
+      <dl class="ie-cartouche" aria-label="Fiche du projet">
+        <div><dt>Cadre</dt><dd><span class="ie-badge ie-badge--ecole">Formation ESIG (Genève)</span></dd></div>
+        <div><dt>Visibilité</dt><dd><span class="ie-badge ie-badge--prive">Privé</span></dd></div>
+        <div><dt>Période</dt><dd>24 juin au 14 août 2026</dd></div>
+        <div><dt>Langages</dt><dd>PHP, Python, SQL</dd></div>
+        <div><dt>Détection</dt><dd>YOLOv8</dd></div>
+        <div><dt>Base</dt><dd>PostgreSQL</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="ie-sec" aria-labelledby="ie-board-title">
+    <h2 id="ie-board-title" class="ie-h2">Prévu, puis retrouvé dans le code</h2>
+    <p class="ie-intro">La description fonctionnelle liste trois acteurs et leurs cas d'utilisation. Chacun est tamponné selon ce que le code lu contient. Ouvrez un cas pour voir sur quoi repose le tampon.</p>
+
+    <div class="ie-meter" id="ie-meter" role="group" aria-label="Bilan">
+      <p class="ie-meter__txt"><b id="ie-found">8</b> sur <b>11</b> cas prévus retrouvés dans le code, et <b>4</b> ajouts hors description.</p>
+      <ul class="ie-meter__bar" aria-hidden="true">
+        <li class="ok"></li><li class="ok"></li><li class="ok"></li><li class="ok"></li><li class="ok"></li><li class="ok"></li><li class="ok"></li><li class="ok"></li><li class="miss"></li><li class="miss"></li><li class="miss"></li>
+      </ul>
+    </div>
+
+    <div class="ie-filters" role="group" aria-label="Filtrer les cas">
+      <button type="button" class="ie-chip" data-f="all" aria-pressed="true">Tout</button>
+      <button type="button" class="ie-chip" data-f="ok" aria-pressed="false">Retrouvé dans le code</button>
+      <button type="button" class="ie-chip" data-f="miss" aria-pressed="false">Non retrouvé</button>
+    </div>
+
+    <div class="ie-board" id="ie-board">
+
+      <article class="ie-sheet" aria-labelledby="ie-a-cam">
+        <header class="ie-sheet__head">
+          <svg class="ie-fig" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="14" width="26" height="18" rx="3"/><path d="M32 20 L44 14 V34 L32 28 Z"/><path d="M14 32 L10 42 M24 32 L28 42"/></svg>
+          <h3 id="ie-a-cam">Caméra IP</h3>
+        </header>
+        <ul class="ie-cases">
+          <li class="ie-case" data-s="ok">
+            <details>
+              <summary><span>Fournir un flux vidéo</span><i class="ie-stamp ie-stamp--ok">Retrouvé</i></summary>
+              <p>Le programme Python ouvre le flux RTSP de la caméra avec OpenCV et lit les images en boucle.</p>
+            </details>
+          </li>
+        </ul>
+      </article>
+
+      <article class="ie-sheet ie-sheet--wide" aria-labelledby="ie-a-sys">
+        <header class="ie-sheet__head">
+          <svg class="ie-fig" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="8" width="34" height="32" rx="3"/><path d="M14 18 H34 M14 26 H34 M14 34 H26"/></svg>
+          <h3 id="ie-a-sys">Système</h3>
+        </header>
+        <ul class="ie-cases">
+          <li class="ie-case" data-s="ok">
+            <details>
+              <summary><span>Détecter un véhicule</span><i class="ie-stamp ie-stamp--ok">Retrouvé</i></summary>
+              <p>YOLOv8 analyse chaque image. Les classes retenues sont voiture, deux-roues, camion, cycliste, piéton, cheval, chien et chat.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="ok">
+            <details>
+              <summary><span>L'identifier</span><i class="ie-stamp ie-stamp--ok">Retrouvé</i></summary>
+              <p>Le mode suivi de YOLOv8 donne un identifiant par objet. Une détection n'est enregistrée qu'une fois par identifiant, au passage d'une ligne au milieu de l'image.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="ok">
+            <details>
+              <summary><span>Calculer la vitesse</span><i class="ie-stamp ie-stamp--ok">Retrouvé</i></summary>
+              <p>Le déplacement du centre entre deux images, une échelle pixels-mètres fixée dans le code, puis une moyenne glissante sur cinq mesures.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="ok">
+            <details>
+              <summary><span>Sauvegarder la détection</span><i class="ie-stamp ie-stamp--ok">Retrouvé</i></summary>
+              <p>Une photo, un véhicule et une détection (confiance, vitesse) sont écrits dans PostgreSQL. Le modèle relie caméra, véhicule, photo et détection.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="ok">
+            <details>
+              <summary><span>Garder la photo temporairement</span><i class="ie-stamp ie-stamp--ok">Retrouvé, en partie</i></summary>
+              <p>Au démarrage du programme, les photos de plus de 24 heures sont supprimées, fichier et ligne en base. La description parlait de 24 à 72 heures ; seul le seuil de 24 heures est dans le code lu.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="miss">
+            <details>
+              <summary><span>Lire la plaque</span><i class="ie-stamp ie-stamp--miss">Non retrouvé</i></summary>
+              <p>Aucune bibliothèque de lecture de plaques dans les dépendances, aucun code de reconnaissance. Le champ « plaque » existe dans le diagramme de classes, pas dans le schéma SQL. <!-- À CONFIRMER --></p>
+            </details>
+          </li>
+        </ul>
+      </article>
+
+      <article class="ie-sheet" aria-labelledby="ie-a-adm">
+        <header class="ie-sheet__head">
+          <svg class="ie-fig" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="12" r="6"/><path d="M24 18 V32 M12 24 H36 M24 32 L15 44 M24 32 L33 44"/></svg>
+          <h3 id="ie-a-adm">Administrateur</h3>
+        </header>
+        <ul class="ie-cases">
+          <li class="ie-case" data-s="ok">
+            <details>
+              <summary><span>Consulter les statistiques</span><i class="ie-stamp ie-stamp--ok">Retrouvé</i></summary>
+              <p>Le tableau de bord affiche le nombre de caméras, de véhicules détectés, d'alertes, le taux de confiance moyen et les passages de la dernière heure.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="ok">
+            <details>
+              <summary><span>Consulter les photos</span><i class="ie-stamp ie-stamp--ok">Retrouvé</i></summary>
+              <p>Dans la liste des dernières alertes, un clic sur l'identifiant du véhicule ouvre sa photo.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="miss">
+            <details>
+              <summary><span>Rechercher une plaque</span><i class="ie-stamp ie-stamp--miss">Non retrouvé</i></summary>
+              <p>Pas d'écran de recherche dans l'interface lue, et sans lecture de plaque, rien à rechercher.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="miss">
+            <details>
+              <summary><span>Gérer les caméras</span><i class="ie-stamp ie-stamp--miss">Non retrouvé</i></summary>
+              <p>La table des caméras existe et une caméra est comptée, mais l'interface n'a pas d'écran pour en ajouter, modifier ou retirer. <!-- À CONFIRMER --></p>
+            </details>
+          </li>
+        </ul>
+      </article>
+
+      <article class="ie-sheet ie-sheet--extra" aria-labelledby="ie-a-plus">
+        <header class="ie-sheet__head">
+          <svg class="ie-fig" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 8 V40 M8 24 H40"/></svg>
+          <h3 id="ie-a-plus">Ajouté en route</h3>
+        </header>
+        <p class="ie-sheet__note">Absent de la description fonctionnelle, présent dans le code.</p>
+        <ul class="ie-cases">
+          <li class="ie-case" data-s="plus">
+            <details>
+              <summary><span>Alerter par Telegram</span><i class="ie-stamp ie-stamp--plus">Ajout</i></summary>
+              <p>Au-dessus d'un seuil de vitesse, une alerte part sur Telegram avec la photo. Un seuil plus bas marque la détection comme alerte dans le tableau de bord.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="plus">
+            <details>
+              <summary><span>Gérer les alertes</span><i class="ie-stamp ie-stamp--plus">Ajout</i></summary>
+              <p>Une alerte se supprime, se modifie et se réactive. La suppression est logique : une colonne garde la date.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="plus">
+            <details>
+              <summary><span>Se connecter</span><i class="ie-stamp ie-stamp--plus">Ajout</i></summary>
+              <p>Un compte administrateur avec mot de passe haché, vérifié par la fonction native de PHP. Accès à l'interface réservé aux comptes connectés.</p>
+            </details>
+          </li>
+          <li class="ie-case" data-s="plus">
+            <details>
+              <summary><span>Choisir démo ou réel</span><i class="ie-stamp ie-stamp--plus">Ajout</i></summary>
+              <p>Le mode Démo travaille sur des données déjà capturées, sans caméra. Le mode Réel attend une caméra connectée.</p>
+            </details>
+          </li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="ie-sec ie-sec--line" aria-labelledby="ie-time-title">
+    <h2 id="ie-time-title" class="ie-h2">De la première à la deuxième version</h2>
+    <ol class="ie-time">
+      <li>
+        <time datetime="2026-06-24">24 juin</time>
+        <h3>Le dépôt de cours</h3>
+        <p>Création du dépôt de cours.</p>
+      </li>
+      <li>
+        <time datetime="2026-06-29">29 juin</time>
+        <h3>Première version</h3>
+        <p>Détection, suivi, vitesse, base PostgreSQL, premières pages PHP, suppression logique multiple. Le lanceur et les dépendances arrivent en annexe.</p>
+      </li>
+      <li>
+        <time datetime="2026-08-11">11 août</time>
+        <h3>Deuxième version</h3>
+        <p>L'interface PHP complète : connexion, modes démo et réel, alertes, modification. Le message du commit parle d'un déploiement par FTP. <!-- À CONFIRMER --></p>
+      </li>
+      <li>
+        <time datetime="2026-08-13">13 août</time>
+        <h3>Dernières corrections</h3>
+        <p>Retouches sur les alertes et l'accès aux données.</p>
+      </li>
+      <li>
+        <time datetime="2026-08-14">14 août</time>
+        <h3>Fichier d'exemple</h3>
+        <p>Ajout d'un fichier modèle pour les réglages sensibles.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="ie-sec ie-sec--line" aria-labelledby="ie-build-title">
+    <div class="ie-cols">
+      <div>
+        <h2 id="ie-build-title" class="ie-h2">Comment c'est construit</h2>
+        <ul class="ie-list">
+          <li>Un programme Python découpé en services (détection, suivi, vitesse, photo, comptage, Telegram, base de données) et une interface web PHP, avec des scripts SQL.</li>
+          <li>L'interface lit PostgreSQL par des requêtes préparées. Les valeurs affichées sont échappées.</li>
+          <li>Les réglages sensibles passent par des variables d'environnement. Côté PHP, une bibliothèque installée avec Composer les charge.</li>
+          <li>Un script lanceur crée la base, exécute les scripts SQL et prépare l'environnement Python.</li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="ie-h2">Ce que la comparaison montre</h2>
+        <ul class="ie-list">
+          <li>Trois cas de la description ne sont pas dans le code lu : la lecture de plaques, leur recherche et la gestion des caméras.</li>
+          <li>Quatre fonctions ne figuraient pas dans la description : alertes Telegram, gestion des alertes, connexion et modes démo et réel.</li>
+          <li>Le dépôt de cours est privé. La version publique, avec une démonstration animée, est sur la page StreetEye.</li>
+        </ul>
+        <p class="ie-tech-title">Technologies</p>
+        <ul class="ie-tech"><li>PHP</li><li>Python</li><li>YOLOv8</li><li>OpenCV</li><li>PostgreSQL</li><li>Telegram</li><li>Composer</li></ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+</body>
+</html>

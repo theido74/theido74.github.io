@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aventure textuelle en Java · GeLeprechaun</title>
+<meta name="description" content="Formation ESIG, module APO : un jeu d'aventure en console écrit en Java (quatre classes, une liste de scénarios, une récursion). Démo jouable et visualisation de la pile d'appels.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#14121f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aventure textuelle en Java · GeLeprechaun">
+<meta property="og:description" content="Un petit jeu en console, quatre classes et une récursion : jouez une reconstitution et regardez la pile d'appels.">
+<meta property="og:locale" content="fr_CH">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/shell.css">
+<link rel="stylesheet" href="style.css">
+<script src="../../assets/shell.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body>
+<a class="shell-skip" href="#main">Aller au contenu</a>
+<header class="shell-bar">
+  <a class="shell-home" href="../../">GeLeprechaun</a>
+  <nav class="shell-nav" aria-label="Projets">
+    <a class="shell-prev" href="../esig-weba/" rel="prev">Précédent</a>
+    <a class="shell-all" href="../../#projets">Tous les projets</a>
+    <a class="shell-next" href="../esig-inlo/" rel="next">Suivant</a>
+  </nav>
+</header>
+
+<main id="main" class="apo">
+
+  <section class="apo-hero" aria-labelledby="apo-h1">
+    <div class="apo-wrap">
+      <p class="apo-badge">Formation ESIG · module APO</p>
+      <h1 id="apo-h1" class="apo-title">Aventure textuelle en Java</h1>
+      <p class="apo-lead">Un petit jeu qui se joue dans la console : on donne son nom, on lit des chapitres en appuyant sur Entrée, et la dernière scène dit si l'on a gagné. Un exercice pour se remettre gentiment dans le Java : quatre classes, une liste de scénarios, une méthode récursive.</p>
+      <p class="apo-note">Projet d'école dans un dépôt privé de l'ESIG (Genève) : le code n'est pas public. La démo ci-dessous est une <b>reconstitution</b> avec mes propres scènes, qui suit le fonctionnement du programme.</p>
+
+      <div class="apo-lab">
+        <div class="apo-console-box">
+          <div class="apo-bar"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><b>Console · Main.main()</b></div>
+          <pre class="apo-console" id="apo-console" tabindex="0" aria-label="Sortie de la console (reconstitution)">Cette démo demande JavaScript. Sans lui, voici le déroulement : bannière de bienvenue, saisie du nom (refusé s'il est vide), quatre scènes séparées par la touche Entrée, puis un message de victoire ou de défaite selon la dernière scène.</pre>
+          <form class="apo-line" id="apo-form" autocomplete="off">
+            <label for="apo-input" id="apo-prompt" class="apo-prompt">Veuillez entrer votre nom :</label>
+            <div class="apo-row">
+              <input id="apo-input" type="text" spellcheck="false" autocomplete="off" disabled>
+              <button type="submit" class="apo-btn apo-btn-main" id="apo-enter" disabled>Entrée</button>
+            </div>
+          </form>
+          <div class="apo-ctl">
+            <label class="apo-switch"><input type="checkbox" id="apo-win" checked><span>Dernière scène : <code>winning = true</code></span></label>
+            <button type="button" class="apo-btn" id="apo-restart">Recommencer</button>
+          </div>
+          <p id="apo-sr" class="apo-sr" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="apo-jvm" aria-label="Ce qui se passe dans la mémoire du programme">
+          <p class="apo-cap">Dans la JVM</p>
+          <div class="apo-jvm-block">
+            <p class="apo-cap2"><code>LinkedList&lt;Scenario&gt;</code></p>
+            <ol class="apo-chips" id="apo-chips">
+              <li>Chapitre 1</li><li>Chapitre 2</li><li>Chapitre 3</li><li>Épilogue</li>
+            </ol>
+          </div>
+          <div class="apo-jvm-block">
+            <p class="apo-cap2">Pile d'appels <span class="apo-dim">(le plus récent en haut)</span></p>
+            <ol class="apo-stack" id="apo-stack" aria-live="off"><li class="apo-empty">vide : le programme n'a pas démarré</li></ol>
+          </div>
+          <div class="apo-jvm-block apo-player" id="apo-player"><p class="apo-cap2"><code>Player</code></p><p class="apo-pname" id="apo-pname">name = ?</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="apo-sec" aria-labelledby="apo-classes">
+    <div class="apo-wrap">
+      <h2 id="apo-classes">Quatre classes, un rôle chacune</h2>
+      <p class="apo-sub">Choisissez une classe pour voir ce qu'elle garde en mémoire et ce qu'elle sait faire.</p>
+      <div class="apo-classes">
+        <div class="apo-tabs" role="tablist" aria-label="Classes du programme">
+          <button type="button" role="tab" aria-selected="true" data-c="main" id="t-main">Main</button>
+          <button type="button" role="tab" aria-selected="false" data-c="game" id="t-game" tabindex="-1">Game</button>
+          <button type="button" role="tab" aria-selected="false" data-c="scenario" id="t-scenario" tabindex="-1">Scenario</button>
+          <button type="button" role="tab" aria-selected="false" data-c="player" id="t-player" tabindex="-1">Player</button>
+        </div>
+        <svg class="apo-uml" viewBox="0 0 520 300" role="img" aria-label="Schéma : Main crée Game ; Game contient une liste de Scenario et un Player.">
+          <defs><marker id="apo-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f2b950"/></marker></defs>
+          <g class="apo-node" data-n="main"><rect x="170" y="10" width="180" height="56" rx="10"/><text x="260" y="44" text-anchor="middle">Main</text></g>
+          <g class="apo-node" data-n="game"><rect x="170" y="120" width="180" height="56" rx="10"/><text x="260" y="154" text-anchor="middle">Game</text></g>
+          <g class="apo-node" data-n="scenario"><rect x="20" y="232" width="200" height="56" rx="10"/><text x="120" y="266" text-anchor="middle">Scenario</text></g>
+          <g class="apo-node" data-n="player"><rect x="320" y="232" width="180" height="56" rx="10"/><text x="410" y="266" text-anchor="middle">Player</text></g>
+          <path d="M260 68 V116" class="apo-edge" marker-end="url(#apo-ar)"/>
+          <text x="272" y="98" class="apo-etxt">crée, puis init() et play()</text>
+          <path d="M215 178 L140 228" class="apo-edge" marker-end="url(#apo-ar)"/>
+          <text x="88" y="208" class="apo-etxt">liste de scénarios</text>
+          <path d="M305 178 L380 228" class="apo-edge" marker-end="url(#apo-ar)"/>
+          <text x="352" y="208" class="apo-etxt">un joueur</text>
+        </svg>
+        <div class="apo-card" id="apo-card" role="tabpanel" aria-live="polite" tabindex="0"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="apo-sec" aria-labelledby="apo-rec">
+    <div class="apo-wrap apo-two">
+      <div>
+        <h2 id="apo-rec">La récursion, et la liste qui se vide</h2>
+        <p class="apo-sub">La méthode <code>play</code> joue le premier scénario, le retire de la liste, puis s'appelle elle-même avec ce qui reste. Quand la liste est vide, elle s'arrête. Chaque appel reste sur la pile jusqu'à la fin : c'est ce que montre le panneau « Dans la JVM » plus haut.</p>
+        <p class="apo-sub">Piège : <code>removeFirst()</code> modifie la liste reçue. Pour que le jeu garde ses scénarios, <code>Main</code> lui en passe une copie. Le dernier commit du dépôt porte justement ce constat dans son message.</p>
+      </div>
+      <figure class="apo-code">
+        <figcaption>Extraits courts, recopiés du code</figcaption>
+<pre><code>// Game.play : le cœur de la récursion
+Scenario currentScenario = scenarios.removeFirst();
+currentScenario.play();
+...
+play(scenarios);
+
+// Main : on lui passe une copie
+game.play(new LinkedList&lt;&gt;(scenarios));
+
+// Game.init : on redemande tant que le nom est vide
+while (name.isBlank()) {</code></pre>
+      </figure>
+    </div>
+  </section>
+
+  <section class="apo-sec" aria-labelledby="apo-hist">
+    <div class="apo-wrap">
+      <h2 id="apo-hist">Les étapes dans l'historique</h2>
+      <p class="apo-sub">Le dépôt compte six commits entre le 3 et le 11 novembre 2026, pour environ 5,5 Ko de Java répartis sur quatre fichiers.</p>
+      <ol class="apo-timeline">
+        <li><time datetime="2026-11-03">3 nov.</time><b>Ouverture du dépôt</b><span>puis deux commits « Chapitre1 » le jour même : premières classes et premier chapitre.</span></li>
+        <li><time datetime="2026-11-10">10 nov.</time><b>« Chapitre1 correction »</b><span>retouche du premier chapitre.</span></li>
+        <li><time datetime="2026-11-11">11 nov.</time><b>« Scenario récursif mais liste detruite »</b><span>la récursion arrive, avec le piège de la liste vidée (message du commit, orthographe d'origine).</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="apo-sec" aria-labelledby="apo-notes">
+    <div class="apo-wrap apo-two">
+      <div>
+        <h2 id="apo-notes">À retenir</h2>
+        <ul class="apo-list">
+          <li><b>Valider une saisie</b> avec une boucle : un nom vide ou fait d'espaces est refusé et redemandé.</li>
+          <li><b>Une récursion a un coût visible</b> : une pile d'appels qui grandit, puis se défait dans l'ordre inverse. Une simple boucle ferait le même travail.</li>
+          <li><b>Attention aux effets de bord</b> : retirer des éléments d'une liste que l'on a reçue la modifie pour tout le monde.</li>
+          <li><b>Séparer les rôles</b> : <code>Main</code> démarre, <code>Game</code> orchestre, <code>Scenario</code> raconte, <code>Player</code> représente la personne qui joue.</li>
+        </ul>
+      </div>
+      <div class="apo-box">
+        <h3>Honnêteté</h3>
+        <ul class="apo-list">
+          <li>Dans cette première version, il n'y a pas de choix : on enchaîne les scènes avec Entrée.</li>
+          <li>Les scènes de la démo sont écrites pour cette page. Celles du devoir restent dans le dépôt privé.</li>
+          <li>Je ne publie ni énoncé ni code complet : seulement l'approche et quelques lignes.</li>
+        </ul>
+        <ul class="apo-tags" aria-label="Technologies"><li>Java</li><li>LinkedList</li><li>Scanner</li><li>Récursion</li></ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="shell-foot"><a href="../../">← Portfolio</a> · <a href="https://github.com/theido74">GitHub</a></footer>
+</body>
+</html>

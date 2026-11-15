@@ -1,0 +1,125 @@
+/* Aventure textuelle Java : la console comme un livre-jeu. Classes préfixées « apo- », le reste ciblé sous main.apo. */
+body { background: #14121f; }
+main.apo {
+  --bg: #14121f; --panel: #1d1930; --panel2: #262040; --line: #3d3560; --paper: #f3e9d2; --mute: #bdb5d4;
+  --amber: #f2b950; --java: #f08a4b; --teal: #5cc8b8; --red: #ff8585;
+  --serif: Charter, "Bitstream Charter", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --mono: "Liberation Mono", "DejaVu Sans Mono", ui-monospace, Menlo, Consolas, monospace;
+  background: radial-gradient(900px 500px at 85% -5%, #3a2a5c 0, transparent 60%), radial-gradient(700px 400px at 0% 40%, #2a1d36 0, transparent 60%), var(--bg);
+  color: var(--paper); font-family: var(--serif); font-size: 1.1875rem; line-height: 1.7; overflow-x: clip;
+}
+main.apo *, main.apo *::before, main.apo *::after { box-sizing: border-box; }
+main.apo :focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+main.apo h1, main.apo h2, main.apo h3 { font-family: var(--serif); line-height: 1.15; margin: 0 0 .7rem; }
+main.apo h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); color: var(--amber); }
+main.apo h3 { font-size: 1.3rem; color: var(--teal); }
+main.apo p { margin: 0 0 1rem; }
+main.apo code { font-family: var(--mono); font-size: .84em; color: var(--teal); background: #ffffff10; padding: .06em .4em; border-radius: 4px; overflow-wrap: anywhere; }
+.apo-wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); }
+.apo-sec { padding: clamp(36px, 6vw, 72px) 0; border-top: 1px solid var(--line); }
+.apo-sub { max-width: 62ch; color: var(--mute); }
+.apo-dim { color: var(--mute); font-weight: 400; }
+.apo-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.apo-two { display: grid; gap: 32px 56px; grid-template-columns: 1fr; align-items: start; }
+.apo-two > * { min-width: 0; }
+
+.apo-btn { font: 700 .95rem/1 var(--mono); color: var(--paper); background: var(--panel2); border: 2px solid #5b4f8a; border-radius: 10px; padding: .75em 1.1em; min-height: 46px; cursor: pointer; transition: border-color .15s, background .15s; }
+.apo-btn:hover:not(:disabled) { border-color: var(--amber); }
+.apo-btn:disabled { opacity: .45; cursor: not-allowed; }
+.apo-btn-main { background: var(--amber); color: #1b1305; border-color: var(--amber); }
+.apo-btn-main:hover:not(:disabled) { background: #ffd47a; }
+
+/* Hero */
+.apo-hero { padding: clamp(20px, 3vw, 36px) 0 clamp(40px, 6vw, 72px); }
+.apo-badge { display: inline-block; font: 700 .9rem var(--mono); color: #1b1305; background: var(--amber); border-radius: 99px; padding: .3em .9em; margin-bottom: 1rem !important; }
+.apo-title { font-size: clamp(2.1rem, 5.2vw, 3.6rem); font-weight: 800; letter-spacing: -.02em; color: var(--paper); text-shadow: 0 3px 0 #0006; margin-bottom: 1rem !important; }
+.apo-title::before { content: "* * *"; display: block; font: 700 .9rem var(--mono); letter-spacing: .4em; color: var(--java); margin-bottom: .3rem; }
+.apo-lead { font-size: clamp(1.1rem, 1.8vw, 1.25rem); line-height: 1.55; max-width: 70ch; }
+.apo-note { max-width: 66ch; font-size: 1rem; color: var(--mute); border-left: 3px solid var(--java); padding-left: 1rem; margin-bottom: 1.6rem !important; }
+.apo-note b { color: var(--paper); }
+
+.apo-lab { display: grid; gap: 22px; grid-template-columns: 1fr; align-items: start; }
+.apo-lab > * { min-width: 0; }
+.apo-console-box { background: #0c0a14; border: 1px solid #5b4f8a; border-radius: 14px; box-shadow: 0 24px 60px #000a, 0 0 50px #7a5cff22; overflow: hidden; }
+.apo-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #1b1630; border-bottom: 1px solid var(--line); }
+.apo-bar span { width: 12px; height: 12px; border-radius: 50%; background: #ff8585; flex: none; }
+.apo-bar span:nth-child(2) { background: #f2b950; } .apo-bar span:nth-child(3) { background: #5cc8b8; }
+.apo-bar b { font: 700 .85rem var(--mono); color: var(--mute); margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.apo-console { margin: 0; padding: 16px 18px; height: clamp(300px, 52vh, 460px); overflow-y: auto; font: 500 .95rem/1.55 var(--mono); color: var(--paper); white-space: pre-wrap; overflow-wrap: anywhere; scrollbar-color: #5b4f8a #0c0a14; }
+.apo-console .h { color: var(--amber); } .apo-console .t { color: var(--teal); font-weight: 700; } .apo-console .you { color: var(--java); }
+.apo-console .win { color: #8fe3a8; font-weight: 700; } .apo-console .lose { color: var(--red); font-weight: 700; } .apo-console .dim { color: var(--mute); }
+.apo-line { padding: 12px 16px 6px; border-top: 1px solid var(--line); }
+.apo-prompt { display: block; font: 700 .95rem var(--mono); color: var(--amber); margin-bottom: 8px; }
+.apo-row { display: flex; gap: 8px; }
+.apo-row input { flex: 1 1 0; min-width: 0; font: 500 1.05rem var(--mono); color: var(--paper); background: #05040a; border: 2px solid #5b4f8a; border-radius: 8px; padding: .55em .8em; min-height: 46px; caret-color: var(--amber); }
+.apo-row input:disabled { opacity: .5; }
+.apo-ctl { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; padding: 6px 16px 16px; }
+.apo-switch { display: flex; gap: 10px; align-items: center; font-size: .98rem; cursor: pointer; }
+.apo-switch input { width: 22px; height: 22px; accent-color: var(--amber); }
+
+/* JVM */
+.apo-jvm { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 16px; }
+.apo-cap { font: 700 1rem var(--mono); color: var(--amber); margin: 0 !important; }
+.apo-cap2 { font: 700 .88rem var(--mono); color: var(--mute); margin: 0 0 8px !important; }
+.apo-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; min-height: 48px; }
+.apo-chips li { font: 700 .85rem var(--mono); background: #35295d; border: 2px solid #7a65c8; border-radius: 8px; padding: .5em .7em; transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .45s, margin .45s; }
+.apo-chips li.is-out { opacity: 0; transform: translateY(-26px) scale(.8); }
+.apo-stack { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column-reverse; gap: 6px; min-height: 100px; justify-content: flex-start; }
+.apo-stack li { font: 600 .85rem var(--mono); background: #12332f; border: 2px solid #3a8f84; border-radius: 8px; padding: .5em .8em; animation: apo-push .4s cubic-bezier(.2, .8, .2, 1); overflow-wrap: anywhere; }
+.apo-stack li.is-top { background: #4a3a10; border-color: var(--amber); }
+.apo-stack li.is-sub { margin-left: 18px; background: #3a1f1a; border-color: var(--java); }
+.apo-stack li.is-end { background: #1f2f20; border-color: #8fe3a8; }
+.apo-stack li.is-leaving { opacity: 0; transform: translateX(30px); transition: transform .3s, opacity .3s; }
+.apo-stack li.apo-empty { background: none; border: 2px dashed var(--line); color: var(--mute); font-weight: 500; animation: none; }
+@keyframes apo-push { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.apo-player { background: #1b1630; border-radius: 10px; padding: 10px 14px; }
+.apo-pname { font: 700 1rem var(--mono); margin: 0 !important; color: var(--paper); overflow-wrap: anywhere; }
+
+/* Classes */
+.apo-classes { display: grid; gap: 18px; grid-template-columns: 1fr; }
+.apo-classes > * { min-width: 0; }
+.apo-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.apo-tabs button { font: 700 1rem var(--mono); color: var(--mute); background: transparent; border: 2px solid var(--line); border-radius: 10px; padding: .6em 1em; min-height: 46px; cursor: pointer; }
+.apo-tabs button[aria-selected="true"] { color: #1b1305; background: var(--amber); border-color: var(--amber); }
+.apo-uml { width: 100%; max-width: 520px; height: auto; }
+.apo-node rect { fill: #231c3d; stroke: #5b4f8a; stroke-width: 2; transition: fill .3s, stroke .3s; }
+.apo-node text { font: 700 18px var(--mono); fill: var(--paper); }
+.apo-node.is-on rect { fill: #4a3a10; stroke: var(--amber); }
+.apo-edge { fill: none; stroke: var(--amber); stroke-width: 2; stroke-dasharray: 5 5; }
+.apo-etxt { font: 600 12px var(--mono); fill: var(--mute); }
+.apo-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; min-height: 12rem; }
+.apo-card h3 { margin-bottom: .4rem !important; }
+.apo-card p { max-width: 62ch; }
+.apo-card ul { margin: 0 0 .6rem; padding-left: 1.2em; }
+.apo-card li { margin-bottom: .3rem; }
+
+/* Code, chronologie, listes */
+.apo-code { margin: 0; background: #0c0a14; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.apo-code figcaption { padding: 10px 16px; background: #1b1630; border-bottom: 1px solid var(--line); font-size: .95rem; color: var(--mute); }
+.apo-code pre { margin: 0; padding: 16px; overflow-x: auto; font: 500 .9rem/1.6 var(--mono); color: var(--paper); }
+.apo-code pre code { background: none; color: inherit; padding: 0; font-size: inherit; overflow-wrap: normal; }
+.apo-timeline { list-style: none; margin: 1.4rem 0 0; padding: 0 0 0 22px; border-left: 3px solid var(--java); display: grid; gap: 22px; max-width: 70ch; }
+.apo-timeline li { position: relative; display: grid; gap: 2px; }
+.apo-timeline li::before { content: ""; position: absolute; left: -32px; top: .5em; width: 14px; height: 14px; border-radius: 50%; background: var(--amber); border: 3px solid var(--bg); }
+.apo-timeline time { font: 700 .9rem var(--mono); color: var(--amber); }
+.apo-timeline b { font-weight: 700; overflow-wrap: anywhere; }
+.apo-timeline span { color: var(--mute); font-size: 1.05rem; }
+.apo-list { max-width: 62ch; padding-left: 1.2em; margin: 0 0 1rem; }
+.apo-list li { margin-bottom: .8rem; }
+.apo-list li::marker { color: var(--java); }
+.apo-box { border: 1px solid #f08a4b66; background: #f08a4b0d; border-radius: 14px; padding: 18px 22px 8px; }
+.apo-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0 0 .8rem; }
+.apo-tags li { font: 700 .9rem var(--mono); color: var(--teal); border: 1px solid #5cc8b88c; border-radius: 99px; padding: .25em .8em; }
+
+@media (min-width: 1000px) {
+  .apo-lab { grid-template-columns: 1.35fr 1fr; }
+  .apo-two { grid-template-columns: 1fr 1fr; }
+  .apo-classes { grid-template-columns: 1fr 1fr; }
+  .apo-tabs { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .apo-chips li, .apo-node rect, .apo-btn { transition: none; }
+  .apo-stack li { animation: none; }
+  .apo-stack li.is-leaving { transition: none; }
+}
+@media (max-width: 480px) { .apo-console { font-size: .8rem; } }

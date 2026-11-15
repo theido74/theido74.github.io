@@ -44,26 +44,31 @@
   H.catCount = {};
   CATEGORIES.forEach(function (c) { H.catCount[c.id] = 0; });
   PROJECTS.forEach(function (p) { H.catCount[p.category]++; });
+  // Organisations (projets de formation) : nombre de projets par organisation.
+  H.orgs = {};
+  PROJECTS.forEach(function (p) { if (p.org) H.orgs[p.org] = (H.orgs[p.org] || 0) + 1; });
+  H.orgNames = Object.keys(H.orgs);
   H.publicCount = PROJECTS.filter(function (p) { return p.visibility === "public"; }).length;
 
   // État des filtres : une catégorie et/ou une technologie.
-  H.state = { cat: null, tech: null };
+  H.state = { cat: null, tech: null, org: null };
   var listeners = [];
   H.on = function (fn) { listeners.push(fn); };
   H.match = function (p, s) {
     s = s || H.state;
-    return (!s.cat || p.category === s.cat) && (!s.tech || p.tech.indexOf(s.tech) >= 0);
+    return (!s.cat || p.category === s.cat) && (!s.tech || p.tech.indexOf(s.tech) >= 0) && (!s.org || p.org === s.org);
   };
   H.matching = function () { return PROJECTS.filter(function (p) { return H.match(p); }); };
-  H.setFilter = function (cat, tech, opts) {
+  H.setFilter = function (cat, tech, opts, org) {
     opts = opts || {};
     if (cat && !H.catLabel(cat)) cat = null;
     if (tech && !map[tech]) tech = null;
-    if (H.state.cat === (cat || null) && H.state.tech === (tech || null)) return;
-    H.state = { cat: cat || null, tech: tech || null };
+    if (org && !H.orgs[org]) org = null;
+    if (H.state.cat === (cat || null) && H.state.tech === (tech || null) && H.state.org === (org || null)) return;
+    H.state = { cat: cat || null, tech: tech || null, org: org || null };
     if (opts.hash !== false) {
       try {
-        var h = cat ? "#cat=" + cat : tech ? "#tech=" + encodeURIComponent(tech) : "#projets";
+        var h = cat ? "#cat=" + cat : tech ? "#tech=" + encodeURIComponent(tech) : org ? "#org=" + encodeURIComponent(org) : "#projets";
         if (cat && tech) h = "#cat=" + cat + "&tech=" + encodeURIComponent(tech);
         history.replaceState(null, "", h);
       } catch (e) { /* le hash n'est pas critique */ }
@@ -75,7 +80,9 @@
     var t = /[#&]tech=([^&]+)/.exec(location.hash);
     var tech = null;
     if (t) { try { tech = decodeURIComponent(t[1]); } catch (e) { tech = null; } }
-    return { cat: c && H.catLabel(c[1]) ? c[1] : null, tech: tech && map[tech] ? tech : null };
+    var o = /[#&]org=([^&]+)/.exec(location.hash), org = null;
+    if (o) { try { org = decodeURIComponent(o[1]); } catch (e) { org = null; } }
+    return { cat: c && H.catLabel(c[1]) ? c[1] : null, tech: tech && map[tech] ? tech : null, org: org && H.orgs[org] ? org : null };
   };
 
   // Observe la visibilité d'un élément à l'écran (rappel avec true/false).
@@ -87,6 +94,7 @@
   H.resolve = function (word) {
     var w = word.toLowerCase();
     var i;
+    for (i = 0; i < H.orgNames.length; i++) if (H.orgNames[i].toLowerCase() === w) return { org: H.orgNames[i] };
     for (i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].id === w) return { cat: CATEGORIES[i].id };
     for (i = 0; i < H.techs.length; i++) if (H.techs[i].name.toLowerCase() === w) return { tech: H.techs[i].name };
     for (i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].label.toLowerCase().indexOf(w) === 0) return { cat: CATEGORIES[i].id };

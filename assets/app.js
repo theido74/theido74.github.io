@@ -31,7 +31,10 @@
     cat.appendChild(el("span", "dot"));
     cat.appendChild(document.createTextNode(H.catLabel(p.category)));
     top.appendChild(cat);
-    top.appendChild(el("span", "vis " + (isPublic ? "vis-pub" : "vis-priv"), isPublic ? "Public" : "Privé"));
+    var tags = el("span", "tags");
+    if (p.org) { var ob = el("span", "org", p.org); ob.title = "Projet de formation : " + p.org; tags.appendChild(ob); }
+    tags.appendChild(el("span", "vis " + (isPublic ? "vis-pub" : "vis-priv"), isPublic ? "Public" : "Privé"));
+    top.appendChild(tags);
     body.appendChild(top);
     body.appendChild(el("h3", null, p.title));
     body.appendChild(el("p", "card-desc", p.desc));
@@ -70,6 +73,7 @@
   // ---------- Filtres ----------
   var catBar = document.getElementById("cat-legend");
   var mix = document.getElementById("mix");
+  var orgBar = document.getElementById("org-bar");
   var techBar = document.getElementById("tech-top");
   var techMore = document.getElementById("tech-more");
   var moreSum = document.getElementById("tech-more-sum");
@@ -89,6 +93,13 @@
     s.addEventListener("click", function () { toggleCat(c.id); });
     mix.appendChild(s);
   });
+  H.orgNames.forEach(function (name) {
+    var b = el("button", "chip chip-big chip-org", "Formation " + name + " "); b.type = "button"; b.dataset.org = name; b.setAttribute("aria-pressed", "false");
+    b.appendChild(el("span", "n", String(H.orgs[name])));
+    b.addEventListener("click", function () { H.setFilter(null, null, undefined, H.state.org === name ? null : name); });
+    orgBar.appendChild(b);
+  });
+  orgBar.hidden = !H.orgNames.length;
   var rest = 0;
   H.techs.forEach(function (t) {
     var b = el("button", "chip chip-big", t.name); b.type = "button"; b.dataset.tech = t.name; b.setAttribute("aria-pressed", "false");
@@ -110,11 +121,15 @@
     Array.prototype.forEach.call(document.querySelectorAll("[data-tech]"), function (b) {
       b.setAttribute("aria-pressed", String(s.tech === b.dataset.tech));
     });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-org]"), function (b) {
+      b.setAttribute("aria-pressed", String(s.org === b.dataset.org));
+    });
     if (s.tech && techMore.querySelector('[data-tech="' + (window.CSS && CSS.escape ? CSS.escape(s.tech) : s.tech) + '"]')) techMore.parentNode.open = true;
-    reset.hidden = !(s.cat || s.tech);
+    reset.hidden = !(s.cat || s.tech || s.org);
     var n = H.matching().length, what = "";
     if (s.cat) what += " dans « " + H.catLabel(s.cat) + " »";
     if (s.tech) what += " avec " + s.tech;
+    if (s.org) what += " de la formation " + s.org;
     countEl.textContent = n + (n > 1 ? " projets" : " projet") + what;
   }
 
@@ -211,10 +226,10 @@
 
   // ---------- Démarrage ----------
   var st = H.readHash();
-  H.setFilter(st.cat, st.tech, { hash: false });
+  H.setFilter(st.cat, st.tech, { hash: false }, st.org);
   syncControls();
-  window.addEventListener("hashchange", function () { var s = H.readHash(); if (/#(cat|tech)=/.test(location.hash) || !H.state.cat && !H.state.tech) H.setFilter(s.cat, s.tech, { hash: false }); });
-  if (H.state.cat || H.state.tech) { var pr = document.getElementById("projets"); if (pr) pr.scrollIntoView(); }
+  window.addEventListener("hashchange", function () { var s = H.readHash(); if (/#(cat|tech|org)=/.test(location.hash) || !H.state.cat && !H.state.tech && !H.state.org) H.setFilter(s.cat, s.tech, { hash: false }, s.org); });
+  if (H.state.cat || H.state.tech || H.state.org) { var pr = document.getElementById("projets"); if (pr) pr.scrollIntoView(); }
   document.documentElement.classList.add("ready");
   if (H.intro) decode(function () { H.intro(); });
 })();

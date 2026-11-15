@@ -21,6 +21,11 @@
     var n = { t: "t", id: t.name, count: t.count, r: 2.4 + Math.min(t.count, 6) * 0.45, col: "#93a0b8", a: 1, ta: 1 };
     byKey["t:" + t.name] = n; nodes.push(n);
   });
+  // Organisations : un losange relié par des traits pointillés aux projets de formation qui en dépendent.
+  H.orgNames.forEach(function (name) {
+    var n = { t: "o", id: name, r: 7, col: "#e6ebf5", a: 1, ta: 1 };
+    byKey["o:" + name] = n; nodes.push(n);
+  });
   nodes.forEach(function (n, i) {
     var ang = rnd() * 6.283, rad = 60 + rnd() * 120;
     n.x = Math.cos(ang) * rad; n.y = Math.sin(ang) * rad; n.vx = 0; n.vy = 0; n.ph = rnd() * 6.283; n.adj = [];
@@ -32,8 +37,14 @@
       edges.push(e); a.adj.push(b); b.adj.push(a);
     });
   });
+  var flow = edges.slice(); // liens projet-technologie : seuls à porter des paquets
+  H.projects.forEach(function (p) {
+    if (!p.org) return;
+    var a = byKey["p:" + p.id], b = byKey["o:" + p.org];
+    edges.push({ a: a, b: b, col: "#e6ebf5", dash: true }); a.adj.push(b); b.adj.push(a);
+  });
   var packets = [];
-  for (var k = 0; k < 9; k++) packets.push({ e: edges[(k * 7) % edges.length], s: rnd(), v: 0.00018 + rnd() * 0.00022 });
+  for (var k = 0; k < 9; k++) packets.push({ e: flow[(k * 7) % flow.length], s: rnd(), v: 0.00018 + rnd() * 0.00022 });
 
   var W = 0, Hh = 0, dpr = 1, cx = 0, cy = 0, x0 = 0, scale = 1, wide = false;
   var mouse = { x: -999, y: -999, in: false }, hover = null, drag = null, alpha = 1, lastMove = 0;
@@ -46,22 +57,22 @@
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(Hh * dpr);
     canvas.style.width = W + "px"; canvas.style.height = Hh + "px";
     wide = W >= 900;
-    x0 = wide ? W * 0.4 : 14; // à gauche, la zone du texte reste libre
+    x0 = wide ? Math.max(W * 0.4, Math.min(680, W * 0.55)) : 14; // à gauche, la zone du texte reste libre
     cx = wide ? (x0 + W) / 2 : W / 2; cy = wide ? Hh * 0.52 : Hh / 2;
-    scale = Math.max(0.55, Math.min((W - x0) / 600, Hh / 540, 1.7));
+    scale = Math.max(0.5, Math.min((W - x0) / 640, Hh / 580, 1.7));
     alpha = Math.max(alpha, 0.6);
   }
 
   function step(t) {
     var i, j, a, b, dx, dy, d2, d, f;
-    var rep = 2000 * scale * scale, rest = 66 * scale;
+    var rep = 2300 * scale * scale, rest = 66 * scale;
     for (i = 0; i < nodes.length; i++) {
       a = nodes[i];
       for (j = i + 1; j < nodes.length; j++) {
         b = nodes[j];
         dx = a.x - b.x; dy = a.y - b.y; d2 = dx * dx + dy * dy + 30;
         if (d2 > 90000) continue;
-        f = rep / d2 * alpha * (a.t === "p" && b.t === "p" ? 2.4 : 1); d = Math.sqrt(d2);
+        f = rep / d2 * alpha * (a.t === "p" && b.t === "p" ? 3.6 : 1); d = Math.sqrt(d2);
         dx = dx / d * f; dy = dy / d * f;
         a.vx += dx; a.vy += dy; b.vx -= dx; b.vy -= dy;
       }
@@ -91,10 +102,11 @@
   }
 
   function relevance() { // quels nœuds correspondent au filtre courant
-    var s = H.state, any = s.cat || s.tech;
+    var s = H.state, any = s.cat || s.tech || s.org;
     nodes.forEach(function (n) {
       if (!any) { n.ta = 1; return; }
       if (n.t === "p") n.ta = H.match(n.p) ? 1 : 0.14;
+      else if (n.t === "o") n.ta = s.org === n.id || n.adj.some(function (p) { return H.match(p.p); }) ? 1 : 0.12;
       else {
         var on = n.adj.some(function (p) { return H.match(p.p); });
         n.ta = on ? (s.tech === n.id ? 1 : 0.8) : 0.1;
@@ -131,7 +143,9 @@
       var hot = hover && (hover === e.a || hover === e.b);
       ctx.globalAlpha = hot ? 0.85 : 0.2 * a;
       ctx.strokeStyle = hot || (H.state.cat || H.state.tech) && a > 0.5 ? e.col : "#8a96ad";
+      if (e.dash) { ctx.setLineDash([3, 4]); ctx.strokeStyle = "#e6ebf5"; ctx.globalAlpha = hot ? 0.85 : 0.34 * a; }
       ctx.beginPath(); ctx.moveTo(e.a.x, e.a.y); ctx.lineTo(e.b.x, e.b.y); ctx.stroke();
+      if (e.dash) ctx.setLineDash([]);
     }
     if (inv) { // paquets qui circulent le long des liens
       for (i = 0; i < packets.length; i++) {
@@ -145,7 +159,12 @@
     }
     for (i = 0; i < nodes.length; i++) {
       n = nodes[i]; a = nodeAlpha(n);
-      if (n.t === "t") {
+      if (n.t === "o") {
+        var ro = n.r * scale + 3 + (hover === n ? 2 : 0);
+        ctx.globalAlpha = a; ctx.fillStyle = "#080a10"; ctx.strokeStyle = "#e6ebf5"; ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.moveTo(n.x, n.y - ro); ctx.lineTo(n.x + ro, n.y); ctx.lineTo(n.x, n.y + ro); ctx.lineTo(n.x - ro, n.y); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.lineWidth = 1;
+      } else if (n.t === "t") {
         ctx.globalAlpha = 0.75 * a; ctx.fillStyle = "#93a0b8";
         ctx.beginPath(); ctx.arc(n.x, n.y, n.r * scale + 0.4, 0, 6.283); ctx.fill();
       } else {
@@ -160,17 +179,17 @@
     for (i = 0; i < nodes.length; i++) {
       n = nodes[i]; a = nodeAlpha(n);
       var near = hover && (hover === n || hover.adj.indexOf(n) >= 0);
-      var show = n.t === "p" ? (wide || near || n.ta === 1 && (H.state.cat || H.state.tech)) : (near || n.count > 1 && wide);
+      var show = n.t === "o" ? true : n.t === "p" ? (wide || near || n.ta === 1 && (H.state.cat || H.state.tech || H.state.org)) : (near || n.count > 1 && wide);
       if (!show || a < 0.3) continue;
-      ctx.globalAlpha = n.t === "p" ? Math.min(1, a) : 0.7 * a;
-      ctx.fillStyle = n.t === "p" ? "#e6ebf5" : "#93a0b8";
+      ctx.globalAlpha = n.t === "t" ? 0.7 * a : Math.min(1, a);
+      ctx.fillStyle = n.t === "t" ? "#93a0b8" : "#e6ebf5";
       ctx.textAlign = n.x > W - cx - 110 ? "right" : "left";
       var off = (n.r * scale + 6) * (ctx.textAlign === "left" ? 1 : -1);
       ctx.fillText(n.id, n.x + off, n.y + 0.5);
     }
     // Bulle d'information sur le projet survolé
-    if (hover && hover.t === "p") {
-      var title = hover.p.title, sub = H.catLabel(hover.cat);
+    if (hover && (hover.t === "p" || hover.t === "o")) {
+      var title = hover.t === "p" ? hover.p.title : hover.id + " (Genève)", sub = hover.t === "p" ? H.catLabel(hover.cat) : "Formation, " + H.orgs[hover.id] + " projets";
       ctx.font = "600 12px 'Noto Sans Mono', ui-monospace, monospace";
       var tw = Math.max(ctx.measureText(title).width, 0), bw = tw + 22, bh = 38;
       ctx.font = "11px 'Noto Sans Mono', ui-monospace, monospace";
@@ -201,7 +220,7 @@
     if (idle && t - last < 33) { raf = requestAnimationFrame(loop); return; } // ~30 i/s au repos
     last = t;
     step(t); easeAlphas();
-    packets.forEach(function (p) { p.s += p.v * 16; if (p.s > 1) { p.s = 0; p.e = edges[Math.floor(Math.random() * edges.length)]; } });
+    packets.forEach(function (p) { p.s += p.v * 16; if (p.s > 1) { p.s = 0; p.e = flow[Math.floor(Math.random() * flow.length)]; } });
     draw(t);
     raf = requestAnimationFrame(loop);
   }
@@ -215,7 +234,7 @@
   function pick(x, y) {
     var best = null, bd = 1e9;
     nodes.forEach(function (n) {
-      var d = Math.hypot(n.x + cx - x, n.y + cy - y), rr = (n.t === "p" ? n.r * scale + 9 : n.r * scale + 7);
+      var d = Math.hypot(n.x + cx - x, n.y + cy - y), rr = (n.t === "t" ? n.r * scale + 7 : n.r * scale + 10);
       if (d < rr && d < bd) { bd = d; best = n; }
     });
     return best;
@@ -240,6 +259,7 @@
     if (down && Math.hypot(q.x - down.x, q.y - down.y) < 6) {
       var n = down.n;
       if (n.t === "p") { if (H.focusProject) H.focusProject(n.id); }
+      else if (n.t === "o") H.setFilter(null, null, undefined, H.state.org === n.id ? null : n.id);
       else H.setFilter(null, H.state.tech === n.id ? null : n.id);
     }
     down = null; drag = null; if (!raf) once();

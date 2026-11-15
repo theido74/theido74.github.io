@@ -20,7 +20,7 @@ Thème sombre « éditeur de code » : graphe de projets reliés à leurs techno
 Un `<meta http-equiv="Content-Security-Policy">` limite le hub à ses propres fichiers. Il contient le hachage SHA-256 du petit script en ligne de `<head>` : si ce script change, recalculer le hachage.
 
 ## Ajouter un projet
-1. Ajouter un objet à `PROJECTS` dans `assets/projects.js` : `id`, `title`, `desc`, `category` (un `id` de `CATEGORIES`), `tech`, `visibility`, `repo`, `page` (`"projets/<id>/"`, ou `null` sans page).
+1. Ajouter un objet à `PROJECTS` dans `assets/projects.js` : `id`, `title`, `desc`, `category` (un `id` de `CATEGORIES`), `tech`, `visibility`, `repo`, `page` (`"projets/<id>/"`, ou `null` sans page), et `org` (facultatif, ex. `"ESIG"` pour un projet de formation : badge sur la carte, puce de filtre, losange dans le graphe, `ls esig` dans le terminal).
    Un projet `visibility:"private"` n'affiche jamais de lien de dépôt : `repo:null`.
 2. Ajouter son aperçu animé dans `assets/previews.js` (sinon une icône générique s'affiche).
 3. Ajouter sa ligne dans le bloc `<noscript>` de `index.html` (liste de secours sans JavaScript).
@@ -61,8 +61,8 @@ Structure à placer dans `<body>` (contrat fixe) :
 - `shell.css` ne style que les classes `.shell-*` : aucun sélecteur global (`body`, `*`, `html`, `a`, `:root`). Ses variables sont préfixées `--shell-*` et déclarées sur `.shell-bar` et `.shell-foot`. La barre est sombre, translucide et collée en haut, lisible sur n'importe quel fond.
 - `shell.js` est facultatif et la page fonctionne sans lui : flèches ← et → pour passer au projet précédent ou suivant (sauf dans un champ de saisie ou un composant à flèches), et fondu de sortie, désactivé avec `prefers-reduced-motion`.
 - Ordre circulaire précédent/suivant (le dernier renvoie au premier) :
-  `spotyfiles` → `pokemonbot` → `skills-agents` → `password-analyzer` → `entrainement-abdd` → `streeteye` → `chatapp` → `dmob` → `image-scanner` → `neworcinvasion` → `nimgame` → retour à `spotyfiles`.
-- `bots-telegram/` (page à part, avec son style) et `flipper-keymanager` (vitrine finale) ne font pas partie de cet ordre.
+  `spotyfiles` → `pokemonbot` → `skills-agents` → `password-analyzer` → `entrainement-abdd` → `streeteye` → `chatapp` → `dmob` → `image-scanner` → `neworcinvasion` → `nimgame` → `esig-individuel` → `esig-weba` → `esig-apo` → `esig-inlo` → retour à `spotyfiles`.
+- `bots-telegram/` (page à part, avec son style) et `flipper-keymanager` (vitrine finale) ne font pas partie de cet ordre. Avec 15 pages, un nouveau projet s'insère entre deux voisins : mettre à jour leurs liens et les siens.
 - Les pages projet doivent aussi se tenir seules : `<title>`, `description`, `og:*`, `lang="fr"`, balise `viewport`, favicon `../../assets/favicon.svg`.
 
 ## Page `bots-telegram/`

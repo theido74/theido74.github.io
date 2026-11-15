@@ -107,6 +107,8 @@ h2{font-size:clamp(1.45rem,4.4vw,2.5rem);line-height:1.18;font-weight:700;letter
 .leg[aria-pressed="true"]{border-color:var(--c);background:rgba(255,255,255,.07);background:color-mix(in srgb,var(--c) 18%,transparent)}
 .leg.off{opacity:.55}
 .chip{display:inline-flex;align-items:center;gap:.4rem;min-height:30px;padding:0 .6rem;background:transparent;border:1px solid var(--line2);border-radius:6px;color:var(--dim);font-size:.8125rem;transition:background-color .2s,color .2s,border-color .2s}
+.chip-org{border-color:var(--ink);color:var(--ink)}
+#org-bar[hidden]{display:none}
 .chip-big{min-height:36px;padding:0 .75rem}
 .chip:hover{color:var(--ink);border-color:var(--dim)}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
@@ -136,6 +138,8 @@ h2{font-size:clamp(1.45rem,4.4vw,2.5rem);line-height:1.18;font-weight:700;letter
 .card-body{display:flex;flex-direction:column;gap:.65rem;flex:1;padding:1rem 1.1rem 1.1rem}
 .card-top{display:flex;justify-content:space-between;align-items:center;gap:.75rem}
 .card-cat{display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--c)}
+.tags{display:inline-flex;align-items:center;gap:.4rem;flex:none}
+.org{font-size:.6875rem;font-weight:700;padding:.05rem .5rem;border-radius:5px;background:var(--ink);color:var(--bg);letter-spacing:.02em}
 .vis{flex:none;font-size:.6875rem;padding:.05rem .5rem;border:1px solid var(--line2);border-radius:5px;color:var(--dim)}
 .vis-priv{border-style:dashed}
 .card h3{font-size:1.1rem;line-height:1.3;letter-spacing:-.02em;overflow-wrap:anywhere}
@@ -159,6 +163,7 @@ h2{font-size:clamp(1.45rem,4.4vw,2.5rem);line-height:1.18;font-weight:700;letter
 .pv .t{fill:currentColor;fill-opacity:.5}
 .pv .k{fill:#0a0e16}
 .pv .o{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.a-gear{transform-box:view-box!important;transform-origin:36px 45px!important}
 .a-rise{transform-origin:50% 100%!important}
 .a-fill{transform-origin:0 50%!important}
 .a-spin,.a-spin-slow{transform-box:view-box!important;transform-origin:36px 45px!important}
@@ -167,6 +172,8 @@ h2{font-size:clamp(1.45rem,4.4vw,2.5rem);line-height:1.18;font-weight:700;letter
 .card.play .a-pulse{animation:pulse 2.4s var(--d,0s) ease-in-out infinite}
 .card.play .a-ring{animation:ring 2s ease-out infinite}
 .card.play .a-spin{animation:spin 4s linear infinite}
+.card.play .a-gear{animation:spin 9s linear infinite}
+.card.play .a-roam{animation:roam 5s ease-in-out infinite}
 .card.play .a-spin-slow{animation:spin 24s linear infinite}
 .card.play .a-rise{animation:rise 3.6s var(--d,0s) ease-in-out infinite}
 .card.play .a-sweepy{animation:sweepy 2.6s linear infinite}
@@ -188,6 +195,7 @@ h2{font-size:clamp(1.45rem,4.4vw,2.5rem);line-height:1.18;font-weight:700;letter
 @keyframes blink{50%{opacity:.2}}
 @keyframes pulse{50%{transform:scale(1.3)}}
 @keyframes ring{0%{transform:scale(.7);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+@keyframes roam{0%,100%{transform:translate(0,0)}25%{transform:translate(32px,0)}50%{transform:translate(32px,20px)}75%{transform:translate(8px,38px)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes rise{0%,100%{transform:scaleY(.18)}45%,80%{transform:scaleY(1)}}
 @keyframes sweepy{0%{transform:translateY(0);opacity:1}90%{opacity:1}100%{transform:translateY(62px);opacity:0}}
